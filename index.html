@@ -581,26 +581,21 @@
             <div id="messages-list-box" style="margin-top: 15px;"></div>
         </div>
 
-        <!-- آزمون آنلاین (تستی و تشریحی) -->
+        <!-- آزمون آنلاین -->
         <div id="exam-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
             <h3>آزمون آنلاین علوم (شیمی نهم) - تستی و تشریحی</h3>
             <div style="margin-top: 15px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                
-                <!-- سوال تستی -->
                 <p><b>سوال ۱ (تستی):</b> کدام ذره زیراتمی بار الکتریکی منفی دارد؟</p>
                 <div style="margin: 10px 0 20px 0;">
                     <label><input type="radio" name="q1" value="wrong"> پروتون</label><br>
                     <label><input type="radio" name="q1" value="correct"> الکترون</label><br>
                     <label><input type="radio" name="q1" value="wrong"> نوترون</label>
                 </div>
-
-                <!-- سوال تشریحی -->
                 <p><b>سوال ۲ (تشریحی):</b> تفاوت اصلی بین اتم و یون چیست؟ توضیح دهید.</p>
                 <div style="margin: 10px 0;">
                     <textarea id="exam-essay-answer" rows="3" placeholder="پاسخ تشریحی خود را اینجا بنویسید..."></textarea>
                 </div>
-
                 <button onclick="submitExam()" style="width: auto; padding: 10px 25px; font-size: 14px; margin-top: 15px;">ارسال پاسخنامه کل آزمون</button>
             </div>
         </div>
@@ -676,13 +671,6 @@
             if (savedUser) {
                 const user = JSON.parse(savedUser);
 
-                if (user.role !== 'دانش‌آموز' && user.role !== 'معلم' && user.role !== 'مدیر') {
-                    localStorage.removeItem('farabi_user');
-                    alert('خطا در تشخیص نقش کاربر!');
-                    location.reload();
-                    return;
-                }
-
                 userDisplayName.textContent = user.name;
                 userDisplayRole.textContent = user.role;
 
@@ -723,6 +711,7 @@
             }
         }
 
+        // اصلاح شد تا بدون هیچ قید و شرط اضافی سریعاً لاگین کند
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const selectedRole = roleSelect.value;
@@ -850,15 +839,7 @@
         });
 
         function submitExam() {
-            const correctRadio = document.querySelector('input[name="q1"]:checked');
-            const essayAnswer = document.getElementById('exam-essay-answer').value.trim();
-
-            if (!correctRadio || !essayAnswer) {
-                alert('لطفاً هم به سوال تستی پاسخ دهید و هم بخش تشریحی را پر کنید.');
-                return;
-            }
-
-            alert('پاسخنامه شما (تستی و تشریحی) با موفقیت برای معلم ارسال شد!');
+            alert('پاسخنامه شما با موفقیت ارسال شد!');
             closeSubPanels();
         }
 
@@ -880,4 +861,49 @@
             if (schedules.length === 0) {
                 schedules = [
                     { day: 'شنبه', time: '۸:۰۰ الی ۹:۳۰', lesson: 'علوم تجربی (شیمی نهم)' },
-                    { day: 'یکشنبه', time: '۸
+                    { day: 'یکشنبه', time: '۸:۰۰ الی ۹:۳۰', lesson: 'ریاضیات' }
+                ];
+            }
+            schedules.forEach(s => {
+                scheduleTableBody.innerHTML += `<tr><td>${s.day}</td><td>${s.time}</td><td><b>${s.lesson}</b></td></tr>`;
+            });
+        }
+
+        function loadHomeworkList() {
+            let homeworks = JSON.parse(localStorage.getItem('farabi_homeworks') || '[]');
+            homeworkListBox.innerHTML = '';
+            if (homeworks.length === 0) {
+                homeworkListBox.innerHTML = '<p style="color: #64748b;">در حال حاضر تکلیفی تعریف نشده است.</p>';
+                return;
+            }
+            homeworks.forEach((hw) => {
+                homeworkListBox.innerHTML += `
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 12px;">
+                        <h4>درس: ${hw.subject}</h4>
+                        <p style="margin: 5px 0; color: #475569;">${hw.desc}</p>
+                        <p style="font-size: 12px; color: #d97706;">مهلت تحویل: ${hw.deadline}</p>
+                        <button onclick="alert('تکلیف شما با موفقیت ارسال شد!')" style="width: auto; padding: 6px 14px; font-size: 13px; margin-top: 8px;">ارسال پاسخ تکلیف</button>
+                    </div>`;
+            });
+        }
+
+        function loadMessagesList() {
+            let messages = JSON.parse(localStorage.getItem('farabi_messages') || '[]');
+            messagesListBox.innerHTML = '';
+            if (messages.length === 0) {
+                messages = [{ title: 'خوش آمدید', text: 'آغاز سال تحصیلی جدید در سامانه هوشمند مدرسه فارابی مبارک باد.', date: 'مهر ۱۴۰۵' }];
+            }
+            messages.forEach(m => {
+                messagesListBox.innerHTML += `
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 12px;">
+                        <h4 style="color: var(--dark-blue);">${m.title}</h4>
+                        <p style="margin: 5px 0; color: #475569;">${m.text}</p>
+                        <span style="font-size: 11px; color: #64748b;">تاریخ: ${m.date}</span>
+                    </div>`;
+            });
+        }
+
+        checkLogin();
+    </script>
+</body>
+</html>
