@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدرسه فارابی - سامانه مدیریت مدرن</title>
+    <title>مدرسه فارابی - سامانه جامع هوشمند</title>
     <style>
         :root {
             --primary-blue: #2563eb;
@@ -49,7 +49,6 @@
             overflow-x: hidden;
         }
 
-        /* انیمیشن لود شدن */
         @keyframes fadeInSlide {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -139,7 +138,6 @@
             display: none !important;
         }
 
-        /* استایل داشبورد مدرن */
         .dashboard {
             max-width: 900px;
             width: 95%;
@@ -213,14 +211,7 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
-            opacity: 0;
-            animation: fadeInSlide 0.5s ease-out forwards;
         }
-
-        /* تاخیر انیمیشن کارت‌ها */
-        .card:nth-child(1) { animation-delay: 0.2s; }
-        .card:nth-child(2) { animation-delay: 0.4s; }
-        .card:nth-child(3) { animation-delay: 0.6s; }
 
         .card:hover {
             transform: translateY(-8px);
@@ -271,33 +262,13 @@
         .card a:hover {
             background-color: var(--primary-hover);
         }
-
-        /* افکت نوری گوشه کارت */
-        .card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100px;
-            height: 100px;
-            background: rgba(37, 99, 235, 0.05);
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-        .card:hover::after {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            right: -100px;
-        }
-
     </style>
 </head>
 <body>
 
-    <!-- فرم ورود (به‌روز شده) -->
+    <!-- صفحه ورود -->
     <div id="login-section" class="container">
-        <h2>ورود به سامانه مدرسه</h2>
+        <h2>ورود به سامانه فارابی</h2>
         <form id="login-form">
             <div class="form-group">
                 <label for="name">نام و نام خانوادگی:</label>
@@ -323,7 +294,7 @@
         </form>
     </div>
 
-    <!-- داشبورد کاربری (خوشگل‌تر شده) -->
+    <!-- داشبورد پویا (بر اساس نقش) -->
     <div id="dashboard-section" class="dashboard hidden">
         <div class="welcome-box">
             <div class="welcome-text">
@@ -333,26 +304,71 @@
             <button class="logout-btn" id="logout-btn">خروج</button>
         </div>
 
-        <h3 class="section-title">امکانات و بخش‌های سامانه فارابی</h3>
+        <h3 class="section-title" id="panel-title">امکانات سامانه</h3>
         
-        <div class="grid">
+        <!-- کارت‌های مختص دانش‌آموز -->
+        <div id="panel-student" class="grid hidden">
             <div class="card">
                 <div class="card-icon">📚</div>
                 <h3>کلاس‌های آنلاین</h3>
-                <p>ورود به کلاس‌های فعال در اسکای‌روم</p>
+                <p>ورود به کلاس‌های اسکای‌روم مدرسه</p>
                 <a href="https://www.skyroom.online" target="_blank">ورود به کلاس</a>
             </div>
             <div class="card">
                 <div class="card-icon">📊</div>
                 <h3>کارنامه و نمرات</h3>
-                <p>مشاهده وضعیت تحصیلی و کارنامه نهایی</p>
-                <a href="#" onclick="alert('به زودی فعال می‌شود'); return false;">مشاهده</a>
+                <p>مشاهده وضعیت تحصیلی و نمرات آزمون‌ها</p>
+                <a href="#" onclick="alert('کارنامه شما در دست بررسی است.'); return false;">مشاهده کارنامه</a>
             </div>
             <div class="card">
                 <div class="card-icon">📅</div>
                 <h3>برنامه هفتگی</h3>
-                <p>مشاهده برنامه دروس و ساعات کلاس</p>
-                <a href="#" onclick="alert('به زودی فعال می‌شود'); return false;">مشاهده برنامه</a>
+                <p>مشاهده ساعات و روزهای تشکیل کلاس‌ها</p>
+                <a href="#" onclick="alert('برنامه هفتگی پایه نهم بارگذاری شد.'); return false;">مشاهده برنامه</a>
+            </div>
+        </div>
+
+        <!-- کارت‌های مختص معلم -->
+        <div id="panel-teacher" class="grid hidden">
+            <div class="card">
+                <div class="card-icon">📝</div>
+                <h3>ثبت نمرات</h3>
+                <p>ثبت و ویرایش نمرات امتحانی دانش‌آموزان</p>
+                <a href="#" onclick="alert('بخش ثبت نمرات فعال شد.'); return false;">مدیریت نمرات</a>
+            </div>
+            <div class="card">
+                <div class="card-icon">📁</div>
+                <h3>تکالیف و تمرین‌ها</h3>
+                <p>بارگذاری تکالیف کلاسی و بررسی پاسخ‌ها</p>
+                <a href="#" onclick="alert('پنل تکالیف باز شد.'); return false;">مدیریت تکالیف</a>
+            </div>
+            <div class="card">
+                <div class="card-icon">💻</div>
+                <h3>کلاس آنلاین</h3>
+                <p>شروع جلسه آنلاین تدریس با دانش‌آموزان</p>
+                <a href="https://www.skyroom.online" target="_blank">برگزاری کلاس</a>
+            </div>
+        </div>
+
+        <!-- کارت‌های مختص مدیر -->
+        <div id="panel-manager" class="grid hidden">
+            <div class="card">
+                <div class="card-icon">👥</div>
+                <h3>مدیریت کاربران</h3>
+                <p>مدیریت حساب‌های معلمان و دانش‌آموزان</p>
+                <a href="#" onclick="alert('لیست کاربران بارگذاری شد.'); return false;">مدیریت کاربران</a>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚙️</div>
+                <h3>تنظیمات مدرسه</h3>
+                <p>پیکربندی سال تحصیلی و اطلاعات آموزشگاه</p>
+                <a href="#" onclick="alert('بخش تنظیمات سیستم.'); return false;">تنظیمات کل</a>
+            </div>
+            <div class="card">
+                <div class="card-icon">📈</div>
+                <h3>گزارشات و آمار</h3>
+                <p>مشاهده آمار کلی حضور و پیشرفت مدرسه</p>
+                <a href="#" onclick="alert('گزارشات کلی دریافت شد.'); return false;">مشاهده آمار</a>
             </div>
         </div>
     </div>
@@ -366,7 +382,11 @@
         const userDisplayGrade = document.getElementById('user-display-grade');
         const logoutBtn = document.getElementById('logout-btn');
 
-        // بررسی ذخیره بودن اطلاعات در حافظه مرورگر (localStorage)
+        const panelStudent = document.getElementById('panel-student');
+        const panelTeacher = document.getElementById('panel-teacher');
+        const panelManager = document.getElementById('panel-manager');
+        const panelTitle = document.getElementById('panel-title');
+
         function checkLogin() {
             const savedUser = localStorage.getItem('farabi_user');
             if (savedUser) {
@@ -377,13 +397,29 @@
                 
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
-                document.title = "داشبورد مدرسه فارابی - " + user.name;
+
+                // نمایش پنل مخصوص بر اساس نقش کاربر
+                panelStudent.classList.add('hidden');
+                panelTeacher.classList.add('hidden');
+                panelManager.classList.add('hidden');
+
+                if (user.role === 'دانش‌آموز') {
+                    panelStudent.classList.remove('hidden');
+                    panelTitle.textContent = 'امکانات پنل دانش‌آموزی';
+                } else if (user.role === 'معلم') {
+                    panelTeacher.classList.remove('hidden');
+                    panelTitle.textContent = 'ابزارها و پنل دبیری';
+                } else if (user.role === 'مدیر') {
+                    panelManager.classList.remove('hidden');
+                    panelTitle.textContent = 'پنل مدیریت کل مدرسه';
+                }
+
+                document.title = "داشبورد " + user.role + " - مدرسه فارابی";
             } else {
                 document.title = "ورود به مدرسه فارابی";
             }
         }
 
-        // ثبت‌نام / ورود کاربر
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const userData = {
@@ -393,23 +429,18 @@
                 nationalCode: document.getElementById('national-code').value
             };
 
-            // افکت لودینگ روی دکمه
             const submitBtn = e.target.querySelector('button');
-            submitBtn.textContent = 'در حال پردازش...';
+            submitBtn.textContent = 'در حال ورود...';
             submitBtn.style.opacity = '0.7';
-            submitBtn.style.pointerEvents = 'none';
 
             setTimeout(() => {
                 localStorage.setItem('farabi_user', JSON.stringify(userData));
                 checkLogin();
-                // بازنشانی دکمه برای ورودهای بعدی
                 submitBtn.textContent = 'ورود به پنل کاربری';
                 submitBtn.style.opacity = '1';
-                submitBtn.style.pointerEvents = 'auto';
-            }, 800);
+            }, 600);
         });
 
-        // دکمه خروج
         logoutBtn.addEventListener('click', function() {
             if(confirm('آیا از خروج اطمینان دارید؟')) {
                 localStorage.removeItem('farabi_user');
@@ -420,7 +451,6 @@
             }
         });
 
-        // اجرای اولیه بررسی ورود هنگام لود صفحه
         checkLogin();
     </script>
 </body>
