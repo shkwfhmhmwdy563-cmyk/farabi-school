@@ -1,6 +1,5 @@
 
-
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -334,7 +333,7 @@
         </div>
 
         <h3 class="section-title" id="panel-title">امکانات سامانه</h3>
-        
+
         <!-- پنل دانش‌آموز -->
         <div id="panel-student" class="grid hidden">
             <div class="card" onclick="window.open('https://www.skyroom.online', '_blank')">
@@ -501,7 +500,6 @@
         const gradesTableBody = document.getElementById('grades-table-body');
         const scheduleTableBody = document.getElementById('schedule-table-body');
 
-        // مخفی یا نمایان کردن فیلد پایه بر اساس نقش انتخابی
         function toggleGradeField() {
             if (roleSelect.value === 'دانش‌آموز') {
                 gradeGroup.style.display = 'block';
@@ -517,16 +515,24 @@
             const savedUser = localStorage.getItem('farabi_user');
             if (savedUser) {
                 const user = JSON.parse(savedUser);
+
+                if (user.role !== 'دانش‌آموز' && user.role !== 'معلم' && user.role !== 'مدیر') {
+                    localStorage.removeItem('farabi_user');
+                    alert('خطا در تشخیص نقش کاربر!');
+                    location.reload();
+                    return;
+                }
+
                 userDisplayName.textContent = user.name;
                 userDisplayRole.textContent = user.role;
-                
+
                 if (user.role === 'دانش‌آموز' && user.grade) {
                     userDisplayGrade.textContent = user.grade;
                     gradeInfoBox.style.display = 'inline';
                 } else {
                     gradeInfoBox.style.display = 'none';
                 }
-                
+
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 closeSubPanels();
@@ -554,12 +560,15 @@
 
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const selectedRole = roleSelect.value;
+            
             const userData = {
                 name: document.getElementById('name').value,
-                role: roleSelect.value,
-                grade: roleSelect.value === 'دانش‌آموز' ? gradeInput.value : '',
+                role: selectedRole,
+                grade: selectedRole === 'دانش‌آموز' ? gradeInput.value : '',
                 nationalCode: document.getElementById('national-code').value
             };
+
             localStorage.setItem('farabi_user', JSON.stringify(userData));
             checkLogin();
         });
@@ -573,12 +582,22 @@
         });
 
         function openGradeForm() {
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            if (user.role !== 'معلم' && user.role !== 'مدیر') {
+                alert('شما اجازه دسترسی به این بخش را ندارید!');
+                return;
+            }
             panelTeacher.classList.add('hidden');
             teacherGradeSection.classList.remove('hidden');
             panelTitle.textContent = 'ثبت نمره جدید';
         }
 
         function openScheduleForm() {
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            if (user.role !== 'مدیر') {
+                alert('فقط مدیر سامانه به این بخش دسترسی دارد!');
+                return;
+            }
             panelManager.classList.add('hidden');
             managerScheduleSection.classList.remove('hidden');
             panelTitle.textContent = 'ثبت برنامه هفتگی';
@@ -604,6 +623,7 @@
             managerScheduleSection.classList.add('hidden');
             gradesViewSection.classList.add('hidden');
             scheduleViewSection.classList.add('hidden');
+            
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             if (user.role === 'دانش‌آموز') {
                 panelStudent.classList.remove('hidden');
@@ -617,9 +637,13 @@
             }
         }
 
-        // ثبت نمره
         gradeForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            if (user.role === 'دانش‌آموز') {
+                alert('دانش‌آموز مجاز به ثبت نمره نیست!');
+                return;
+            }
             const newGrade = {
                 student: document.getElementById('student-name').value,
                 subject: document.getElementById('subject-name').value,
@@ -633,9 +657,13 @@
             closeSubPanels();
         });
 
-        // ثبت برنامه هفتگی
         scheduleForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            if (user.role !== 'مدیر') {
+                alert('فقط مدیر می‌تواند برنامه هفتگی را تغییر دهد!');
+                return;
+            }
             const newSchedule = {
                 day: document.getElementById('schedule-day').value,
                 time: document.getElementById('schedule-time').value,
@@ -649,7 +677,6 @@
             closeSubPanels();
         });
 
-        // لود جدول نمرات
         function loadGradesTable() {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             gradesTableBody.innerHTML = '';
@@ -662,7 +689,6 @@
             });
         }
 
-        // لود جدول برنامه هفتگی
         function loadScheduleTable() {
             let schedules = JSON.parse(localStorage.getItem('farabi_schedules') || '[]');
             scheduleTableBody.innerHTML = '';
@@ -682,6 +708,4 @@
     </script>
 </body>
 </html>
-
-
-
+     
