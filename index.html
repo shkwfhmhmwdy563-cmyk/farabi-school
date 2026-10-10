@@ -421,7 +421,7 @@
                 <div class="card" onclick="openScheduleForm()">
                     <div class="card-icon">📅</div>
                     <h3>ثبت برنامه هفتگی</h3>
-                    <p>افزودن کلاس و درس جدید</p>
+                    <p>افزودن کلاس برای هر پایه</p>
                 </div>
                 <div class="card" onclick="openMessageForm()">
                     <div class="card-icon">📢</div>
@@ -525,11 +525,15 @@
             </form>
         </div>
 
-        <!-- فرم ثبت برنامه هفتگی -->
+        <!-- فرم ثبت برنامه هفتگی (مختص هر پایه) -->
         <div id="manager-schedule-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
             <h3>افزودن درس به برنامه هفتگی</h3>
             <form id="schedule-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>انتخاب پایه تحصیلی:</label>
+                    <input type="text" id="schedule-grade" required placeholder="مثلاً: نهم (یا هفتم، هشتم)">
+                </div>
                 <div class="form-group">
                     <label>روز هفته:</label>
                     <select id="schedule-day">
@@ -576,6 +580,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>پایه</th>
                         <th>روز هفته</th>
                         <th>ساعت</th>
                         <th>عنوان درس</th>
@@ -731,7 +736,7 @@
             const userData = {
                 name: document.getElementById('name').value,
                 role: selectedRole,
-                grade: selectedRole === 'دانش‌آموز' ? gradeInput.value : '',
+                grade: selectedRole === 'دانش‌آموز' ? gradeInput.value.trim() : '',
                 nationalCode: document.getElementById('national-code').value
             };
             localStorage.setItem('farabi_user', JSON.stringify(userData));
@@ -833,9 +838,11 @@
             closeSubPanels();
         });
 
+        // ثبت برنامه هفتگی با تفکیک پایه
         scheduleForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newSchedule = {
+                grade: document.getElementById('schedule-grade').value.trim(),
                 day: document.getElementById('schedule-day').value,
                 time: document.getElementById('schedule-time').value,
                 lesson: document.getElementById('schedule-lesson').value
@@ -865,17 +872,25 @@
             });
         }
 
+        // بارگذاری برنامه هفتگی بر اساس پایه دانش‌آموز یا نمایش همه برای مدیر/معلم
         function loadScheduleTable() {
             let schedules = JSON.parse(localStorage.getItem('farabi_schedules') || '[]');
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            
             scheduleTableBody.innerHTML = '';
-            if (schedules.length === 0) {
-                schedules = [
-                    { day: 'شنبه', time: '۸:۰۰ الی ۹:۳۰', lesson: 'علوم تجربی (شیمی نهم)' },
-                    { day: 'یکشنبه', time: '۸:۰۰ الی ۹:۳۰', lesson: 'ریاضیات' }
-                ];
+            
+            // اگر دانش‌آموز است، فقط برنامه‌های مربوط به پایه خودش را فیلتر کن
+            if (user.role === 'دانش‌آموز' && user.grade) {
+                schedules = schedules.filter(s => s.grade === user.grade);
             }
+
+            if (schedules.length === 0) {
+                scheduleTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b;">برنامه‌ای برای نمایش وجود ندارد.</td></tr>';
+                return;
+            }
+
             schedules.forEach(s => {
-                scheduleTableBody.innerHTML += `<tr><td>${s.day}</td><td>${s.time}</td><td><b>${s.lesson}</b></td></tr>`;
+                scheduleTableBody.innerHTML += `<tr><td><b>${s.grade}</b></td><td>${s.day}</td><td>${s.time}</td><td><b>${s.lesson}</b></td></tr>`;
             });
         }
 
