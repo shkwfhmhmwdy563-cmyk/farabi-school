@@ -1,3 +1,624 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسه فارابی - سامانه جامع هوشمند</title>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-blue: #eff6ff;
+            --dark-blue: #1e3a8a;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+            font-weight: normal; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Bold.woff2') format('woff2');
+            font-weight: bold; font-style: normal;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeInSlide {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            animation: fadeInSlide 0.6s ease-out;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        h2, h3 {
+            color: var(--dark-blue);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 26px;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-blue);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            color: var(--dark-blue);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: var(--text-main);
+            outline: none;
+            transition: var(--transition);
+            background: #f8fafc;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            background: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-blue), #4f46e5);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(37, 99, 235, 0.3);
+            background: linear-gradient(135deg, var(--primary-hover), #4338ca);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .dashboard {
+            max-width: 950px;
+            width: 95%;
+            padding: 30px;
+        }
+
+        .welcome-box {
+            background: linear-gradient(135deg, #e0f2fe, #e0e7ff);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #bae6fd;
+            animation: fadeInSlide 0.8s ease-out;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .welcome-text h3 {
+            color: var(--dark-blue);
+            font-size: 20px;
+        }
+
+        .welcome-text p {
+            color: var(--text-sub);
+            font-size: 13px;
+            margin-top: 6px;
+            background: white;
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            width: auto;
+            padding: 8px 18px;
+            font-size: 14px;
+            margin-top: 0;
+            box-shadow: none;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .section-title {
+            color: var(--dark-blue);
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-right: 4px solid var(--primary-blue);
+            padding-right: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-blue);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            color: var(--primary-blue);
+            background: var(--secondary-blue);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            border: 2px solid #dbeafe;
+        }
+
+        .card h3 {
+            margin-bottom: 6px;
+            color: var(--dark-blue);
+            font-size: 16px;
+        }
+
+        .card p {
+            color: var(--text-sub);
+            font-size: 12px;
+        }
+
+        .sub-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            margin-top: 20px;
+            animation: fadeInSlide 0.4s ease-out;
+            box-shadow: var(--shadow-md);
+        }
+
+        .back-btn {
+            background: #64748b;
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            box-shadow: none;
+        }
+        .back-btn:hover { background: #475569; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: var(--secondary-blue);
+            color: var(--dark-blue);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- صفحه ورود -->
+    <div id="login-section" class="container">
+        <h2>ورود به سامانه فارابی</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="name">نام و نام خانوادگی:</label>
+                <input type="text" id="name" required placeholder="مثلاً: علی موسی">
+            </div>
+            <div class="form-group">
+                <label for="role">نقش کاربر:</label>
+                <select id="role" onchange="toggleGradeField()">
+                    <option value="دانش‌آموز">دانش‌آموز</option>
+                    <option value="معلم">معلم</option>
+                    <option value="مدیر">مدیر</option>
+                </select>
+            </div>
+            <div class="form-group" id="grade-group">
+                <label for="grade">پایه تحصیلی:</label>
+                <input type="text" id="grade" placeholder="مثلاً: نهم">
+            </div>
+            <div class="form-group">
+                <label for="national-code">کد ملی:</label>
+                <input type="text" id="national-code" required placeholder="۱۰ رقم">
+            </div>
+            <button type="submit">ورود به پنل کاربری</button>
+        </form>
+    </div>
+
+    <!-- داشبورد اصلی -->
+    <div id="dashboard-section" class="dashboard hidden">
+        <div class="welcome-box">
+            <div class="welcome-text">
+                <h3>خوش آمدید، <span id="user-display-name"></span> عزیز!</h3>
+                <p>نقش: <b><span id="user-display-role"></span></b> <span id="grade-info-box">| پایه: <b><span id="user-display-grade"></span></b></span> <span id="points-info-box" style="margin-right: 10px;">| ⭐ امتیاز کل: <b id="user-display-points" style="color: #d97706;">0</b></span></p>
+            </div>
+            <button class="logout-btn" id="logout-btn">خروج از حساب</button>
+        </div>
+
+        <!-- پنل دانش‌آموز -->
+        <div id="panel-student" class="hidden">
+            <h3 class="section-title">آموزش و یادگیری</h3>
+            <div class="grid">
+                <div class="card" onclick="window.open('https://www.skyroom.online', '_blank')">
+                    <div class="card-icon">📚</div>
+                    <h3>کلاس‌های آنلاین</h3>
+                    <p>ورود به اسکای‌روم مدرسه</p>
+                </div>
+                <div class="card" onclick="showHomeworkStudentView()">
+                    <div class="card-icon">📝</div>
+                    <h3>تکالیف درسی</h3>
+                    <p>مشاهده و ارسال تکالیف</p>
+                </div>
+                <div class="card" onclick="showOnlineExamView()">
+                    <div class="card-icon">✍️</div>
+                    <h3>آزمون آنلاین</h3>
+                    <p>تستی و تشریحی</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">امور آموزشی و اداری</h3>
+            <div class="grid">
+                <div class="card" onclick="showStudentGrades()">
+                    <div class="card-icon">📊</div>
+                    <h3>کارنامه و نمرات</h3>
+                    <p>مشاهده نمرات و ستاره‌ها</p>
+                </div>
+                <div class="card" onclick="showScheduleView()">
+                    <div class="card-icon">📅</div>
+                    <h3>برنامه هفتگی</h3>
+                    <p>مشاهده ساعات کلاس‌ها</p>
+                </div>
+                <div class="card" onclick="showMessagesView()">
+                    <div class="card-icon">🔔</div>
+                    <h3>پیام‌های مدرسه</h3>
+                    <p>اطلاعیه‌ها و اخبار مهم</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- پنل معلم -->
+        <div id="panel-teacher" class="hidden">
+            <h3 class="section-title">مدیریت آموزش و ارزیابی</h3>
+            <div class="grid">
+                <div class="card" onclick="openGradeForm()">
+                    <div class="card-icon">📝</div>
+                    <h3>ثبت نمره و امتیاز</h3>
+                    <p>ثبت نمره و امتیاز تشویقی</p>
+                </div>
+                <div class="card" onclick="openHomeworkForm()">
+                    <div class="card-icon">📂</div>
+                    <h3>تعریف تکلیف</h3>
+                    <p>ارسال تکلیف جدید</p>
+                </div>
+                <div class="card" onclick="openAttendanceForm()">
+                    <div class="card-icon">📋</div>
+                    <h3>حضور و غیاب</h3>
+                    <p>ثبت وضعیت حضور کلاس</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">ارتباطات و برنامه‌ریزی</h3>
+            <div class="grid">
+                <div class="card" onclick="window.open('https://www.skyroom.online', '_blank')">
+                    <div class="card-icon">💻</div>
+                    <h3>کلاس آنلاین</h3>
+                    <p>شروع جلسه تدریس</p>
+                </div>
+                <div class="card" onclick="showScheduleView()">
+                    <div class="card-icon">📅</div>
+                    <h3>برنامه هفتگی</h3>
+                    <p>بررسی ساعات و دروس</p>
+                </div>
+                <div class="card" onclick="showMessagesView()">
+                    <div class="card-icon">🔔</div>
+                    <h3>پیام‌های مدرسه</h3>
+                    <p>مشاهده و ارسال اطلاعیه</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- پنل مدیر -->
+        <div id="panel-manager" class="hidden">
+            <h3 class="section-title">مدیریت کل مدرسه</h3>
+            <div class="grid">
+                <div class="card" onclick="openScheduleForm()">
+                    <div class="card-icon">📅</div>
+                    <h3>ثبت برنامه هفتگی</h3>
+                    <p>افزودن کلاس و درس جدید</p>
+                </div>
+                <div class="card" onclick="openMessageForm()">
+                    <div class="card-icon">📢</div>
+                    <h3>ارسال پیام عمومی</h3>
+                    <p>اعلامیه برای همه</p>
+                </div>
+                <div class="card" onclick="showMessagesView()">
+                    <div class="card-icon">🔔</div>
+                    <h3>پیام‌های مدرسه</h3>
+                    <p>مشاهده لیست پیام‌ها</p>
+                </div>
+                <div class="card" onclick="alert('مدیریت کاربران فعال است.')">
+                    <div class="card-icon">👥</div>
+                    <h3>مدیریت کاربران</h3>
+                    <p>معلمان و دانش‌آموزان</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- فرم ثبت نمره و امتیاز -->
+        <div id="teacher-grade-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>ثبت نمره و امتیاز برای دانش‌آموز</h3>
+            <form id="grade-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>نام دانش‌آموز:</label>
+                    <input type="text" id="student-name" required placeholder="مثلاً: علی رضایی">
+                </div>
+                <div class="form-group">
+                    <label>درس:</label>
+                    <input type="text" id="subject-name" required placeholder="مثلاً: علوم (شیمی نهم)">
+                </div>
+                <div class="form-group">
+                    <label>نمره (از ۲۰):</label>
+                    <input type="number" step="0.25" max="20" min="0" id="score-val" required placeholder="مثلاً: 19.5">
+                </div>
+                <div class="form-group">
+                    <label>امتیاز تشویقی (ستاره):</label>
+                    <input type="number" min="0" id="points-val" value="0" required placeholder="مثلاً: 5">
+                </div>
+                <button type="submit">ثبت و ذخیره نمره و امتیاز</button>
+            </form>
+        </div>
+
+        <!-- فرم تعریف تکلیف -->
+        <div id="teacher-homework-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>تعریف تکلیف جدید</h3>
+            <form id="homework-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>عنوان درس:</label>
+                    <input type="text" id="hw-subject" required placeholder="مثلاً: علوم تجربی">
+                </div>
+                <div class="form-group">
+                    <label>شرح تکلیف:</label>
+                    <textarea id="hw-desc" rows="3" required placeholder="توضیحات تکالیف..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>مهلت تحویل:</label>
+                    <input type="text" id="hw-deadline" required placeholder="مثلاً: چهارشنبه ساعت ۱۸">
+                </div>
+                <button type="submit">انتشار تکلیف</button>
+            </form>
+        </div>
+
+        <!-- فرم حضور و غیاب -->
+        <div id="teacher-attendance-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>ثبت حضور و غیاب کلاس</h3>
+            <form id="attendance-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>نام دانش‌آموز:</label>
+                    <input type="text" id="att-student" required placeholder="مثلاً: علی رضایی">
+                </div>
+                <div class="form-group">
+                    <label>وضعیت حضور:</label>
+                    <select id="att-status">
+                        <option value="حاضر">حاضر</option>
+                        <option value="غایب">غایب</option>
+                        <option value="تاخیر">دارای تاخیر</option>
+                    </select>
+                </div>
+                <button type="submit">ثبت وضعیت در سامانه</button>
+            </form>
+        </div>
+
+        <!-- فرم ارسال پیام -->
+        <div id="manager-message-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>ارسال اطلاعیه جدید</h3>
+            <form id="message-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>عنوان پیام:</label>
+                    <input type="text" id="msg-title" required placeholder="مثلاً: تعطیلی کلاس جبرانی">
+                </div>
+                <div class="form-group">
+                    <label>متن پیام:</label>
+                    <textarea id="msg-text" rows="3" required placeholder="متن اطلاعیه..."></textarea>
+                </div>
+                <button type="submit">انتشار پیام در سامانه</button>
+            </form>
+        </div>
+
+        <!-- فرم ثبت برنامه هفتگی -->
+        <div id="manager-schedule-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>افزودن درس به برنامه هفتگی</h3>
+            <form id="schedule-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>روز هفته:</label>
+                    <select id="schedule-day">
+                        <option value="شنبه">شنبه</option>
+                        <option value="یکشنبه">یکشنبه</option>
+                        <option value="دوشنبه">دوشنبه</option>
+                        <option value="سه‌شنبه">سه‌شنبه</option>
+                        <option value="چهارشنبه">چهارشنبه</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ساعت کلاس:</label>
+                    <input type="text" id="schedule-time" required placeholder="مثلاً: ۸:۰۰ الی ۹:۳۰">
+                </div>
+                <div class="form-group">
+                    <label>نام درس:</label>
+                    <input type="text" id="schedule-lesson" required placeholder="مثلاً: علوم تجربی">
+                </div>
+                <button type="submit">ثبت در برنامه هفتگی</button>
+            </form>
+        </div>
+
+        <!-- جدول نمرات -->
+        <div id="grades-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>لیست نمرات و امتیازات ثبت‌شده سامانه</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>نام دانش‌آموز</th>
+                        <th>درس</th>
+                        <th>نمره</th>
+                        <th>امتیاز</th>
+                    </tr>
+                </thead>
+                <tbody id="grades-table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- جدول برنامه هفتگی -->
+        <div id="schedule-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>برنامه هفتگی کلاس‌های مدرسه فارابی</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>روز هفته</th>
+                        <th>ساعت</th>
+                        <th>عنوان درس</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- تکالیف دانش‌آموز -->
+        <div id="homework-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>لیست تکالیف درسی</h3>
+            <div id="homework-list-box" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- پیام‌های مدرسه -->
+        <div id="messages-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>تابلو اعلانات و پیام‌های مدرسه</h3>
+            <div id="messages-list-box" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- آزمون آنلاین -->
+        <div id="exam-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>آزمون آنلاین علوم (شیمی نهم) - تستی و تشریحی</h3>
+            <div style="margin-top: 15px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <p><b>سوال ۱ (تستی):</b> کدام ذره زیراتمی بار الکتریکی منفی دارد؟</p>
+                <div style="margin: 10px 0 20px 0;">
+                    <label><input type="radio" name="q1" value="wrong"> پروتون</label><br>
+                    <label><input type="radio" name="q1" value="correct"> الکترون</label><br>
+                    <label><input type="radio" name="q1" value="wrong"> نوترون</label>
+                </div>
+                <p><b>سوال ۲ (تشریحی):</b> تفاوت اصلی بین اتم و یون چیست؟ توضیح دهید.</p>
+                <div style="margin: 10px 0;">
+                    <textarea id="exam-essay-answer" rows="3" placeholder="پاسخ تشریحی خود را اینجا بنویسید..."></textarea>
+                </div>
+                <button onclick="submitExam()" style="width: auto; padding: 10px 25px; font-size: 14px; margin-top: 15px;">ارسال پاسخنامه کل آزمون</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const loginForm = document.getElementById('login-form');
         const loginSection = document.getElementById('login-section');
@@ -294,3 +915,5 @@
 
         checkLogin();
     </script>
+</body>
+</html>
