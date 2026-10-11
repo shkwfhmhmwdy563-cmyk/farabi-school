@@ -364,20 +364,20 @@
                     <h3>کارنامه و نمرات من</h3>
                     <p>مشاهده نمرات و ستاره‌های اختصاصی</p>
                 </div>
+                <div class="card" onclick="showLeaderboardView()">
+                    <div class="card-icon">🏆</div>
+                    <h3>۱۰ نفر برتر سامانه</h3>
+                    <p>مشاهده رتبه‌بندی برترین امتیازات</p>
+                </div>
+                <div class="card" onclick="showSchoolDirectoryView()">
+                    <div class="card-icon">🏫</div>
+                    <h3>لیست کل مدرسه و پایه‌ها</h3>
+                    <p>مشاهده کلاس‌ها و دانش‌آموزان</p>
+                </div>
                 <div class="card" onclick="showProgressReport()">
                     <div class="card-icon">📈</div>
                     <h3>گزارش پیشرفت تحصیلی</h3>
                     <p>تحلیل نموداری امتیازات و معدل</p>
-                </div>
-                <div class="card" onclick="showScheduleView()">
-                    <div class="card-icon">📅</div>
-                    <h3>برنامه هفتگی</h3>
-                    <p>مشاهده ساعات کلاس‌ها</p>
-                </div>
-                <div class="card" onclick="showMessagesView()">
-                    <div class="card-icon">🔔</div>
-                    <h3>پیام‌های مدرسه</h3>
-                    <p>اطلاعیه‌ها و اخبار مهم</p>
                 </div>
             </div>
         </div>
@@ -410,20 +410,20 @@
 
             <h3 class="section-title">ارتباطات و برنامه‌ریزی</h3>
             <div class="grid">
+                <div class="card" onclick="showSchoolDirectoryView()">
+                    <div class="card-icon">🏫</div>
+                    <h3>کلاس‌ها و پایه‌های مدرسه</h3>
+                    <p>مشاهده لیست کل دانش‌آموزان مدرسه</p>
+                </div>
+                <div class="card" onclick="showLeaderboardView()">
+                    <div class="card-icon">🏆</div>
+                    <h3>۱۰ نفر برتر سامانه</h3>
+                    <p>بررسی جدول رتبه‌بندی دانش‌آموزان</p>
+                </div>
                 <div class="card" onclick="showLibraryView()">
                     <div class="card-icon">📖</div>
                     <h3>کتابخانه درسی</h3>
                     <p>مدیریت و حذف جزوات</p>
-                </div>
-                <div class="card" onclick="showScheduleView()">
-                    <div class="card-icon">📅</div>
-                    <h3>برنامه هفتگی</h3>
-                    <p>بررسی ساعات و دروس</p>
-                </div>
-                <div class="card" onclick="showMessagesView()">
-                    <div class="card-icon">🔔</div>
-                    ### پیام‌های مدرسه
-                    <p>مشاهده و ارسال اطلاعیه</p>
                 </div>
                 <div class="card" onclick="showGradesManagerView()">
                     <div class="card-icon">⚙️</div>
@@ -442,15 +442,15 @@
                     <h3>ثبت‌نام کاربر جدید</h3>
                     <p>تعریف دانش‌آموز یا معلم</p>
                 </div>
-                <div class="card" onclick="openScheduleForm()">
-                    <div class="card-icon">📅</div>
-                    <h3>ثبت برنامه هفتگی</h3>
-                    <p>افزودن کلاس برای هر پایه</p>
+                <div class="card" onclick="showSchoolDirectoryView()">
+                    <div class="card-icon">🏫</div>
+                    <h3>کل مدرسه (پایه‌ها و کلاس‌ها)</h3>
+                    <p>مدیریت و مشاهده تفکیکی دانش‌آموزان</p>
                 </div>
-                <div class="card" onclick="openMessageForm()">
-                    <div class="card-icon">📢</div>
-                    <h3>ارسال پیام عمومی</h3>
-                    <p>اعلامیه برای همه</p>
+                <div class="card" onclick="showLeaderboardView()">
+                    <div class="card-icon">🏆</div>
+                    <h3>۱۰ نفر برتر سامانه</h3>
+                    <p>مشاهده جدول رتبه‌بندی برترین‌ها</p>
                 </div>
                 <div class="card" onclick="showManagerDashboardData()">
                     <div class="card-icon">⚙️</div>
@@ -466,7 +466,7 @@
             <h3>ثبت دانش‌آموز یا معلم جدید در سامانه</h3>
             <form id="user-register-form" style="margin-top: 15px;">
                 <div class="form-group">
-                    <label>نام و نام خانوادگی (باید دقیقاً مطابق با نام درج شده در نمرات باشد):</label>
+                    <label>نام و نام خانوادگی:</label>
                     <input type="text" id="reg-name" required placeholder="مثلاً: علی رضایی">
                 </div>
                 <div class="form-group">
@@ -624,7 +624,7 @@
             </form>
         </div>
 
-        <!-- جدول نمرات (دانش‌آموز فقط نمره خودش را می‌بیند) -->
+        <!-- جدول نمرات -->
         <div id="grades-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
             <h3 id="grades-section-title">کارنامه و نمرات من</h3>
@@ -639,6 +639,42 @@
                     </tr>
                 </thead>
                 <tbody id="grades-table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- جدول ۱۰ نفر برتر (لیدربورد) -->
+        <div id="leaderboard-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>🏆 جدول رتبه‌بندی ۱۰ دانش‌آموز برتر سامانه</h3>
+            <p style="font-size: 13px; color: var(--text-sub); margin-top: 5px;">بر اساس مجموع امتیازات و ستاره‌های کسب‌شده در فعالیت‌های مدرسه</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>رتبه</th>
+                        <th>نام دانش‌آموز</th>
+                        <th>پایه تحصیلی</th>
+                        <th>مجموع امتیاز (ستاره)</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- بخش کل مدرسه: لیست دانش‌آموزان به تفکیک پایه و کلاس -->
+        <div id="school-directory-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>🏫 دایرکتوری و لیست کل دانش‌آموزان مدرسه فارابی</h3>
+            <p style="font-size: 13px; color: var(--text-sub); margin-top: 5px;">مشاهده تفکیکی پایه‌ها و کلاس‌های دایر در مدرسه</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ردیف</th>
+                        <th>نام و نام خانوادگی دانش‌آموز</th>
+                        <th>پایه تحصیلی</th>
+                        <th>کد ملی</th>
+                    </tr>
+                </thead>
+                <tbody id="school-directory-table-body"></tbody>
             </table>
         </div>
 
@@ -740,6 +776,8 @@
 
         const gradesViewSection = document.getElementById('grades-view-section');
         const gradesSectionTitle = document.getElementById('grades-section-title');
+        const leaderboardViewSection = document.getElementById('leaderboard-view-section');
+        const schoolDirectorySection = document.getElementById('school-directory-section');
         const libraryViewSection = document.getElementById('library-view-section');
         const progressViewSection = document.getElementById('progress-view-section');
         const scheduleViewSection = document.getElementById('schedule-view-section');
@@ -762,6 +800,8 @@
 
         const gradesTableBody = document.getElementById('grades-table-body');
         const gradeActionTh = document.getElementById('grade-action-th');
+        const leaderboardTableBody = document.getElementById('leaderboard-table-body');
+        const schoolDirectoryTableBody = document.getElementById('school-directory-table-body');
         const libraryListBox = document.getElementById('library-list-box');
         const progressContentBox = document.getElementById('progress-content-box');
         const scheduleTableBody = document.getElementById('schedule-table-body');
@@ -910,6 +950,25 @@
 
         function showStudentGrades() { closeSubPanels(); panelStudent.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showGradesManagerView() { closeSubPanels(); panelTeacher.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
+        
+        function showLeaderboardView() { 
+            closeSubPanels(); 
+            panelStudent.classList.add('hidden'); 
+            panelTeacher.classList.add('hidden'); 
+            panelManager.classList.add('hidden'); 
+            leaderboardViewSection.classList.remove('hidden'); 
+            loadLeaderboardTable(); 
+        }
+
+        function showSchoolDirectoryView() {
+            closeSubPanels();
+            panelStudent.classList.add('hidden');
+            panelTeacher.classList.add('hidden');
+            panelManager.classList.add('hidden');
+            schoolDirectorySection.classList.remove('hidden');
+            loadSchoolDirectoryTable();
+        }
+
         function showLibraryView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); libraryViewSection.classList.remove('hidden'); loadLibraryList(); }
         function showProgressReport() { closeSubPanels(); panelStudent.classList.add('hidden'); progressViewSection.classList.remove('hidden'); loadProgressReportData(); }
         function showScheduleView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); scheduleViewSection.classList.remove('hidden'); loadScheduleTable(); }
@@ -927,6 +986,8 @@
             managerMessageSection.classList.add('hidden');
             managerScheduleSection.classList.add('hidden');
             gradesViewSection.classList.add('hidden');
+            leaderboardViewSection.classList.add('hidden');
+            schoolDirectorySection.classList.add('hidden');
             libraryViewSection.classList.add('hidden');
             progressViewSection.classList.add('hidden');
             scheduleViewSection.classList.add('hidden');
@@ -1054,14 +1115,12 @@
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             gradesTableBody.innerHTML = '';
 
-            // تفکیک دسترسی نمرات: دانش‌آموز فقط نمرات خودش را می‌بیند
             if (user.role === 'معلم' || user.role === 'مدیر') {
                 gradeActionTh.classList.remove('hidden');
                 gradesSectionTitle.textContent = 'لیست کل نمرات و امتیازات ثبت‌شده در سامانه';
             } else {
                 gradeActionTh.classList.add('hidden');
                 gradesSectionTitle.textContent = `کارنامه و نمرات من (${user.name})`;
-                // فیلتر دقیق بر اساس نام دانش‌آموز لاگین‌شده
                 grades = grades.filter(g => g.student.trim() === user.name.trim());
             }
 
@@ -1073,6 +1132,61 @@
             grades.forEach((g, idx) => {
                 let actionTd = (user.role === 'معلم' || user.role === 'مدیر') ? `<td><button class="del-btn" onclick="deleteGradeItem(${idx})">حذف</button></td>` : '';
                 gradesTableBody.innerHTML += `<tr><td>${g.student}</td><td>${g.subject}</td><td><b>${g.score}</b></td><td><span style="color: #d97706; font-weight: bold;">⭐ +${g.points || 0}</span></td>${actionTd}</tr>`;
+            });
+        }
+
+        function loadLeaderboardTable() {
+            let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
+            let students = users.filter(u => u.role === 'دانش‌آموز');
+
+            let studentScores = students.map(st => {
+                return {
+                    name: st.name,
+                    grade: st.grade || 'نهم',
+                    totalPoints: calculateUserPoints(st.name)
+                };
+            });
+
+            studentScores.sort((a, b) => b.totalPoints - a.totalPoints);
+            let topStudents = studentScores.slice(0, 10);
+
+            leaderboardTableBody.innerHTML = '';
+            if (topStudents.length === 0) {
+                leaderboardTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #64748b;">هنوز دانش‌آموزی در سامانه ثبت نشده یا امتیازی کسب نکرده است.</td></tr>`;
+                return;
+            }
+
+            topStudents.forEach((st, index) => {
+                let rankBadge = index === 0 ? '🥇 اول' : (index === 1 ? '🥈 دوم' : (index === 2 ? '🥉 سوم' : `${index + 1}`));
+                leaderboardTableBody.innerHTML += `
+                    <tr>
+                        <td><b>${rankBadge}</b></td>
+                        <td>${st.name}</td>
+                        <td>${st.grade}</td>
+                        <td><span style="color: #d97706; font-weight: bold;">⭐ ${st.totalPoints} امتیاز</span></td>
+                    </tr>`;
+            });
+        }
+
+        // تابع نمایش لیست کل دانش‌آموزان مدرسه به تفکیک پایه و کلاس
+        function loadSchoolDirectoryTable() {
+            let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
+            let students = users.filter(u => u.role === 'دانش‌آموز');
+
+            schoolDirectoryTableBody.innerHTML = '';
+            if (students.length === 0) {
+                schoolDirectoryTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #64748b;">هیچ دانش‌آموزی در سامانه ثبت نشده است. از طریق پنل مدیر اقدام به ثبت‌نام کنید.</td></tr>`;
+                return;
+            }
+
+            students.forEach((st, idx) => {
+                schoolDirectoryTableBody.innerHTML += `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td><b>${st.name}</b></td>
+                        <td><span style="background: var(--secondary-blue); color: var(--dark-blue); padding: 3px 10px; border-radius: 20px; font-weight: bold;">پایه ${st.grade || 'نامشخص'}</span></td>
+                        <td>${st.nationalCode}</td>
+                    </tr>`;
             });
         }
 
@@ -1200,7 +1314,7 @@
             usersTableBody.innerHTML = '';
             if (users.length === 0) {
                 usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">کاربر ثبت‌شده‌ای وجود ندارد.</td></tr>';
-                        return;
+                return;
             }
             users.forEach((u, idx) => {
                 usersTableBody.innerHTML += `
