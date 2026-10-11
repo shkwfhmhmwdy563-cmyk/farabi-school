@@ -191,7 +191,7 @@
             transform: scale(1.05);
         }
 
-        /* استایل کارت امتیاز طلایی جدید با تب‌های هفتگی، ماهانه و کل */
+        /* کارت امتیاز طلایی جدید */
         .score-card {
             background: linear-gradient(135deg, #f6d88c 0%, #d4af37 100%);
             color: #1a1a1a;
@@ -253,7 +253,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        /* دکمه‌های جابجایی بین هفتگی، ماهانه و کل */
         .score-tabs {
             display: flex;
             gap: 8px;
@@ -382,36 +381,36 @@
             color: var(--dark-blue);
             font-weight: bold;
         }
+
+        .hint-box {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 15px;
+            border: 1px dashed #cbd5e1;
+        }
     </style>
 </head>
 <body>
 
-    <!-- صفحه ورود -->
+    <!-- صفحه ورود با کد ملی -->
     <div id="login-section" class="container">
         <h2>ورود به سامانه فارابی</h2>
         <form id="login-form">
             <div class="form-group">
-                <label for="name">نام و نام خانوادگی:</label>
-                <input type="text" id="name" required placeholder="مثلاً: محمد محمودی">
-            </div>
-            <div class="form-group">
-                <label for="role">نقش کاربر:</label>
-                <select id="role" onchange="toggleGradeField()">
-                    <option value="دانش‌آموز">دانش‌آموز</option>
-                    <option value="معلم">معلم</option>
-                    <option value="مدیر">مدیر</option>
-                </select>
-            </div>
-            <div class="form-group" id="grade-group">
-                <label for="grade">پایه تحصیلی:</label>
-                <input type="text" id="grade" placeholder="مثلاً: دهم ریاضی و فیزیک">
-            </div>
-            <div class="form-group">
                 <label for="national-code">کد ملی:</label>
-                <input type="text" id="national-code" required placeholder="۱۰ رقم">
+                <input type="text" id="national-code" required placeholder="کد ملی خود را وارد کنید..." autocomplete="off">
             </div>
             <button type="submit">ورود به پنل کاربری</button>
         </form>
+        <div class="hint-box">
+            <b>راهنما برای تست:</b><br>
+            • دانش‌آموز (محمد محمودی): کد ملی <b>1234567890</b><br>
+            • معلم شیمی: کد ملی <b>0011223344</b><br>
+            • مدیر مدرسه: کد ملی <b>9988776655</b>
+        </div>
     </div>
 
     <!-- داشبورد اصلی -->
@@ -426,7 +425,6 @@
 
         <!-- پنل دانش‌آموز -->
         <div id="panel-student" class="hidden">
-            <!-- کارت امتیاز و رتبه با پشتیبانی از هفتگی، ماهانه و کل -->
             <div class="score-card">
                 <div class="score-header-flex">
                     <div class="score-info">
@@ -436,7 +434,6 @@
                     </div>
                     <div class="score-icon-box">🏆</div>
                 </div>
-                <!-- دکمه‌های تعویض حالت بازه زمانی -->
                 <div class="score-tabs">
                     <button class="score-tab-btn active" onclick="switchScorePeriod('weekly')">هفتگی</button>
                     <button class="score-tab-btn" onclick="switchScorePeriod('monthly')">ماهانه</button>
@@ -562,7 +559,7 @@
                 </div>
                 <div class="form-group">
                     <label>درس:</label>
-                    <input type="text" id="subject-name" required placeholder="مثلاً: شیمی">
+                    <input type="text" id="subject-name" required placeholder="مثلاً: علوم (شیمی نهم)">
                 </div>
                 <div class="form-group">
                     <label>نمره (از ۲۰):</label>
@@ -642,7 +639,18 @@
             <form id="schedule-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>انتخاب پایه تحصیلی:</label>
-                    <input type="text" id="schedule-grade" required placeholder="مثلاً: دهم ریاضی و فیزیک">
+                    <select id="schedule-grade">
+                        <optgroup label="متوسطه اول">
+                            <option value="هفتم">هفتم</option>
+                            <option value="هشتم">هشتم</option>
+                            <option value="نهم">نهم</option>
+                        </optgroup>
+                        <optgroup label="متوسطه دوم">
+                            <option value="دهم">دهم</option>
+                            <option value="یازدهم">یازدهم</option>
+                            <option value="دوازدهم">دوازدهم</option>
+                        </optgroup>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>روز هفته:</label>
@@ -735,6 +743,13 @@
     </div>
 
     <script>
+        // پایگاه داده پیش‌فرض کاربران (دانش‌آموزان، معلمان و مدیر)
+        const schoolUsers = [
+            { nationalCode: "1234567890", name: "محمد محمودی", role: "دانش‌آموز", grade: "نهم" },
+            { nationalCode: "0011223344", name: "استاد رضایی (معلم شیمی)", role: "معلم", grade: "" },
+            { nationalCode: "9988776655", name: "مدیر محترم (آقای ناصری)", role: "مدیر", grade: "" }
+        ];
+
         const loginForm = document.getElementById('login-form');
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
@@ -745,9 +760,6 @@
         const scorePeriodTitle = document.getElementById('score-period-title');
         const gradeInfoBox = document.getElementById('grade-info-box');
         const logoutBtn = document.getElementById('logout-btn');
-        const roleSelect = document.getElementById('role');
-        const gradeGroup = document.getElementById('grade-group');
-        const gradeInput = document.getElementById('grade');
 
         const panelStudent = document.getElementById('panel-student');
         const panelTeacher = document.getElementById('panel-teacher');
@@ -776,18 +788,6 @@
         const homeworkListBox = document.getElementById('homework-list-box');
         const messagesListBox = document.getElementById('messages-list-box');
 
-        function toggleGradeField() {
-            if (roleSelect.value === 'دانش‌آموز') {
-                gradeGroup.style.display = 'block';
-                gradeInput.required = true;
-            } else {
-                gradeGroup.style.display = 'none';
-                gradeInput.required = false;
-                gradeInput.value = '';
-            }
-        }
-
-        // تابع محاسبه امتیازات با فیلتر بازه زمانی (هفتگی، ماهانه، کل)
         function calculateUserPoints(studentName, period = 'weekly') {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             let totalPoints = 0;
@@ -811,7 +811,6 @@
             return totalPoints;
         }
 
-        // تغییر حالت نمایش امتیاز بر اساس دکمه‌های هفتگی، ماهانه، کل
         function switchScorePeriod(period) {
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             const buttons = document.querySelectorAll('.score-tab-btn');
@@ -867,21 +866,23 @@
             } else {
                 dashboardSection.classList.add('hidden');
                 loginSection.classList.remove('hidden');
-                toggleGradeField();
             }
         }
 
+        // ورود هوشمند فقط با وارد کردن کد ملی
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const selectedRole = roleSelect.value;
-            const userData = {
-                name: document.getElementById('name').value.trim(),
-                role: selectedRole,
-                grade: selectedRole === 'دانش‌آموز' ? gradeInput.value.trim() : '',
-                nationalCode: document.getElementById('national-code').value
-            };
-            localStorage.setItem('farabi_user', JSON.stringify(userData));
-            checkLogin();
+            const inputCode = document.getElementById('national-code').value.trim();
+            
+            // جستجوی کد ملی در لیست کاربران مدرسه
+            const foundUser = schoolUsers.find(u => u.nationalCode === inputCode);
+
+            if (foundUser) {
+                localStorage.setItem('farabi_user', JSON.stringify(foundUser));
+                checkLogin();
+            } else {
+                alert('کد ملی وارد شده در سامانه ثبت نشده است! (لطفاً از کد ملی‌های راهنما استفاده کنید)');
+            }
         });
 
         logoutBtn.addEventListener('click', function() {
@@ -933,7 +934,7 @@
                 subject: document.getElementById('subject-name').value,
                 score: document.getElementById('score-val').value,
                 points: document.getElementById('points-val').value || 0,
-                date: new Date().toISOString() // ذخیره تاریخ برای محاسبه هفتگی و ماهانه
+                date: new Date().toISOString()
             };
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             grades.push(newGrade);
@@ -983,7 +984,7 @@
         scheduleForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newSchedule = {
-                grade: document.getElementById('schedule-grade').value.trim(),
+                grade: document.getElementById('schedule-grade').value,
                 day: document.getElementById('schedule-day').value,
                 time: document.getElementById('schedule-time').value,
                 lesson: document.getElementById('schedule-lesson').value
@@ -1029,7 +1030,7 @@
             }
 
             schedules.forEach(s => {
-                scheduleTableBody.innerHTML += `<tr><td><b>${s.grade}</b></td><td>${s.day}</td><td>${s.time}</td><td><b>${s.lesson}</b></td></tr>`;
+                scheduleTableBody.innerHTML += `<tr><td><b>پایه ${s.grade}</b></td><td>${s.day}</td><td>${s.time}</td><td><b>${s.lesson}</b></td></tr>`;
             });
         }
 
