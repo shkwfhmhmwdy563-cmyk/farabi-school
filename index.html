@@ -331,9 +331,14 @@
             <button class="logout-btn" id="logout-btn">خروج از حساب</button>
         </div>
 
-        <!-- پنل دانش‌آموز -->
+        <!-- پنل میز کار دانش‌آموز -->
         <div id="panel-student" class="hidden">
-            <h3 class="section-title">آموزش و یادگیری</h3>
+            <div style="background: linear-gradient(135deg, var(--secondary-blue), #e2e8f0); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid #cbd5e1;">
+                <h3 style="color: var(--dark-blue); font-size: 18px;">💻 میز کار الکترونیک شما</h3>
+                <p style="font-size: 13px; color: var(--text-sub); margin-top: 4px;">تمامی ابزارهای آموزشی، تکالیف و نمرات شما روی این میز کار آماده است.</p>
+            </div>
+
+            <h3 class="section-title">آموزش و کلاس‌ها</h3>
             <div class="grid">
                 <div class="card" onclick="window.open('https://fanotech.ir', '_blank')">
                     <div class="card-icon">📚</div>
@@ -345,6 +350,20 @@
                     <h3>کتابخانه و جزوات</h3>
                     <p>دانلود جزوات و نکات درسی</p>
                 </div>
+                <div class="card" onclick="showScheduleView()">
+                    <div class="card-icon">📅</div>
+                    <h3>برنامه هفتگی</h3>
+                    <p>مشاهده ساعت کلاس‌ها</p>
+                </div>
+                <div class="card" onclick="showMessagesView()">
+                    <div class="card-icon">🔔</div>
+                    <h3>تابلو اعلانات</h3>
+                    <p>پیام‌ها و اطلاعیه‌های مدرسه</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">تکالیف و ارزیابی</h3>
+            <div class="grid">
                 <div class="card" onclick="showHomeworkStudentView()">
                     <div class="card-icon">📝</div>
                     <h3>تکالیف درسی</h3>
@@ -355,45 +374,50 @@
                     <h3>آزمون آنلاین</h3>
                     <p>تستی و تشریحی</p>
                 </div>
-            </div>
-
-            <h3 class="section-title">امور آموزشی و پیشرفت</h3>
-            <div class="grid">
                 <div class="card" onclick="showStudentGrades()">
                     <div class="card-icon">📊</div>
                     <h3>کارنامه و نمرات من</h3>
-                    <p>مشاهده نمرات و ستاره‌های اختصاصی</p>
-                </div>
-                <div class="card" onclick="showLeaderboardView()">
-                    <div class="card-icon">🏆</div>
-                    <h3>۱۰ نفر برتر سامانه</h3>
-                    <p>مشاهده رتبه‌بندی برترین امتیازات</p>
-                </div>
-                <div class="card" onclick="showSchoolDirectoryView()">
-                    <div class="card-icon">🏫</div>
-                    <h3>لیست کل مدرسه و پایه‌ها</h3>
-                    <p>مشاهده کلاس‌ها و دانش‌آموزان</p>
+                    <p>مشاهده نمرات و ستاره‌ها</p>
                 </div>
                 <div class="card" onclick="showProgressReport()">
                     <div class="card-icon">📈</div>
-                    <h3>گزارش پیشرفت تحصیلی</h3>
-                    <p>تحلیل نموداری امتیازات و معدل</p>
+                    <h3>گزارش پیشرفت</h3>
+                    <p>تحلیل نموداری عملکرد</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">ارتباط و رتبه‌بندی</h3>
+            <div class="grid">
+                <div class="card" onclick="showLeaderboardView()">
+                    <div class="card-icon">🏆</div>
+                    <h3>۱۰ نفر برتر سامانه</h3>
+                    <p>برترین امتیازات مدرسه</p>
+                </div>
+                <div class="card" onclick="showSchoolDirectoryView()">
+                    <div class="card-icon">🏫</div>
+                    <h3>لیست کل مدرسه</h3>
+                    <p>مشاهده پایه‌ها و دانش‌آموزان</p>
                 </div>
             </div>
         </div>
 
-        <!-- پنل معلم -->
+        <!-- پنل میز کار معلم -->
         <div id="panel-teacher" class="hidden">
-            <h3 class="section-title">مدیریت آموزش و ارزیابی</h3>
+            <div style="background: linear-gradient(135deg, var(--secondary-blue), #e2e8f0); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid #cbd5e1;">
+                <h3 style="color: var(--dark-blue); font-size: 18px;">💻 میز کار تدریس و ارزیابی</h3>
+                <p style="font-size: 13px; color: var(--text-sub); margin-top: 4px;">ابزارهای ثبت نمره، طراحی آزمون و مدیریت کلاس در اختیار شماست.</p>
+            </div>
+
+            <h3 class="section-title">ابزارهای ارزیابی و محتوا</h3>
             <div class="grid">
                 <div class="card" onclick="openGradeForm()">
                     <div class="card-icon">📝</div>
                     <h3>ثبت نمره و امتیاز</h3>
-                    <p>ثبت نمره و امتیاز تشویقی دانش‌آموز</p>
+                    <p>ثبت نمره و ستاره تشویقی</p>
                 </div>
                 <div class="card" onclick="openLibraryForm()">
                     <div class="card-icon">📤</div>
-                    <h3>بارگذاری جزوه و فایل</h3>
+                    <h3>بارگذاری جزوه</h3>
                     <p>افزودن محتوای آموزشی</p>
                 </div>
                 <div class="card" onclick="openHomeworkForm()">
@@ -404,31 +428,31 @@
                 <div class="card" onclick="openExamForm()">
                     <div class="card-icon">✍️</div>
                     <h3>طراحی آزمون آنلاین</h3>
-                    <p>ساخت آزمون تستی و تشریحی</p>
+                    <p>ساخت آزمون تستی/تشریحی</p>
                 </div>
             </div>
 
-            <h3 class="section-title">ارتباطات و برنامه‌ریزی</h3>
+            <h3 class="section-title">مدیریت و نظارت</h3>
             <div class="grid">
+                <div class="card" onclick="showGradesManagerView()">
+                    <div class="card-icon">⚙️</div>
+                    <h3>مدیریت کل نمرات</h3>
+                    <p>ویرایش یا حذف نمرات ثبت‌شده</p>
+                </div>
                 <div class="card" onclick="showSchoolDirectoryView()">
                     <div class="card-icon">🏫</div>
-                    <h3>کلاس‌ها و پایه‌های مدرسه</h3>
-                    <p>مشاهده لیست کل دانش‌آموزان مدرسه</p>
+                    <h3>کلاس‌ها و پایه‌ها</h3>
+                    <p>مشاهده لیست دانش‌آموزان</p>
                 </div>
                 <div class="card" onclick="showLeaderboardView()">
                     <div class="card-icon">🏆</div>
                     <h3>۱۰ نفر برتر سامانه</h3>
-                    <p>بررسی جدول رتبه‌بندی دانش‌آموزان</p>
+                    <p>بررسی جدول رتبه‌بندی</p>
                 </div>
                 <div class="card" onclick="showLibraryView()">
                     <div class="card-icon">📖</div>
                     <h3>کتابخانه درسی</h3>
-                    <p>مدیریت و حذف جزوات</p>
-                </div>
-                <div class="card" onclick="showGradesManagerView()">
-                    <div class="card-icon">⚙️</div>
-                    <h3>مدیریت و مشاهده کل نمرات</h3>
-                    <p>ویرایش یا حذف نمرات ثبت‌شده</p>
+                    <p>مدیریت جزوات</p>
                 </div>
             </div>
         </div>
@@ -462,7 +486,7 @@
 
         <!-- فرم ثبت‌نام کاربر -->
         <div id="manager-user-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>ثبت دانش‌آموز یا معلم جدید در سامانه</h3>
             <form id="user-register-form" style="margin-top: 15px;">
                 <div class="form-group">
@@ -490,7 +514,7 @@
 
         <!-- فرم بارگذاری جزوه و کتابخانه -->
         <div id="library-upload-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>بارگذاری جزوه یا محتوای آموزشی جدید</h3>
             <form id="library-form" style="margin-top: 15px;">
                 <div class="form-group">
@@ -511,7 +535,7 @@
 
         <!-- فرم ثبت نمره و امتیاز -->
         <div id="teacher-grade-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>ثبت نمره و امتیاز برای دانش‌آموز</h3>
             <form id="grade-form" style="margin-top: 15px;">
                 <div class="form-group">
@@ -536,7 +560,7 @@
 
         <!-- فرم تعریف تکلیف -->
         <div id="teacher-homework-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>تعریف تکلیف جدید</h3>
             <form id="homework-form" style="margin-top: 15px;">
                 <div class="form-group">
@@ -557,7 +581,7 @@
 
         <!-- فرم طراحی آزمون آنلاین -->
         <div id="teacher-exam-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>طراحی آزمون آنلاین جدید</h3>
             <form id="exam-create-form" style="margin-top: 15px;">
                 <div class="form-group">
@@ -578,7 +602,7 @@
 
         <!-- فرم ارسال پیام -->
         <div id="manager-message-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>ارسال اطلاعیه جدید</h3>
             <form id="message-form" style="margin-top: 15px;">
                 <div class="form-group">
@@ -595,7 +619,7 @@
 
         <!-- فرم ثبت برنامه هفتگی -->
         <div id="manager-schedule-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>افزودن درس به برنامه هفتگی</h3>
             <form id="schedule-form" style="margin-top: 15px;">
                 <div class="form-group">
@@ -626,7 +650,7 @@
 
         <!-- جدول نمرات -->
         <div id="grades-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3 id="grades-section-title">کارنامه و نمرات من</h3>
             <table>
                 <thead>
@@ -644,7 +668,7 @@
 
         <!-- جدول ۱۰ نفر برتر (لیدربورد) -->
         <div id="leaderboard-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>🏆 جدول رتبه‌بندی ۱۰ دانش‌آموز برتر سامانه</h3>
             <p style="font-size: 13px; color: var(--text-sub); margin-top: 5px;">بر اساس مجموع امتیازات و ستاره‌های کسب‌شده در فعالیت‌های مدرسه</p>
             <table>
@@ -662,7 +686,7 @@
 
         <!-- بخش کل مدرسه: لیست دانش‌آموزان به تفکیک پایه و کلاس -->
         <div id="school-directory-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>🏫 دایرکتوری و لیست کل دانش‌آموزان مدرسه فارابی</h3>
             <p style="font-size: 13px; color: var(--text-sub); margin-top: 5px;">مشاهده تفکیکی پایه‌ها و کلاس‌های دایر در مدرسه</p>
             <table>
@@ -680,21 +704,21 @@
 
         <!-- کتابخانه جزوات -->
         <div id="library-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>کتابخانه و جزوات آموزشی</h3>
             <div id="library-list-box" style="margin-top: 15px;"></div>
         </div>
 
         <!-- گزارش پیشرفت تحصیلی -->
         <div id="progress-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>گزارش پیشرفت تحصیلی و تحلیل عملکرد</h3>
             <div id="progress-content-box" style="margin-top: 15px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;"></div>
         </div>
 
         <!-- جدول برنامه هفتگی -->
         <div id="schedule-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>برنامه هفتگی کلاس‌های مدرسه فارابی</h3>
             <table>
                 <thead>
@@ -711,28 +735,28 @@
 
         <!-- تکالیف دانش‌آموز -->
         <div id="homework-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>لیست تکالیف درسی</h3>
             <div id="homework-list-box" style="margin-top: 15px;"></div>
         </div>
 
         <!-- پیام‌های مدرسه -->
         <div id="messages-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>تابلو اعلانات و پیام‌های مدرسه</h3>
             <div id="messages-list-box" style="margin-top: 15px;"></div>
         </div>
 
         <!-- آزمون آنلاین -->
         <div id="exam-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>آزمون آنلاین فعال</h3>
             <div id="exam-container-box" style="margin-top: 15px;"></div>
         </div>
 
         <!-- پنل مدیریت کاربران -->
         <div id="manager-control-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>مدیریت کاربران سامانه</h3>
             <table>
                 <thead>
@@ -950,7 +974,7 @@
 
         function showStudentGrades() { closeSubPanels(); panelStudent.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showGradesManagerView() { closeSubPanels(); panelTeacher.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
-        
+
         function showLeaderboardView() { 
             closeSubPanels(); 
             panelStudent.classList.add('hidden'); 
@@ -1168,7 +1192,6 @@
             });
         }
 
-        // تابع نمایش لیست کل دانش‌آموزان مدرسه به تفکیک پایه و کلاس
         function loadSchoolDirectoryTable() {
             let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
             let students = users.filter(u => u.role === 'دانش‌آموز');
