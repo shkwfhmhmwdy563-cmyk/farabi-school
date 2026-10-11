@@ -9,7 +9,8 @@
             --primary: #4f46e5;
             --primary-hover: #4338ca;
             --primary-light: #e0e7ff;
-            --accent: #f59e0b;
+            --success: #0d9488;
+            --success-hover: #0f766e;
             --dark: #0f172a;
             --gray-text: #64748b;
             --bg-body: #f8fafc;
@@ -136,7 +137,6 @@
             animation: fadeIn 0.5s ease-out;
         }
 
-        /* هدر میز کار جدید و شیک */
         .workspace-header {
             background: linear-gradient(135deg, #4f46e5, #3b82f6);
             color: white;
@@ -202,7 +202,6 @@
             border-radius: 2px;
         }
 
-        /* گرید کارت‌های میز کار */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -557,16 +556,20 @@
             <h3>تعریف تکلیف جدید</h3>
             <form id="homework-form" style="margin-top: 15px;">
                 <div class="form-group">
-                    <label>عنوان درس:</label>
-                    <input type="text" id="hw-subject" required placeholder="علوم تجربی">
+                    <label>عنوان تکلیف (مثلاً تمرین ص ۷):</label>
+                    <input type="text" id="hw-title" required placeholder="تمرین ص ۷">
+                </div>
+                <div class="form-group">
+                    <label>نام درس و دبیر:</label>
+                    <input type="text" id="hw-subject" required placeholder="ریاضی - دبیر: اسلام صارمی">
                 </div>
                 <div class="form-group">
                     <label>شرح تکلیف:</label>
-                    <textarea id="hw-desc" rows="3" required placeholder="توضیحات تکالیف..."></textarea>
+                    <textarea id="hw-desc" rows="3" required placeholder="نوشتن و حل تمرینات در دفتر..."></textarea>
                 </div>
                 <div class="form-group">
                     <label>مهلت تحویل:</label>
-                    <input type="text" id="hw-deadline" required placeholder="چهارشنبه ساعت ۱۸">
+                    <input type="text" id="hw-deadline" required placeholder="۲۰ مهر ۱۴۰۵">
                 </div>
                 <button type="submit">انتشار تکلیف</button>
             </form>
@@ -670,9 +673,10 @@
             </table>
         </div>
 
+        <!-- بخش تکالیف مشابه تصویر انتخابی شما -->
         <div id="homework-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
-            <h3>تکالیف درسی</h3>
+            <h3>تکالیف من</h3>
             <div id="homework-list-box" style="margin-top: 15px;"></div>
         </div>
 
@@ -906,12 +910,14 @@
             e.preventDefault();
             let homeworks = JSON.parse(localStorage.getItem('farabi_homeworks') || '[]');
             homeworks.push({
-                subject: document.getElementById('hw-subject').value,
-                desc: document.getElementById('hw-desc').value,
-                deadline: document.getElementById('hw-deadline').value
+                title: document.getElementById('hw-title').value.trim(),
+                subject: document.getElementById('hw-subject').value.trim(),
+                desc: document.getElementById('hw-desc').value.trim(),
+                deadline: document.getElementById('hw-deadline').value.trim(),
+                status: '⏳ هنوز انجام نداده‌ای'
             });
             localStorage.setItem('farabi_homeworks', JSON.stringify(homeworks));
-            alert('تکلیف منتشر شد!');
+            alert('تکلیف با موفقیت منتشر شد!');
             homeworkForm.reset();
             closeSubPanels();
         });
@@ -996,6 +1002,14 @@
             }
         }
 
+        function submitHomework(index) {
+            let homeworks = JSON.parse(localStorage.getItem('farabi_homeworks') || '[]');
+            homeworks[index].status = '🕒 در انتظار بررسی دبیر';
+            localStorage.setItem('farabi_homeworks', JSON.stringify(homeworks));
+            alert('پاسخ تکلیف با موفقیت ارسال شد و در انتظار بررسی دبیر است!');
+            loadHomeworkList();
+        }
+
         function loadGradesTable() {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
@@ -1074,9 +1088,29 @@
 
         function loadHomeworkList() {
             let homeworks = JSON.parse(localStorage.getItem('farabi_homeworks') || '[]');
-            homeworkListBox.innerHTML = homeworks.length === 0 ? '<p style="color: var(--gray-text);">تکلیفی نیست.</p>' : '';
-            homeworks.forEach(hw => {
-                homeworkListBox.innerHTML += `<div style="background: #f8fafc; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 10px;"><h4>درس: ${hw.subject}</h4><p style="margin: 4px 0; font-size: 13px; color: var(--gray-text);">${hw.desc}</p><p style="font-size: 11px; color: #d97706;">مهلت: ${hw.deadline}</p><button onclick="alert('ارسال شد!')" style="width: auto; padding: 5px 12px; font-size: 12px; margin-top: 6px;">ارسال پاسخ</button></div>`;
+            if (homeworks.length === 0) {
+                homeworks = [
+                    { title: 'تمرین ص ۷', subject: 'درس: ریاضی – دبیر: اسلام صارمی', desc: 'نوشتن و حل تمرینات در دفتر', deadline: 'مهلت: ۲۰ مهر ۱۴۰۵', status: '⏳ هنوز انجام نداده‌ای' },
+                    { title: 'رسم مثلث با استفاده از خط و پرگار', subject: 'درس: هندسه – دبیر: علی طاهری', desc: 'رسم دقیق شکل‌های هندسی صفحه ۱۵', deadline: 'مهلت: ۲۲ مهر ۱۴۰۵', status: '⏳ هنوز انجام نداده‌ای' }
+                ];
+                localStorage.setItem('farabi_homeworks', JSON.stringify(homeworks));
+            }
+
+            homeworkListBox.innerHTML = '';
+            homeworks.forEach((hw, idx) => {
+                homeworkListBox.innerHTML += `
+                    <div style="background: white; padding: 18px; border-radius: 16px; border: 1px solid #e2e8f0; margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <h4 style="color: var(--dark); font-size: 16px;">${hw.title}</h4>
+                            <span style="font-size: 12px; font-weight: bold; color: ${hw.status.includes('در انتظار') ? '#d97706' : '#b45309'};">${hw.status}</span>
+                        </div>
+                        <p style="font-size: 12px; color: var(--gray-text); margin-bottom: 8px;">${hw.subject} – ${hw.deadline}</p>
+                        <p style="font-size: 13px; color: #334155; margin-bottom: 12px;">${hw.desc}</p>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="file" style="flex: 1; padding: 8px; font-size: 12px; border: 1px dashed #cbd5e1; background: #f8fafc; border-radius: 10px;">
+                            <button onclick="submitHomework(${idx})" style="background: var(--success); width: auto; padding: 10px 20px; font-size: 13px; margin-top: 0; box-shadow: 0 4px 10px rgba(13, 148, 136, 0.2);">انجام دادم ✅</button>
+                        </div>
+                    </div>`;
             });
         }
 
