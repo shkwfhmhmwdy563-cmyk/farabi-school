@@ -305,7 +305,7 @@
             <button type="submit">ورود به پنل کاربری</button>
         </form>
         <p style="text-align: center; margin-top: 15px; font-size: 12px; color: var(--text-sub);">
-            نکته مدیریت: مدیر سامانه با کد ملی پیش‌فرض <b>1234567890</b> وارد می‌شود.
+            مدیر سامانه با کد ملی پیش‌فرض <b>1234567890</b> وارد می‌شود.
         </p>
     </div>
 
@@ -323,10 +323,10 @@
         <div id="panel-student" class="hidden">
             <h3 class="section-title">آموزش و یادگیری</h3>
             <div class="grid">
-                <div class="card" onclick="window.open('https://www.skyroom.online', '_blank')">
+                <div class="card" onclick="window.open('https://fanotech.ir', '_blank')">
                     <div class="card-icon">📚</div>
                     <h3>کلاس‌های آنلاین</h3>
-                    <p>ورود به اسکای‌روم مدرسه</p>
+                    <p>ورود به سامانه فنو‌تک</p>
                 </div>
                 <div class="card" onclick="showHomeworkStudentView()">
                     <div class="card-icon">📝</div>
@@ -388,10 +388,10 @@
 
             <h3 class="section-title">ارتباطات و برنامه‌ریزی</h3>
             <div class="grid">
-                <div class="card" onclick="window.open('https://www.skyroom.online', '_blank')">
+                <div class="card" onclick="window.open('https://fanotech.ir', '_blank')">
                     <div class="card-icon">💻</div>
                     <h3>کلاس آنلاین</h3>
-                    <p>شروع جلسه تدریس</p>
+                    <p>شروع جلسه در فنو‌تک</p>
                 </div>
                 <div class="card" onclick="showScheduleView()">
                     <div class="card-icon">📅</div>
@@ -765,12 +765,10 @@
             }
         }
 
-        // ورود هوشمند فقط با کد ملی (بر اساس کاربران ثبت‌شده توسط مدیر)
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const code = nationalCodeInput.value.trim();
 
-            // کد ملی پیش‌فرض مدیر سامانه
             if (code === '1234567890') {
                 const managerData = { name: 'مدیر محترم سامانه', role: 'مدیر', nationalCode: code };
                 localStorage.setItem('farabi_user', JSON.stringify(managerData));
@@ -778,7 +776,6 @@
                 return;
             }
 
-            // جستجوی کد ملی در بین کاربران ثبت‌شده توسط مدیر
             let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
             let foundUser = users.find(u => u.nationalCode === code);
 
@@ -798,7 +795,6 @@
             }
         });
 
-        // ثبت کاربر جدید توسط مدیر
         userRegisterForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newUser = {
@@ -809,7 +805,6 @@
             };
 
             let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
-            // بررسی تکراری نبودن کد ملی
             if(users.some(u => u.nationalCode === newUser.nationalCode)) {
                 alert('این کد ملی قبلاً در سامانه ثبت شده است!');
                 return;
@@ -817,7 +812,7 @@
 
             users.push(newUser);
             localStorage.setItem('farabi_users', JSON.stringify(users));
-            alert('کاربر جدید با موفقیت در سامانه ثبت شد و اکنون با کد ملی خود می‌تواند وارد شود!');
+            alert('کاربر جدید با موفقیت در سامانه ثبت شد!');
             userRegisterForm.reset();
             closeSubPanels();
         });
@@ -901,7 +896,7 @@
             let exams = JSON.parse(localStorage.getItem('farabi_exams') || '[]');
             exams.push(newExam);
             localStorage.setItem('farabi_exams', JSON.stringify(exams));
-            alert('آزمون آنلاین با موفقیت ایجاد و برای دانش‌آموزان منتشر شد!');
+            alert('آزمون آنلاین با موفقیت ایجاد و منتشر شد!');
             examCreateForm.reset();
             closeSubPanels();
         });
@@ -1008,7 +1003,7 @@
                         <input type="text" placeholder="پاسخ خود را بنویسید..." style="margin: 8px 0 15px 0;">
                         <p><b>سوال ۲ (تشریحی):</b> ${ex.q2}</p>
                         <textarea rows="2" placeholder="پاسخ تشریحی..." style="margin: 8px 0;"></textarea>
-                        <button onclick="alert('پاسخنامه آزمون با موفقیت ثبت‌نام و ارسال شد!')" style="width: auto; padding: 8px 20px; font-size: 13px; margin-top: 10px;">ارسال پاسخنامه</button>
+                        <button onclick="alert('پاسخنامه آزمون با موفقیت ثبت و ارسال شد!')" style="width: auto; padding: 8px 20px; font-size: 13px; margin-top: 10px;">ارسال پاسخنامه</button>
                     </div>`;
             });
         }
