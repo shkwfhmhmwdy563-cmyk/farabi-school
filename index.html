@@ -294,32 +294,19 @@
 </head>
 <body>
 
-    <!-- صفحه ورود -->
+    <!-- صفحه ورود (فقط با کد ملی) -->
     <div id="login-section" class="container">
         <h2>ورود به سامانه فارابی</h2>
         <form id="login-form">
             <div class="form-group">
-                <label for="name">نام و نام خانوادگی:</label>
-                <input type="text" id="name" required placeholder="مثلاً: علی موسی">
-            </div>
-            <div class="form-group">
-                <label for="role">نقش کاربر:</label>
-                <select id="role" onchange="toggleGradeField()">
-                    <option value="دانش‌آموز">دانش‌آموز</option>
-                    <option value="معلم">معلم</option>
-                    <option value="مدیر">مدیر</option>
-                </select>
-            </div>
-            <div class="form-group" id="grade-group">
-                <label for="grade">پایه تحصیلی:</label>
-                <input type="text" id="grade" placeholder="مثلاً: نهم">
-            </div>
-            <div class="form-group">
                 <label for="national-code">کد ملی:</label>
-                <input type="text" id="national-code" required placeholder="۱۰ رقم">
+                <input type="text" id="national-code" required placeholder="کد ملی ۱۰ رقمی خود را وارد کنید">
             </div>
             <button type="submit">ورود به پنل کاربری</button>
         </form>
+        <p style="text-align: center; margin-top: 15px; font-size: 12px; color: var(--text-sub);">
+            نکته مدیریت: مدیر سامانه با کد ملی پیش‌فرض <b>1234567890</b> وارد می‌شود.
+        </p>
     </div>
 
     <!-- داشبورد اصلی -->
@@ -421,8 +408,13 @@
 
         <!-- پنل مدیر -->
         <div id="panel-manager" class="hidden">
-            <h3 class="section-title">مدیریت کل مدرسه</h3>
+            <h3 class="section-title">مدیریت کل مدرسه و کاربران</h3>
             <div class="grid">
+                <div class="card" onclick="openUserRegisterForm()">
+                    <div class="card-icon">👥</div>
+                    <h3>ثبت‌نام کاربر جدید</h3>
+                    <p>تعریف دانش‌آموز یا معلم جدید</p>
+                </div>
                 <div class="card" onclick="openScheduleForm()">
                     <div class="card-icon">📅</div>
                     <h3>ثبت برنامه هفتگی</h3>
@@ -430,7 +422,7 @@
                 </div>
                 <div class="card" onclick="openMessageForm()">
                     <div class="card-icon">📢</div>
-                    ### ارسال پیام عمومی
+                    <h3>ارسال پیام عمومی</h3>
                     <p>اعلامیه برای همه</p>
                 </div>
                 <div class="card" onclick="showMessagesView()">
@@ -438,12 +430,35 @@
                     <h3>پیام‌های مدرسه</h3>
                     <p>مشاهده لیست پیام‌ها</p>
                 </div>
-                <div class="card" onclick="alert('مدیریت کاربران فعال است.')">
-                    <div class="card-icon">👥</div>
-                    <h3>مدیریت کاربران</h3>
-                    <p>معلمان و دانش‌آموزان</p>
-                </div>
             </div>
+        </div>
+
+        <!-- فرم ثبت‌نام کاربر توسط مدیر -->
+        <div id="manager-user-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>ثبت دانش‌آموز یا معلم جدید در سامانه</h3>
+            <form id="user-register-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>نام و نام خانوادگی:</label>
+                    <input type="text" id="reg-name" required placeholder="مثلاً: رضا رضایی">
+                </div>
+                <div class="form-group">
+                    <label>نقش کاربر:</label>
+                    <select id="reg-role" onchange="toggleRegGradeField()">
+                        <option value="دانش‌آموز">دانش‌آموز</option>
+                        <option value="معلم">معلم</option>
+                    </select>
+                </div>
+                <div class="form-group" id="reg-grade-group">
+                    <label>پایه تحصیلی (مخصوص دانش‌آموز):</label>
+                    <input type="text" id="reg-grade" placeholder="مثلاً: نهم">
+                </div>
+                <div class="form-group">
+                    <label>کد ملی (رمز ورود):</label>
+                    <input type="text" id="reg-national-code" required placeholder="۱۰ رقم">
+                </div>
+                <button type="submit">ثبت و ذخیره کاربر در سامانه</button>
+            </form>
         </div>
 
         <!-- فرم ثبت نمره و امتیاز -->
@@ -492,7 +507,7 @@
             </form>
         </div>
 
-        <!-- فرم طراحی آزمون آنلاین (معلم) -->
+        <!-- فرم طراحی آزمون آنلاین -->
         <div id="teacher-exam-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
             <h3>طراحی آزمون آنلاین جدید</h3>
@@ -537,7 +552,7 @@
         <!-- فرم ارسال پیام -->
         <div id="manager-message-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            ### ارسال اطلاعیه جدید
+            <h3>ارسال اطلاعیه جدید</h3>
             <form id="message-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>عنوان پیام:</label>
@@ -558,7 +573,7 @@
             <form id="schedule-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>انتخاب پایه تحصیلی:</label>
-                    <input type="text" id="schedule-grade" required placeholder="مثلاً: نهم (یا هفتم، هشتم)">
+                    <input type="text" id="schedule-grade" required placeholder="مثلاً: نهم">
                 </div>
                 <div class="form-group">
                     <label>روز هفته:</label>
@@ -602,7 +617,7 @@
         <!-- جدول برنامه هفتگی -->
         <div id="schedule-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            ### برنامه هفتگی کلاس‌های مدرسه فارابی
+            <h3>برنامه هفتگی کلاس‌های مدرسه فارابی</h3>
             <table>
                 <thead>
                     <tr>
@@ -630,7 +645,7 @@
             <div id="messages-list-box" style="margin-top: 15px;"></div>
         </div>
 
-        <!-- آزمون آنلاین (شرکت دانش‌آموز) -->
+        <!-- آزمون آنلاین -->
         <div id="exam-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
             <h3>آزمون آنلاین فعال</h3>
@@ -649,14 +664,13 @@
         const gradeInfoBox = document.getElementById('grade-info-box');
         const pointsInfoBox = document.getElementById('points-info-box');
         const logoutBtn = document.getElementById('logout-btn');
-        const roleSelect = document.getElementById('role');
-        const gradeGroup = document.getElementById('grade-group');
-        const gradeInput = document.getElementById('grade');
+        const nationalCodeInput = document.getElementById('national-code');
 
         const panelStudent = document.getElementById('panel-student');
         const panelTeacher = document.getElementById('panel-teacher');
         const panelManager = document.getElementById('panel-manager');
 
+        const managerUserSection = document.getElementById('manager-user-section');
         const teacherGradeSection = document.getElementById('teacher-grade-section');
         const teacherHomeworkSection = document.getElementById('teacher-homework-section');
         const teacherExamSection = document.getElementById('teacher-exam-section');
@@ -670,6 +684,7 @@
         const messagesViewSection = document.getElementById('messages-view-section');
         const examViewSection = document.getElementById('exam-view-section');
 
+        const userRegisterForm = document.getElementById('user-register-form');
         const gradeForm = document.getElementById('grade-form');
         const homeworkForm = document.getElementById('homework-form');
         const examCreateForm = document.getElementById('exam-create-form');
@@ -677,20 +692,24 @@
         const messageForm = document.getElementById('message-form');
         const scheduleForm = document.getElementById('schedule-form');
 
+        const regRoleSelect = document.getElementById('reg-role');
+        const regGradeGroup = document.getElementById('reg-grade-group');
+        const regGradeInput = document.getElementById('reg-grade');
+
         const gradesTableBody = document.getElementById('grades-table-body');
         const scheduleTableBody = document.getElementById('schedule-table-body');
         const homeworkListBox = document.getElementById('homework-list-box');
         const messagesListBox = document.getElementById('messages-list-box');
         const examContainerBox = document.getElementById('exam-container-box');
 
-        function toggleGradeField() {
-            if (roleSelect.value === 'دانش‌آموز') {
-                gradeGroup.style.display = 'block';
-                gradeInput.required = true;
+        function toggleRegGradeField() {
+            if (regRoleSelect.value === 'دانش‌آموز') {
+                regGradeGroup.style.display = 'block';
+                regGradeInput.required = true;
             } else {
-                gradeGroup.style.display = 'none';
-                gradeInput.required = false;
-                gradeInput.value = '';
+                regGradeGroup.style.display = 'none';
+                regGradeInput.required = false;
+                regGradeInput.value = '';
             }
         }
 
@@ -743,21 +762,32 @@
             } else {
                 dashboardSection.classList.add('hidden');
                 loginSection.classList.remove('hidden');
-                toggleGradeField();
             }
         }
 
+        // ورود هوشمند فقط با کد ملی (بر اساس کاربران ثبت‌شده توسط مدیر)
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const selectedRole = roleSelect.value;
-            const userData = {
-                name: document.getElementById('name').value,
-                role: selectedRole,
-                grade: selectedRole === 'دانش‌آموز' ? gradeInput.value.trim() : '',
-                nationalCode: document.getElementById('national-code').value
-            };
-            localStorage.setItem('farabi_user', JSON.stringify(userData));
-            checkLogin();
+            const code = nationalCodeInput.value.trim();
+
+            // کد ملی پیش‌فرض مدیر سامانه
+            if (code === '1234567890') {
+                const managerData = { name: 'مدیر محترم سامانه', role: 'مدیر', nationalCode: code };
+                localStorage.setItem('farabi_user', JSON.stringify(managerData));
+                checkLogin();
+                return;
+            }
+
+            // جستجوی کد ملی در بین کاربران ثبت‌شده توسط مدیر
+            let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
+            let foundUser = users.find(u => u.nationalCode === code);
+
+            if (foundUser) {
+                localStorage.setItem('farabi_user', JSON.stringify(foundUser));
+                checkLogin();
+            } else {
+                alert('کد ملی وارد شده در سامانه ثبت نشده است! از مدیر مدرسه بخواهید ابتدا شما را ثبت کند.');
+            }
         });
 
         logoutBtn.addEventListener('click', function() {
@@ -768,6 +798,31 @@
             }
         });
 
+        // ثبت کاربر جدید توسط مدیر
+        userRegisterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newUser = {
+                name: document.getElementById('reg-name').value.trim(),
+                role: regRoleSelect.value,
+                grade: regRoleSelect.value === 'دانش‌آموز' ? regGradeInput.value.trim() : '',
+                nationalCode: document.getElementById('reg-national-code').value.trim()
+            };
+
+            let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
+            // بررسی تکراری نبودن کد ملی
+            if(users.some(u => u.nationalCode === newUser.nationalCode)) {
+                alert('این کد ملی قبلاً در سامانه ثبت شده است!');
+                return;
+            }
+
+            users.push(newUser);
+            localStorage.setItem('farabi_users', JSON.stringify(users));
+            alert('کاربر جدید با موفقیت در سامانه ثبت شد و اکنون با کد ملی خود می‌تواند وارد شود!');
+            userRegisterForm.reset();
+            closeSubPanels();
+        });
+
+        function openUserRegisterForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerUserSection.classList.remove('hidden'); }
         function openGradeForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherGradeSection.classList.remove('hidden'); }
         function openHomeworkForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherHomeworkSection.classList.remove('hidden'); }
         function openExamForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherExamSection.classList.remove('hidden'); }
@@ -782,6 +837,7 @@
         function showOnlineExamView() { closeSubPanels(); panelStudent.classList.add('hidden'); examViewSection.classList.remove('hidden'); loadExamsList(); }
 
         function closeSubPanels() {
+            managerUserSection.classList.add('hidden');
             teacherGradeSection.classList.add('hidden');
             teacherHomeworkSection.classList.add('hidden');
             teacherExamSection.classList.add('hidden');
@@ -952,7 +1008,7 @@
                         <input type="text" placeholder="پاسخ خود را بنویسید..." style="margin: 8px 0 15px 0;">
                         <p><b>سوال ۲ (تشریحی):</b> ${ex.q2}</p>
                         <textarea rows="2" placeholder="پاسخ تشریحی..." style="margin: 8px 0;"></textarea>
-                        <button onclick="alert('پاسخنامه آزمون با موفقیت ثبت شد!')" style="width: auto; padding: 8px 20px; font-size: 13px; margin-top: 10px;">ارسال پاسخنامه</button>
+                        <button onclick="alert('پاسخنامه آزمون با موفقیت ثبت‌نام و ارسال شد!')" style="width: auto; padding: 8px 20px; font-size: 13px; margin-top: 10px;">ارسال پاسخنامه</button>
                     </div>`;
             });
         }
