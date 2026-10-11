@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدرسه فارابی - سامانه جامع هوشمند (سیبا)</title>
+    <title>مدرسه فارابی - سامانه جامع هوشمند</title>
     <style>
         :root {
             --primary-blue: #2563eb;
@@ -191,96 +191,6 @@
             transform: scale(1.05);
         }
 
-        .score-card {
-            background: linear-gradient(135deg, #f6d88c 0%, #d4af37 100%);
-            color: #1a1a1a;
-            border-radius: 16px;
-            padding: 20px 24px;
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
-            margin-bottom: 25px;
-            border: 1px solid #e8c850;
-        }
-
-        .score-header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .score-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .score-subtitle {
-            font-size: 13px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 4px;
-        }
-
-        .score-rank {
-            font-size: 28px;
-            font-weight: 800;
-            margin: 0;
-            color: #111;
-        }
-
-        .score-total {
-            font-size: 12px;
-            font-weight: normal;
-            color: #333;
-        }
-
-        .score-current {
-            font-size: 14px;
-            margin-top: 4px;
-            color: #111;
-            font-weight: bold;
-        }
-
-        .score-icon-box {
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-
-        .score-tabs {
-            display: flex;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            padding: 5px;
-            border-radius: 12px;
-        }
-
-        .score-tab-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 6px 10px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #444;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: none;
-            margin-top: 0;
-        }
-
-        .score-tab-btn.active {
-            background: #ffffff;
-            color: #1e3a8a;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
         .section-title {
             color: var(--dark-blue);
             margin-top: 20px;
@@ -380,16 +290,6 @@
             color: var(--dark-blue);
             font-weight: bold;
         }
-
-        .hint-box {
-            background: #f8fafc;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 15px;
-            border: 1px dashed #cbd5e1;
-        }
     </style>
 </head>
 <body>
@@ -399,18 +299,27 @@
         <h2>ورود به سامانه فارابی</h2>
         <form id="login-form">
             <div class="form-group">
+                <label for="name">نام و نام خانوادگی:</label>
+                <input type="text" id="name" required placeholder="مثلاً: علی موسی">
+            </div>
+            <div class="form-group">
+                <label for="role">نقش کاربر:</label>
+                <select id="role" onchange="toggleGradeField()">
+                    <option value="دانش‌آموز">دانش‌آموز</option>
+                    <option value="معلم">معلم</option>
+                    <option value="مدیر">مدیر</option>
+                </select>
+            </div>
+            <div class="form-group" id="grade-group">
+                <label for="grade">پایه تحصیلی:</label>
+                <input type="text" id="grade" placeholder="مثلاً: نهم">
+            </div>
+            <div class="form-group">
                 <label for="national-code">کد ملی:</label>
-                <input type="text" id="national-code" required placeholder="کد ملی ۱۰ رقمی..." autocomplete="off">
+                <input type="text" id="national-code" required placeholder="۱۰ رقم">
             </div>
             <button type="submit">ورود به پنل کاربری</button>
         </form>
-        <div class="hint-box">
-            <b>اطلاعات ورود پیش‌فرض:</b><br>
-            • دانش‌آموز (محمد محمودی): کد ملی <code>1234567890</code><br>
-            • استاد علوم (رضایی): کد ملی <code>0011223344</code><br>
-            • استاد ریاضی (کریمی): کد ملی <code>0022334455</code><br>
-            • مدیر مدرسه (آقای ناصری): کد ملی <code>9988776655</code>
-        </div>
     </div>
 
     <!-- داشبورد اصلی -->
@@ -418,32 +327,16 @@
         <div class="welcome-box">
             <div class="welcome-text">
                 <h3>خوش آمدید، <span id="user-display-name"></span> عزیز!</h3>
-                <p>نقش: <b><span id="user-display-role"></span></b> <span id="grade-info-box">| پایه: <b><span id="user-display-grade"></span></b></span></p>
+                <p>نقش: <b><span id="user-display-role"></span></b> <span id="grade-info-box">| پایه: <b><span id="user-display-grade"></span></b></span> <span id="points-info-box" style="margin-right: 10px;">| ⭐ امتیاز کل: <b id="user-display-points" style="color: #d97706;">0</b></span></p>
             </div>
             <button class="logout-btn" id="logout-btn">خروج از حساب</button>
         </div>
 
         <!-- پنل دانش‌آموز -->
         <div id="panel-student" class="hidden">
-            <div class="score-card">
-                <div class="score-header-flex">
-                    <div class="score-info">
-                        <span class="score-subtitle" id="score-period-title">رتبه‌ی تو در مدرسه (این هفته)</span>
-                        <h2 class="score-rank">۱۱۴ <span class="score-total">از ۲۳۱ دانش‌آموز</span></h2>
-                        <p class="score-current">امتیاز کسب‌شده: <span id="user-display-points">۰</span></p>
-                    </div>
-                    <div class="score-icon-box">🏆</div>
-                </div>
-                <div class="score-tabs">
-                    <button class="score-tab-btn active" onclick="switchScorePeriod('weekly')">هفتگی</button>
-                    <button class="score-tab-btn" onclick="switchScorePeriod('monthly')">ماهانه</button>
-                    <button class="score-tab-btn" onclick="switchScorePeriod('all')">همه (کل)</button>
-                </div>
-            </div>
-
             <h3 class="section-title">آموزش و یادگیری</h3>
             <div class="grid">
-                <div class="card" onclick="showOnlineClassView()">
+                <div class="card" onclick="window.open('https://www.skyroom.online', '_blank')">
                     <div class="card-icon">📚</div>
                     <h3>کلاس‌های آنلاین</h3>
                     <p>ورود به اسکای‌روم مدرسه</p>
@@ -494,6 +387,11 @@
                     <h3>تعریف تکلیف</h3>
                     <p>ارسال تکلیف جدید</p>
                 </div>
+                <div class="card" onclick="openExamForm()">
+                    <div class="card-icon">✍️</div>
+                    <h3>طراحی آزمون آنلاین</h3>
+                    <p>ساخت آزمون تستی و تشریحی</p>
+                </div>
                 <div class="card" onclick="openAttendanceForm()">
                     <div class="card-icon">📋</div>
                     <h3>حضور و غیاب</h3>
@@ -503,10 +401,10 @@
 
             <h3 class="section-title">ارتباطات و برنامه‌ریزی</h3>
             <div class="grid">
-                <div class="card" onclick="openOnlineClassForm()">
+                <div class="card" onclick="window.open('https://www.skyroom.online', '_blank')">
                     <div class="card-icon">💻</div>
-                    <h3>ثبت کلاس آنلاین</h3>
-                    <p>افزودن لینک اسکای‌روم جلسات</p>
+                    <h3>کلاس آنلاین</h3>
+                    <p>شروع جلسه تدریس</p>
                 </div>
                 <div class="card" onclick="showScheduleView()">
                     <div class="card-icon">📅</div>
@@ -525,102 +423,27 @@
         <div id="panel-manager" class="hidden">
             <h3 class="section-title">مدیریت کل مدرسه</h3>
             <div class="grid">
-                <div class="card" onclick="openRegisterStudentForm()">
-                    <div class="card-icon">👤</div>
-                    <h3>ثبت‌نام دانش‌آموز جدید</h3>
-                    <p>افزودن دانش‌آموز به سامانه</p>
-                </div>
-                <div class="card" onclick="openRegisterTeacherForm()">
-                    <div class="card-icon">👨‍🏫</div>
-                    <h3>ثبت‌نام دبیر جدید</h3>
-                    <p>افزودن معلم به سامانه</p>
-                </div>
                 <div class="card" onclick="openScheduleForm()">
                     <div class="card-icon">📅</div>
                     <h3>ثبت برنامه هفتگی</h3>
                     <p>افزودن کلاس برای هر پایه</p>
                 </div>
-                <div class="card" onclick="openOnlineClassForm()">
-                    <div class="card-icon">💻</div>
-                    <h3>ثبت کلاس آنلاین</h3>
-                    <p>افزودن لینک اسکای‌روم جلسات</p>
-                </div>
                 <div class="card" onclick="openMessageForm()">
                     <div class="card-icon">📢</div>
-                    <h3>ارسال پیام عمومی</h3>
+                    ### ارسال پیام عمومی
                     <p>اعلامیه برای همه</p>
                 </div>
+                <div class="card" onclick="showMessagesView()">
+                    <div class="card-icon">🔔</div>
+                    <h3>پیام‌های مدرسه</h3>
+                    <p>مشاهده لیست پیام‌ها</p>
+                </div>
+                <div class="card" onclick="alert('مدیریت کاربران فعال است.')">
+                    <div class="card-icon">👥</div>
+                    <h3>مدیریت کاربران</h3>
+                    <p>معلمان و دانش‌آموزان</p>
+                </div>
             </div>
-        </div>
-
-        <!-- فرم ثبت‌نام دانش‌آموز جدید -->
-        <div id="manager-register-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>ثبت‌نام دانش‌آموز جدید در سامانه</h3>
-            <form id="register-student-form" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>نام و نام خانوادگی:</label>
-                    <input type="text" id="reg-name" required placeholder="مثلاً: علی کریمی">
-                </div>
-                <div class="form-group">
-                    <label>کد ملی (رمز ورود):</label>
-                    <input type="text" id="reg-code" required placeholder="کد ملی ۱۰ رقمی...">
-                </div>
-                <div class="form-group">
-                    <label>پایه تحصیلی:</label>
-                    <select id="reg-grade">
-                        <option value="هفتم">هفتم</option>
-                        <option value="هشتم">هشتم</option>
-                        <option value="نهم" selected>نهم</option>
-                        <option value="دهم">دهم</option>
-                        <option value="یازدهم">یازدهم</option>
-                        <option value="دوازدهم">دوازدهم</option>
-                    </select>
-                </div>
-                <button type="submit">ثبت و ذخیره دانش‌آموز در سامانه</button>
-            </form>
-        </div>
-
-        <!-- فرم ثبت‌نام دبیر جدید -->
-        <div id="manager-register-teacher-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>ثبت‌نام دبیر و معلم جدید در سامانه</h3>
-            <form id="register-teacher-form" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>نام و نام خانوادگی دبیر:</label>
-                    <input type="text" id="reg-t-name" required placeholder="مثلاً: استاد کریمی (دبیر ریاضی)">
-                </div>
-                <div class="form-group">
-                    <label>کد ملی (رمز ورود):</label>
-                    <input type="text" id="reg-t-code" required placeholder="کد ملی ۱۰ رقمی...">
-                </div>
-                <button type="submit">ثبت و ذخیره دبیر در سامانه</button>
-            </form>
-        </div>
-
-        <!-- فرم ثبت کلاس آنلاین -->
-        <div id="teacher-online-class-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>ثبت و انتشار لینک کلاس آنلاین (اسکای‌روم)</h3>
-            <form id="online-class-form" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>عنوان کلاس / درس:</label>
-                    <input type="text" id="oc-title" required placeholder="مثلاً: کلاس آنلاین علوم نهم">
-                </div>
-                <div class="form-group">
-                    <label>نام استاد / معلم:</label>
-                    <input type="text" id="oc-teacher" required placeholder="مثلاً: استاد رضایی">
-                </div>
-                <div class="form-group">
-                    <label>لینک ورود (اسکای‌روم):</label>
-                    <input type="url" id="oc-link" required placeholder="https://www.skyroom.online/ch/farabi/class1">
-                </div>
-                <div class="form-group">
-                    <label>ساعت و زمان برگزاری:</label>
-                    <input type="text" id="oc-time" required placeholder="مثلاً: امروز ساعت ۱۶:۰۰">
-                </div>
-                <button type="submit">ثبت و انتشار کلاس آنلاین</button>
-            </form>
         </div>
 
         <!-- فرم ثبت نمره و امتیاز -->
@@ -630,11 +453,11 @@
             <form id="grade-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>نام دانش‌آموز:</label>
-                    <input type="text" id="student-name" required placeholder="مثلاً: محمد محمودی">
+                    <input type="text" id="student-name" required placeholder="مثلاً: علی رضایی">
                 </div>
                 <div class="form-group">
                     <label>درس:</label>
-                    <input type="text" id="subject-name" required placeholder="مثلاً: علوم نهم">
+                    <input type="text" id="subject-name" required placeholder="مثلاً: علوم (شیمی نهم)">
                 </div>
                 <div class="form-group">
                     <label>نمره (از ۲۰):</label>
@@ -669,6 +492,27 @@
             </form>
         </div>
 
+        <!-- فرم طراحی آزمون آنلاین (معلم) -->
+        <div id="teacher-exam-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>طراحی آزمون آنلاین جدید</h3>
+            <form id="exam-create-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>عنوان آزمون / درس:</label>
+                    <input type="text" id="exam-title" required placeholder="مثلاً: آزمون میان‌ترم شیمی نهم">
+                </div>
+                <div class="form-group">
+                    <label>سوال تستی:</label>
+                    <input type="text" id="exam-q1" required placeholder="متن سوال تستی...">
+                </div>
+                <div class="form-group">
+                    <label>سوال تشریحی:</label>
+                    <input type="text" id="exam-q2" required placeholder="متن سوال تشریحی...">
+                </div>
+                <button type="submit">انتشار آزمون برای دانش‌آموزان</button>
+            </form>
+        </div>
+
         <!-- فرم حضور و غیاب -->
         <div id="teacher-attendance-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
@@ -676,7 +520,7 @@
             <form id="attendance-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>نام دانش‌آموز:</label>
-                    <input type="text" id="att-student" required placeholder="مثلاً: محمد محمودی">
+                    <input type="text" id="att-student" required placeholder="مثلاً: علی رضایی">
                 </div>
                 <div class="form-group">
                     <label>وضعیت حضور:</label>
@@ -693,7 +537,7 @@
         <!-- فرم ارسال پیام -->
         <div id="manager-message-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>ارسال اطلاعیه جدید</h3>
+            ### ارسال اطلاعیه جدید
             <form id="message-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>عنوان پیام:</label>
@@ -714,18 +558,7 @@
             <form id="schedule-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>انتخاب پایه تحصیلی:</label>
-                    <select id="schedule-grade">
-                        <optgroup label="متوسطه اول">
-                            <option value="هفتم">هفتم</option>
-                            <option value="هشتم">هشتم</option>
-                            <option value="نهم">نهم</option>
-                        </optgroup>
-                        <optgroup label="متوسطه دوم">
-                            <option value="دهم">دهم</option>
-                            <option value="یازدهم">یازدهم</option>
-                            <option value="دوازدهم">دوازدهم</option>
-                        </optgroup>
-                    </select>
+                    <input type="text" id="schedule-grade" required placeholder="مثلاً: نهم (یا هفتم، هشتم)">
                 </div>
                 <div class="form-group">
                     <label>روز هفته:</label>
@@ -743,17 +576,10 @@
                 </div>
                 <div class="form-group">
                     <label>نام درس:</label>
-                    <input type="text" id="schedule-lesson" required placeholder="مثلاً: شیمی">
+                    <input type="text" id="schedule-lesson" required placeholder="مثلاً: علوم تجربی">
                 </div>
                 <button type="submit">ثبت در برنامه هفتگی</button>
             </form>
-        </div>
-
-        <!-- لیست کلاس‌های آنلاین برای دانش‌آموز -->
-        <div id="online-class-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>کلاس‌های آنلاین فعال (اسکای‌روم)</h3>
-            <div id="online-class-list-box" style="margin-top: 15px;"></div>
         </div>
 
         <!-- جدول نمرات -->
@@ -776,7 +602,7 @@
         <!-- جدول برنامه هفتگی -->
         <div id="schedule-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>برنامه هفتگی کلاس‌های مدرسه فارابی</h3>
+            ### برنامه هفتگی کلاس‌های مدرسه فارابی
             <table>
                 <thead>
                     <tr>
@@ -804,39 +630,15 @@
             <div id="messages-list-box" style="margin-top: 15px;"></div>
         </div>
 
-        <!-- آزمون آنلاین -->
+        <!-- آزمون آنلاین (شرکت دانش‌آموز) -->
         <div id="exam-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>آزمون آنلاین علوم (شیمی نهم) - تستی و تشریحی</h3>
-            <div style="margin-top: 15px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                <p><b>سوال ۱ (تستی):</b> کدام ذره زیراتمی بار الکتریکی منفی دارد؟</p>
-                <div style="margin: 10px 0 20px 0;">
-                    <label><input type="radio" name="q1" value="wrong"> پروتون</label><br>
-                    <label><input type="radio" name="q1" value="correct"> الکترون</label><br>
-                    <label><input type="radio" name="q1" value="wrong"> نوترون</label>
-                </div>
-                <p><b>سوال ۲ (تشریحی):</b> تفاوت اصلی بین اتم و یون چیست؟ توضیح دهید.</p>
-                <div style="margin: 10px 0;">
-                    <textarea id="exam-essay-answer" rows="3" placeholder="پاسخ تشریحی خود را اینجا بنویسید..."></textarea>
-                </div>
-                <button onclick="submitExam()" style="width: auto; padding: 10px 25px; font-size: 14px; margin-top: 15px;">ارسال پاسخنامه کل آزمون</button>
-            </div>
+            <h3>آزمون آنلاین فعال</h3>
+            <div id="exam-container-box" style="margin-top: 15px;"></div>
         </div>
     </div>
 
     <script>
-        // پایگاه داده کاربران (شامل دانش‌آموزان، معلمان مختلف و مدیر)
-        function getSchoolUsers() {
-            let defaultUsers = [
-                { nationalCode: "1234567890", name: "محمد محمودی", role: "دانش‌آموز", grade: "نهم" },
-                { nationalCode: "0011223344", name: "استاد رضایی (دبیر علوم)", role: "معلم", grade: "" },
-                { nationalCode: "0022334455", name: "استاد کریمی (دبیر ریاضی)", role: "معلم", grade: "" },
-                { nationalCode: "9988776655", name: "آقای ناصری (مدیر مدرسه)", role: "مدیر", grade: "" }
-            ];
-            let saved = localStorage.getItem('farabi_school_users');
-            return saved ? JSON.parse(saved) : defaultUsers;
-        }
-
         const loginForm = document.getElementById('login-form');
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
@@ -844,9 +646,12 @@
         const userDisplayRole = document.getElementById('user-display-role');
         const userDisplayGrade = document.getElementById('user-display-grade');
         const userDisplayPoints = document.getElementById('user-display-points');
-        const scorePeriodTitle = document.getElementById('score-period-title');
         const gradeInfoBox = document.getElementById('grade-info-box');
+        const pointsInfoBox = document.getElementById('points-info-box');
         const logoutBtn = document.getElementById('logout-btn');
+        const roleSelect = document.getElementById('role');
+        const gradeGroup = document.getElementById('grade-group');
+        const gradeInput = document.getElementById('grade');
 
         const panelStudent = document.getElementById('panel-student');
         const panelTeacher = document.getElementById('panel-teacher');
@@ -854,75 +659,50 @@
 
         const teacherGradeSection = document.getElementById('teacher-grade-section');
         const teacherHomeworkSection = document.getElementById('teacher-homework-section');
+        const teacherExamSection = document.getElementById('teacher-exam-section');
         const teacherAttendanceSection = document.getElementById('teacher-attendance-section');
         const managerMessageSection = document.getElementById('manager-message-section');
         const managerScheduleSection = document.getElementById('manager-schedule-section');
-        const teacherOnlineClassSection = document.getElementById('teacher-online-class-section');
-        const managerRegisterSection = document.getElementById('manager-register-section');
-        const managerRegisterTeacherSection = document.getElementById('manager-register-teacher-section');
-
+        
         const gradesViewSection = document.getElementById('grades-view-section');
         const scheduleViewSection = document.getElementById('schedule-view-section');
         const homeworkViewSection = document.getElementById('homework-view-section');
         const messagesViewSection = document.getElementById('messages-view-section');
         const examViewSection = document.getElementById('exam-view-section');
-        const onlineClassViewSection = document.getElementById('online-class-view-section');
 
         const gradeForm = document.getElementById('grade-form');
         const homeworkForm = document.getElementById('homework-form');
+        const examCreateForm = document.getElementById('exam-create-form');
         const attendanceForm = document.getElementById('attendance-form');
         const messageForm = document.getElementById('message-form');
         const scheduleForm = document.getElementById('schedule-form');
-        const onlineClassForm = document.getElementById('online-class-form');
-        const registerStudentForm = document.getElementById('register-student-form');
-        const registerTeacherForm = document.getElementById('register-teacher-form');
 
         const gradesTableBody = document.getElementById('grades-table-body');
         const scheduleTableBody = document.getElementById('schedule-table-body');
         const homeworkListBox = document.getElementById('homework-list-box');
         const messagesListBox = document.getElementById('messages-list-box');
-        const onlineClassListBox = document.getElementById('online-class-list-box');
+        const examContainerBox = document.getElementById('exam-container-box');
 
-        function calculateUserPoints(studentName, period = 'weekly') {
+        function toggleGradeField() {
+            if (roleSelect.value === 'دانش‌آموز') {
+                gradeGroup.style.display = 'block';
+                gradeInput.required = true;
+            } else {
+                gradeGroup.style.display = 'none';
+                gradeInput.required = false;
+                gradeInput.value = '';
+            }
+        }
+
+        function calculateUserPoints(studentName) {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             let totalPoints = 0;
-            const now = new Date();
-
             grades.forEach(g => {
                 if (g.student.trim() === studentName.trim()) {
-                    let recordDate = g.date ? new Date(g.date) : now;
-                    let diffTime = now - recordDate;
-                    let diffDays = diffTime / (1000 * 60 * 60 * 24);
-
-                    if (period === 'weekly' && diffDays <= 7) {
-                        totalPoints += Number(g.points || 0);
-                    } else if (period === 'monthly' && diffDays <= 30) {
-                        totalPoints += Number(g.points || 0);
-                    } else if (period === 'all') {
-                        totalPoints += Number(g.points || 0);
-                    }
+                    totalPoints += Number(g.points || 0);
                 }
             });
             return totalPoints;
-        }
-
-        function switchScorePeriod(period) {
-            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
-            const buttons = document.querySelectorAll('.score-tab-btn');
-            
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if (period === 'weekly') {
-                scorePeriodTitle.textContent = "رتبه‌ی تو در مدرسه (این هفته)";
-                userDisplayPoints.textContent = calculateUserPoints(user.name, 'weekly');
-            } else if (period === 'monthly') {
-                scorePeriodTitle.textContent = "رتبه‌ی تو در مدرسه (این ماه)";
-                userDisplayPoints.textContent = calculateUserPoints(user.name, 'monthly');
-            } else if (period === 'all') {
-                scorePeriodTitle.textContent = "رتبه‌ی تو در مدرسه (کل امتیازها)";
-                userDisplayPoints.textContent = calculateUserPoints(user.name, 'all');
-            }
         }
 
         function checkLogin() {
@@ -938,9 +718,11 @@
                         userDisplayGrade.textContent = user.grade;
                         gradeInfoBox.style.display = 'inline';
                     }
-                    userDisplayPoints.textContent = calculateUserPoints(user.name, 'weekly');
+                    userDisplayPoints.textContent = calculateUserPoints(user.name);
+                    pointsInfoBox.style.display = 'inline';
                 } else {
                     gradeInfoBox.style.display = 'none';
+                    pointsInfoBox.style.display = 'none';
                 }
 
                 loginSection.classList.add('hidden');
@@ -961,21 +743,21 @@
             } else {
                 dashboardSection.classList.add('hidden');
                 loginSection.classList.remove('hidden');
+                toggleGradeField();
             }
         }
 
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const inputCode = document.getElementById('national-code').value.trim();
-            const users = getSchoolUsers();
-            const foundUser = users.find(u => u.nationalCode === inputCode);
-
-            if (foundUser) {
-                localStorage.setItem('farabi_user', JSON.stringify(foundUser));
-                checkLogin();
-            } else {
-                alert('کد ملی وارد شده در سامانه ثبت نشده است!');
-            }
+            const selectedRole = roleSelect.value;
+            const userData = {
+                name: document.getElementById('name').value,
+                role: selectedRole,
+                grade: selectedRole === 'دانش‌آموز' ? gradeInput.value.trim() : '',
+                nationalCode: document.getElementById('national-code').value
+            };
+            localStorage.setItem('farabi_user', JSON.stringify(userData));
+            checkLogin();
         });
 
         logoutBtn.addEventListener('click', function() {
@@ -988,36 +770,30 @@
 
         function openGradeForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherGradeSection.classList.remove('hidden'); }
         function openHomeworkForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherHomeworkSection.classList.remove('hidden'); }
+        function openExamForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherExamSection.classList.remove('hidden'); }
         function openAttendanceForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherAttendanceSection.classList.remove('hidden'); }
         function openMessageForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerMessageSection.classList.remove('hidden'); }
         function openScheduleForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerScheduleSection.classList.remove('hidden'); }
-        function openOnlineClassForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); teacherOnlineClassSection.classList.remove('hidden'); }
-        function openRegisterStudentForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerRegisterSection.classList.remove('hidden'); }
-        function openRegisterTeacherForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerRegisterTeacherSection.classList.remove('hidden'); }
 
         function showStudentGrades() { closeSubPanels(); panelStudent.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showScheduleView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); scheduleViewSection.classList.remove('hidden'); loadScheduleTable(); }
         function showHomeworkStudentView() { closeSubPanels(); panelStudent.classList.add('hidden'); homeworkViewSection.classList.remove('hidden'); loadHomeworkList(); }
         function showMessagesView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); messagesViewSection.classList.remove('hidden'); loadMessagesList(); }
-        function showOnlineExamView() { closeSubPanels(); panelStudent.classList.add('hidden'); examViewSection.classList.remove('hidden'); }
-        function showOnlineClassView() { closeSubPanels(); panelStudent.classList.add('hidden'); onlineClassViewSection.classList.remove('hidden'); loadOnlineClassList(); }
+        function showOnlineExamView() { closeSubPanels(); panelStudent.classList.add('hidden'); examViewSection.classList.remove('hidden'); loadExamsList(); }
 
         function closeSubPanels() {
             teacherGradeSection.classList.add('hidden');
             teacherHomeworkSection.classList.add('hidden');
+            teacherExamSection.classList.add('hidden');
             teacherAttendanceSection.classList.add('hidden');
             managerMessageSection.classList.add('hidden');
             managerScheduleSection.classList.add('hidden');
-            teacherOnlineClassSection.classList.add('hidden');
-            managerRegisterSection.classList.add('hidden');
-            managerRegisterTeacherSection.classList.add('hidden');
             gradesViewSection.classList.add('hidden');
             scheduleViewSection.classList.add('hidden');
             homeworkViewSection.classList.add('hidden');
             messagesViewSection.classList.add('hidden');
             examViewSection.classList.add('hidden');
-            onlineClassViewSection.classList.add('hidden');
-
+            
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             if (user.role === 'دانش‌آموز') {
                 panelStudent.classList.remove('hidden');
@@ -1028,69 +804,13 @@
             }
         }
 
-        // ثبت‌نام دانش‌آموز جدید توسط مدیر
-        registerStudentForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const newName = document.getElementById('reg-name').value.trim();
-            const newCode = document.getElementById('reg-code').value.trim();
-            const newGrade = document.getElementById('reg-grade').value;
-
-            let users = getSchoolUsers();
-            if(users.some(u => u.nationalCode === newCode)) {
-                alert('این کد ملی قبلاً در سامانه ثبت شده است!');
-                return;
-            }
-
-            users.push({ nationalCode: newCode, name: newName, role: "دانش‌آموز", grade: newGrade });
-            localStorage.setItem('farabi_school_users', JSON.stringify(users));
-            alert('دانش‌آموز جدید با موفقیت ثبت‌نام شد!');
-            registerStudentForm.reset();
-            closeSubPanels();
-        });
-
-        // ثبت‌نام دبیر جدید توسط مدیر
-        registerTeacherForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const newName = document.getElementById('reg-t-name').value.trim();
-            const newCode = document.getElementById('reg-t-code').value.trim();
-
-            let users = getSchoolUsers();
-            if(users.some(u => u.nationalCode === newCode)) {
-                alert('این کد ملی قبلاً در سامانه ثبت شده است!');
-                return;
-            }
-
-            users.push({ nationalCode: newCode, name: newName, role: "معلم", grade: "" });
-            localStorage.setItem('farabi_school_users', JSON.stringify(users));
-            alert('دبیر جدید با موفقیت در سامانه ثبت شد!');
-            registerTeacherForm.reset();
-            closeSubPanels();
-        });
-
-        onlineClassForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const newClass = {
-                title: document.getElementById('oc-title').value,
-                teacher: document.getElementById('oc-teacher').value,
-                link: document.getElementById('oc-link').value,
-                time: document.getElementById('oc-time').value
-            };
-            let classes = JSON.parse(localStorage.getItem('farabi_online_classes') || '[]');
-            classes.push(newClass);
-            localStorage.setItem('farabi_online_classes', JSON.stringify(classes));
-            alert('کلاس آنلاین با موفقیت ثبت و منتشر شد!');
-            onlineClassForm.reset();
-            closeSubPanels();
-        });
-
         gradeForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newGrade = {
-                student: document.getElementById('student-name').value.trim(),
+                student: document.getElementById('student-name').value,
                 subject: document.getElementById('subject-name').value,
                 score: document.getElementById('score-val').value,
-                points: document.getElementById('points-val').value || 0,
-                date: new Date().toISOString()
+                points: document.getElementById('points-val').value || 0
             };
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             grades.push(newGrade);
@@ -1112,6 +832,21 @@
             localStorage.setItem('farabi_homeworks', JSON.stringify(homeworks));
             alert('تکلیف جدید با موفقیت منتشر شد!');
             homeworkForm.reset();
+            closeSubPanels();
+        });
+
+        examCreateForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newExam = {
+                title: document.getElementById('exam-title').value,
+                q1: document.getElementById('exam-q1').value,
+                q2: document.getElementById('exam-q2').value
+            };
+            let exams = JSON.parse(localStorage.getItem('farabi_exams') || '[]');
+            exams.push(newExam);
+            localStorage.setItem('farabi_exams', JSON.stringify(exams));
+            alert('آزمون آنلاین با موفقیت ایجاد و برای دانش‌آموزان منتشر شد!');
+            examCreateForm.reset();
             closeSubPanels();
         });
 
@@ -1140,7 +875,7 @@
         scheduleForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newSchedule = {
-                grade: document.getElementById('schedule-grade').value,
+                grade: document.getElementById('schedule-grade').value.trim(),
                 day: document.getElementById('schedule-day').value,
                 time: document.getElementById('schedule-time').value,
                 lesson: document.getElementById('schedule-lesson').value
@@ -1152,29 +887,6 @@
             scheduleForm.reset();
             closeSubPanels();
         });
-
-        function submitExam() {
-            alert('پاسخنامه شما با موفقیت ارسال شد!');
-            closeSubPanels();
-        }
-
-        function loadOnlineClassList() {
-            let classes = JSON.parse(localStorage.getItem('farabi_online_classes') || '[]');
-            onlineClassListBox.innerHTML = '';
-            if (classes.length === 0) {
-                onlineClassListBox.innerHTML = '<p style="color: #64748b;">در حال حاضر کلاس آنلاین فعالی برگزار نمی‌شود.</p>';
-                return;
-            }
-            classes.forEach((cls) => {
-                onlineClassListBox.innerHTML += `
-                    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 12px;">
-                        <h4>${cls.title}</h4>
-                        <p style="margin: 5px 0; color: #475569;">استاد: ${cls.teacher}</p>
-                        <p style="font-size: 12px; color: #d97706; margin-bottom: 10px;">زمان: ${cls.time}</p>
-                        <a href="${cls.link}" target="_blank" style="display: inline-block; background: var(--primary-blue); color: white; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">ورود به کلاس اسکای‌روم</a>
-                    </div>`;
-            });
-        }
 
         function loadGradesTable() {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
@@ -1191,9 +903,9 @@
         function loadScheduleTable() {
             let schedules = JSON.parse(localStorage.getItem('farabi_schedules') || '[]');
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
-
+            
             scheduleTableBody.innerHTML = '';
-
+            
             if (user.role === 'دانش‌آموز' && user.grade) {
                 schedules = schedules.filter(s => s.grade === user.grade);
             }
@@ -1204,7 +916,7 @@
             }
 
             schedules.forEach(s => {
-                scheduleTableBody.innerHTML += `<tr><td><b>پایه ${s.grade}</b></td><td>${s.day}</td><td>${s.time}</td><td><b>${s.lesson}</b></td></tr>`;
+                scheduleTableBody.innerHTML += `<tr><td><b>${s.grade}</b></td><td>${s.day}</td><td>${s.time}</td><td><b>${s.lesson}</b></td></tr>`;
             });
         }
 
@@ -1222,6 +934,25 @@
                         <p style="margin: 5px 0; color: #475569;">${hw.desc}</p>
                         <p style="font-size: 12px; color: #d97706;">مهلت تحویل: ${hw.deadline}</p>
                         <button onclick="alert('تکلیف شما با موفقیت ارسال شد!')" style="width: auto; padding: 6px 14px; font-size: 13px; margin-top: 8px;">ارسال پاسخ تکلیف</button>
+                    </div>`;
+            });
+        }
+
+        function loadExamsList() {
+            let exams = JSON.parse(localStorage.getItem('farabi_exams') || '[]');
+            examContainerBox.innerHTML = '';
+            if (exams.length === 0) {
+                exams = [{ title: 'آزمون نمونه علوم (شیمی نهم)', q1: 'کدام ذره بار منفی دارد؟ (الکترون)', q2: 'تفاوت اتم و یون را بنویسید.' }];
+            }
+            exams.forEach((ex) => {
+                examContainerBox.innerHTML += `
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                        <h4 style="color: var(--dark-blue); margin-bottom: 10px;">${ex.title}</h4>
+                        <p><b>سوال ۱:</b> ${ex.q1}</p>
+                        <input type="text" placeholder="پاسخ خود را بنویسید..." style="margin: 8px 0 15px 0;">
+                        <p><b>سوال ۲ (تشریحی):</b> ${ex.q2}</p>
+                        <textarea rows="2" placeholder="پاسخ تشریحی..." style="margin: 8px 0;"></textarea>
+                        <button onclick="alert('پاسخنامه آزمون با موفقیت ثبت شد!')" style="width: auto; padding: 8px 20px; font-size: 13px; margin-top: 10px;">ارسال پاسخنامه</button>
                     </div>`;
             });
         }
