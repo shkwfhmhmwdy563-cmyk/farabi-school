@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدرسه فارابی - سامانه جامع هوشمند</title>
+    <title>مدرسه فارابی - سامانه جامع هوشمند (سیبا)</title>
     <style>
         :root {
             --primary-blue: #2563eb;
@@ -191,6 +191,98 @@
             transform: scale(1.05);
         }
 
+        /* استایل کارت امتیاز طلایی جدید با تب‌های هفتگی، ماهانه و کل */
+        .score-card {
+            background: linear-gradient(135deg, #f6d88c 0%, #d4af37 100%);
+            color: #1a1a1a;
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+            margin-bottom: 25px;
+            border: 1px solid #e8c850;
+        }
+
+        .score-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .score-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .score-subtitle {
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .score-rank {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0;
+            color: #111;
+        }
+
+        .score-total {
+            font-size: 12px;
+            font-weight: normal;
+            color: #333;
+        }
+
+        .score-current {
+            font-size: 14px;
+            margin-top: 4px;
+            color: #111;
+            font-weight: bold;
+        }
+
+        .score-icon-box {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* دکمه‌های جابجایی بین هفتگی، ماهانه و کل */
+        .score-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .score-tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: none;
+            margin-top: 0;
+        }
+
+        .score-tab-btn.active {
+            background: #ffffff;
+            color: #1e3a8a;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
         .section-title {
             color: var(--dark-blue);
             margin-top: 20px;
@@ -300,7 +392,7 @@
         <form id="login-form">
             <div class="form-group">
                 <label for="name">نام و نام خانوادگی:</label>
-                <input type="text" id="name" required placeholder="مثلاً: علی موسی">
+                <input type="text" id="name" required placeholder="مثلاً: محمد محمودی">
             </div>
             <div class="form-group">
                 <label for="role">نقش کاربر:</label>
@@ -312,7 +404,7 @@
             </div>
             <div class="form-group" id="grade-group">
                 <label for="grade">پایه تحصیلی:</label>
-                <input type="text" id="grade" placeholder="مثلاً: نهم">
+                <input type="text" id="grade" placeholder="مثلاً: دهم ریاضی و فیزیک">
             </div>
             <div class="form-group">
                 <label for="national-code">کد ملی:</label>
@@ -327,13 +419,31 @@
         <div class="welcome-box">
             <div class="welcome-text">
                 <h3>خوش آمدید، <span id="user-display-name"></span> عزیز!</h3>
-                <p>نقش: <b><span id="user-display-role"></span></b> <span id="grade-info-box">| پایه: <b><span id="user-display-grade"></span></b></span> <span id="points-info-box" style="margin-right: 10px;">| ⭐ امتیاز کل: <b id="user-display-points" style="color: #d97706;">0</b></span></p>
+                <p>نقش: <b><span id="user-display-role"></span></b> <span id="grade-info-box">| پایه: <b><span id="user-display-grade"></span></b></span></p>
             </div>
             <button class="logout-btn" id="logout-btn">خروج از حساب</button>
         </div>
 
         <!-- پنل دانش‌آموز -->
         <div id="panel-student" class="hidden">
+            <!-- کارت امتیاز و رتبه با پشتیبانی از هفتگی، ماهانه و کل -->
+            <div class="score-card">
+                <div class="score-header-flex">
+                    <div class="score-info">
+                        <span class="score-subtitle" id="score-period-title">رتبه‌ی تو در مدرسه (این هفته)</span>
+                        <h2 class="score-rank">۱۱۴ <span class="score-total">از ۲۳۱ دانش‌آموز</span></h2>
+                        <p class="score-current">امتیاز کسب‌شده: <span id="user-display-points">۰</span></p>
+                    </div>
+                    <div class="score-icon-box">🏆</div>
+                </div>
+                <!-- دکمه‌های تعویض حالت بازه زمانی -->
+                <div class="score-tabs">
+                    <button class="score-tab-btn active" onclick="switchScorePeriod('weekly')">هفتگی</button>
+                    <button class="score-tab-btn" onclick="switchScorePeriod('monthly')">ماهانه</button>
+                    <button class="score-tab-btn" onclick="switchScorePeriod('all')">همه (کل)</button>
+                </div>
+            </div>
+
             <h3 class="section-title">آموزش و یادگیری</h3>
             <div class="grid">
                 <div class="card" onclick="window.open('https://www.skyroom.online', '_blank')">
@@ -448,11 +558,11 @@
             <form id="grade-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>نام دانش‌آموز:</label>
-                    <input type="text" id="student-name" required placeholder="مثلاً: علی رضایی">
+                    <input type="text" id="student-name" required placeholder="مثلاً: محمد محمودی">
                 </div>
                 <div class="form-group">
                     <label>درس:</label>
-                    <input type="text" id="subject-name" required placeholder="مثلاً: علوم (شیمی نهم)">
+                    <input type="text" id="subject-name" required placeholder="مثلاً: شیمی">
                 </div>
                 <div class="form-group">
                     <label>نمره (از ۲۰):</label>
@@ -494,7 +604,7 @@
             <form id="attendance-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>نام دانش‌آموز:</label>
-                    <input type="text" id="att-student" required placeholder="مثلاً: علی رضایی">
+                    <input type="text" id="att-student" required placeholder="مثلاً: محمد محمودی">
                 </div>
                 <div class="form-group">
                     <label>وضعیت حضور:</label>
@@ -525,14 +635,14 @@
             </form>
         </div>
 
-        <!-- فرم ثبت برنامه هفتگی (مختص هر پایه) -->
+        <!-- فرم ثبت برنامه هفتگی -->
         <div id="manager-schedule-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
             <h3>افزودن درس به برنامه هفتگی</h3>
             <form id="schedule-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>انتخاب پایه تحصیلی:</label>
-                    <input type="text" id="schedule-grade" required placeholder="مثلاً: نهم (یا هفتم، هشتم)">
+                    <input type="text" id="schedule-grade" required placeholder="مثلاً: دهم ریاضی و فیزیک">
                 </div>
                 <div class="form-group">
                     <label>روز هفته:</label>
@@ -550,7 +660,7 @@
                 </div>
                 <div class="form-group">
                     <label>نام درس:</label>
-                    <input type="text" id="schedule-lesson" required placeholder="مثلاً: علوم تجربی">
+                    <input type="text" id="schedule-lesson" required placeholder="مثلاً: شیمی">
                 </div>
                 <button type="submit">ثبت در برنامه هفتگی</button>
             </form>
@@ -632,8 +742,8 @@
         const userDisplayRole = document.getElementById('user-display-role');
         const userDisplayGrade = document.getElementById('user-display-grade');
         const userDisplayPoints = document.getElementById('user-display-points');
+        const scorePeriodTitle = document.getElementById('score-period-title');
         const gradeInfoBox = document.getElementById('grade-info-box');
-        const pointsInfoBox = document.getElementById('points-info-box');
         const logoutBtn = document.getElementById('logout-btn');
         const roleSelect = document.getElementById('role');
         const gradeGroup = document.getElementById('grade-group');
@@ -648,7 +758,7 @@
         const teacherAttendanceSection = document.getElementById('teacher-attendance-section');
         const managerMessageSection = document.getElementById('manager-message-section');
         const managerScheduleSection = document.getElementById('manager-schedule-section');
-        
+
         const gradesViewSection = document.getElementById('grades-view-section');
         const scheduleViewSection = document.getElementById('schedule-view-section');
         const homeworkViewSection = document.getElementById('homework-view-section');
@@ -677,15 +787,48 @@
             }
         }
 
-        function calculateUserPoints(studentName) {
+        // تابع محاسبه امتیازات با فیلتر بازه زمانی (هفتگی، ماهانه، کل)
+        function calculateUserPoints(studentName, period = 'weekly') {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             let totalPoints = 0;
+            const now = new Date();
+
             grades.forEach(g => {
                 if (g.student.trim() === studentName.trim()) {
-                    totalPoints += Number(g.points || 0);
+                    let recordDate = g.date ? new Date(g.date) : now;
+                    let diffTime = now - recordDate;
+                    let diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+                    if (period === 'weekly' && diffDays <= 7) {
+                        totalPoints += Number(g.points || 0);
+                    } else if (period === 'monthly' && diffDays <= 30) {
+                        totalPoints += Number(g.points || 0);
+                    } else if (period === 'all') {
+                        totalPoints += Number(g.points || 0);
+                    }
                 }
             });
             return totalPoints;
+        }
+
+        // تغییر حالت نمایش امتیاز بر اساس دکمه‌های هفتگی، ماهانه، کل
+        function switchScorePeriod(period) {
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            const buttons = document.querySelectorAll('.score-tab-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (period === 'weekly') {
+                scorePeriodTitle.textContent = "رتبه‌ی تو در مدرسه (این هفته)";
+                userDisplayPoints.textContent = calculateUserPoints(user.name, 'weekly');
+            } else if (period === 'monthly') {
+                scorePeriodTitle.textContent = "رتبه‌ی تو در مدرسه (این ماه)";
+                userDisplayPoints.textContent = calculateUserPoints(user.name, 'monthly');
+            } else if (period === 'all') {
+                scorePeriodTitle.textContent = "رتبه‌ی تو در مدرسه (کل امتیازها)";
+                userDisplayPoints.textContent = calculateUserPoints(user.name, 'all');
+            }
         }
 
         function checkLogin() {
@@ -701,11 +844,9 @@
                         userDisplayGrade.textContent = user.grade;
                         gradeInfoBox.style.display = 'inline';
                     }
-                    userDisplayPoints.textContent = calculateUserPoints(user.name);
-                    pointsInfoBox.style.display = 'inline';
+                    userDisplayPoints.textContent = calculateUserPoints(user.name, 'weekly');
                 } else {
                     gradeInfoBox.style.display = 'none';
-                    pointsInfoBox.style.display = 'none';
                 }
 
                 loginSection.classList.add('hidden');
@@ -734,7 +875,7 @@
             e.preventDefault();
             const selectedRole = roleSelect.value;
             const userData = {
-                name: document.getElementById('name').value,
+                name: document.getElementById('name').value.trim(),
                 role: selectedRole,
                 grade: selectedRole === 'دانش‌آموز' ? gradeInput.value.trim() : '',
                 nationalCode: document.getElementById('national-code').value
@@ -774,7 +915,7 @@
             homeworkViewSection.classList.add('hidden');
             messagesViewSection.classList.add('hidden');
             examViewSection.classList.add('hidden');
-            
+
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             if (user.role === 'دانش‌آموز') {
                 panelStudent.classList.remove('hidden');
@@ -788,10 +929,11 @@
         gradeForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newGrade = {
-                student: document.getElementById('student-name').value,
+                student: document.getElementById('student-name').value.trim(),
                 subject: document.getElementById('subject-name').value,
                 score: document.getElementById('score-val').value,
-                points: document.getElementById('points-val').value || 0
+                points: document.getElementById('points-val').value || 0,
+                date: new Date().toISOString() // ذخیره تاریخ برای محاسبه هفتگی و ماهانه
             };
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             grades.push(newGrade);
@@ -838,7 +980,6 @@
             closeSubPanels();
         });
 
-        // ثبت برنامه هفتگی با تفکیک پایه
         scheduleForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newSchedule = {
@@ -872,14 +1013,12 @@
             });
         }
 
-        // بارگذاری برنامه هفتگی بر اساس پایه دانش‌آموز یا نمایش همه برای مدیر/معلم
         function loadScheduleTable() {
             let schedules = JSON.parse(localStorage.getItem('farabi_schedules') || '[]');
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
-            
+
             scheduleTableBody.innerHTML = '';
-            
-            // اگر دانش‌آموز است، فقط برنامه‌های مربوط به پایه خودش را فیلتر کن
+
             if (user.role === 'دانش‌آموز' && user.grade) {
                 schedules = schedules.filter(s => s.grade === user.grade);
             }
