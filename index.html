@@ -407,8 +407,9 @@
         <div class="hint-box">
             <b>اطلاعات ورود پیش‌فرض:</b><br>
             • دانش‌آموز (محمد محمودی): کد ملی <code>1234567890</code><br>
-            • معلم شیمی: کد ملی <code>0011223344</code><br>
-            • مدیر مدرسه: کد ملی <code>9988776655</code>
+            • استاد علوم (رضایی): کد ملی <code>0011223344</code><br>
+            • استاد ریاضی (کریمی): کد ملی <code>0022334455</code><br>
+            • مدیر مدرسه (آقای ناصری): کد ملی <code>9988776655</code>
         </div>
     </div>
 
@@ -529,6 +530,11 @@
                     <h3>ثبت‌نام دانش‌آموز جدید</h3>
                     <p>افزودن دانش‌آموز به سامانه</p>
                 </div>
+                <div class="card" onclick="openRegisterTeacherForm()">
+                    <div class="card-icon">👨‍🏫</div>
+                    <h3>ثبت‌نام دبیر جدید</h3>
+                    <p>افزودن معلم به سامانه</p>
+                </div>
                 <div class="card" onclick="openScheduleForm()">
                     <div class="card-icon">📅</div>
                     <h3>ثبت برنامه هفتگی</h3>
@@ -547,7 +553,7 @@
             </div>
         </div>
 
-        <!-- فرم ثبت‌نام دانش‌آموز جدید توسط مدیر -->
+        <!-- فرم ثبت‌نام دانش‌آموز جدید -->
         <div id="manager-register-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
             <h3>ثبت‌نام دانش‌آموز جدید در سامانه</h3>
@@ -575,6 +581,23 @@
             </form>
         </div>
 
+        <!-- فرم ثبت‌نام دبیر جدید -->
+        <div id="manager-register-teacher-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>ثبت‌نام دبیر و معلم جدید در سامانه</h3>
+            <form id="register-teacher-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>نام و نام خانوادگی دبیر:</label>
+                    <input type="text" id="reg-t-name" required placeholder="مثلاً: استاد کریمی (دبیر ریاضی)">
+                </div>
+                <div class="form-group">
+                    <label>کد ملی (رمز ورود):</label>
+                    <input type="text" id="reg-t-code" required placeholder="کد ملی ۱۰ رقمی...">
+                </div>
+                <button type="submit">ثبت و ذخیره دبیر در سامانه</button>
+            </form>
+        </div>
+
         <!-- فرم ثبت کلاس آنلاین -->
         <div id="teacher-online-class-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
@@ -582,7 +605,7 @@
             <form id="online-class-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>عنوان کلاس / درس:</label>
-                    <input type="text" id="oc-title" required placeholder="مثلاً: کلاس آنلاین شیمی نهم">
+                    <input type="text" id="oc-title" required placeholder="مثلاً: کلاس آنلاین علوم نهم">
                 </div>
                 <div class="form-group">
                     <label>نام استاد / معلم:</label>
@@ -611,7 +634,7 @@
                 </div>
                 <div class="form-group">
                     <label>درس:</label>
-                    <input type="text" id="subject-name" required placeholder="مثلاً: شیمی نهم">
+                    <input type="text" id="subject-name" required placeholder="مثلاً: علوم نهم">
                 </div>
                 <div class="form-group">
                     <label>نمره (از ۲۰):</label>
@@ -802,12 +825,13 @@
     </div>
 
     <script>
-        // پایگاه داده پیش‌فرض کاربران (ذخیره شده در localStorage برای حفظ تغییرات مدیر)
+        // پایگاه داده کاربران (شامل دانش‌آموزان، معلمان مختلف و مدیر)
         function getSchoolUsers() {
             let defaultUsers = [
                 { nationalCode: "1234567890", name: "محمد محمودی", role: "دانش‌آموز", grade: "نهم" },
-                { nationalCode: "0011223344", name: "استاد رضایی (معلم شیمی)", role: "معلم", grade: "" },
-                { nationalCode: "9988776655", name: "مدیر محترم (آقای ناصری)", role: "مدیر", grade: "" }
+                { nationalCode: "0011223344", name: "استاد رضایی (دبیر علوم)", role: "معلم", grade: "" },
+                { nationalCode: "0022334455", name: "استاد کریمی (دبیر ریاضی)", role: "معلم", grade: "" },
+                { nationalCode: "9988776655", name: "آقای ناصری (مدیر مدرسه)", role: "مدیر", grade: "" }
             ];
             let saved = localStorage.getItem('farabi_school_users');
             return saved ? JSON.parse(saved) : defaultUsers;
@@ -835,6 +859,7 @@
         const managerScheduleSection = document.getElementById('manager-schedule-section');
         const teacherOnlineClassSection = document.getElementById('teacher-online-class-section');
         const managerRegisterSection = document.getElementById('manager-register-section');
+        const managerRegisterTeacherSection = document.getElementById('manager-register-teacher-section');
 
         const gradesViewSection = document.getElementById('grades-view-section');
         const scheduleViewSection = document.getElementById('schedule-view-section');
@@ -850,6 +875,7 @@
         const scheduleForm = document.getElementById('schedule-form');
         const onlineClassForm = document.getElementById('online-class-form');
         const registerStudentForm = document.getElementById('register-student-form');
+        const registerTeacherForm = document.getElementById('register-teacher-form');
 
         const gradesTableBody = document.getElementById('grades-table-body');
         const scheduleTableBody = document.getElementById('schedule-table-body');
@@ -938,7 +964,6 @@
             }
         }
 
-        // ورود هوشمند با بررسی پایگاه داده کاربران
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const inputCode = document.getElementById('national-code').value.trim();
@@ -949,7 +974,7 @@
                 localStorage.setItem('farabi_user', JSON.stringify(foundUser));
                 checkLogin();
             } else {
-                alert('کد ملی وارد شده در سامانه ثبت نشده است! از مدیر مدرسه بخواهید شما را ثبت‌نام کند.');
+                alert('کد ملی وارد شده در سامانه ثبت نشده است!');
             }
         });
 
@@ -968,6 +993,7 @@
         function openScheduleForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerScheduleSection.classList.remove('hidden'); }
         function openOnlineClassForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); teacherOnlineClassSection.classList.remove('hidden'); }
         function openRegisterStudentForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerRegisterSection.classList.remove('hidden'); }
+        function openRegisterTeacherForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerRegisterTeacherSection.classList.remove('hidden'); }
 
         function showStudentGrades() { closeSubPanels(); panelStudent.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showScheduleView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); scheduleViewSection.classList.remove('hidden'); loadScheduleTable(); }
@@ -984,6 +1010,7 @@
             managerScheduleSection.classList.add('hidden');
             teacherOnlineClassSection.classList.add('hidden');
             managerRegisterSection.classList.add('hidden');
+            managerRegisterTeacherSection.classList.add('hidden');
             gradesViewSection.classList.add('hidden');
             scheduleViewSection.classList.add('hidden');
             homeworkViewSection.classList.add('hidden');
@@ -1009,23 +1036,34 @@
             const newGrade = document.getElementById('reg-grade').value;
 
             let users = getSchoolUsers();
-            
-            // بررسی تکراری نبودن کد ملی
             if(users.some(u => u.nationalCode === newCode)) {
                 alert('این کد ملی قبلاً در سامانه ثبت شده است!');
                 return;
             }
 
-            users.push({
-                nationalCode: newCode,
-                name: newName,
-                role: "دانش‌آموز",
-                grade: newGrade
-            });
-
+            users.push({ nationalCode: newCode, name: newName, role: "دانش‌آموز", grade: newGrade });
             localStorage.setItem('farabi_school_users', JSON.stringify(users));
-            alert('دانش‌آموز جدید با موفقیت در سامانه ثبت‌نام شد!');
+            alert('دانش‌آموز جدید با موفقیت ثبت‌نام شد!');
             registerStudentForm.reset();
+            closeSubPanels();
+        });
+
+        // ثبت‌نام دبیر جدید توسط مدیر
+        registerTeacherForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newName = document.getElementById('reg-t-name').value.trim();
+            const newCode = document.getElementById('reg-t-code').value.trim();
+
+            let users = getSchoolUsers();
+            if(users.some(u => u.nationalCode === newCode)) {
+                alert('این کد ملی قبلاً در سامانه ثبت شده است!');
+                return;
+            }
+
+            users.push({ nationalCode: newCode, name: newName, role: "معلم", grade: "" });
+            localStorage.setItem('farabi_school_users', JSON.stringify(users));
+            alert('دبیر جدید با موفقیت در سامانه ثبت شد!');
+            registerTeacherForm.reset();
             closeSubPanels();
         });
 
@@ -1079,4 +1117,132 @@
 
         attendanceForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('وضعیت
+            alert('وضعیت حضور و غیاب دانش‌آموز ثبت شد.');
+            attendanceForm.reset();
+            closeSubPanels();
+        });
+
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newMsg = {
+                title: document.getElementById('msg-title').value,
+                text: document.getElementById('msg-text').value,
+                date: 'امروز'
+            };
+            let messages = JSON.parse(localStorage.getItem('farabi_messages') || '[]');
+            messages.push(newMsg);
+            localStorage.setItem('farabi_messages', JSON.stringify(messages));
+            alert('پیام عمومی با موفقیت ارسال شد!');
+            messageForm.reset();
+            closeSubPanels();
+        });
+
+        scheduleForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newSchedule = {
+                grade: document.getElementById('schedule-grade').value,
+                day: document.getElementById('schedule-day').value,
+                time: document.getElementById('schedule-time').value,
+                lesson: document.getElementById('schedule-lesson').value
+            };
+            let schedules = JSON.parse(localStorage.getItem('farabi_schedules') || '[]');
+            schedules.push(newSchedule);
+            localStorage.setItem('farabi_schedules', JSON.stringify(schedules));
+            alert('برنامه هفتگی با موفقیت ثبت شد!');
+            scheduleForm.reset();
+            closeSubPanels();
+        });
+
+        function submitExam() {
+            alert('پاسخنامه شما با موفقیت ارسال شد!');
+            closeSubPanels();
+        }
+
+        function loadOnlineClassList() {
+            let classes = JSON.parse(localStorage.getItem('farabi_online_classes') || '[]');
+            onlineClassListBox.innerHTML = '';
+            if (classes.length === 0) {
+                onlineClassListBox.innerHTML = '<p style="color: #64748b;">در حال حاضر کلاس آنلاین فعالی برگزار نمی‌شود.</p>';
+                return;
+            }
+            classes.forEach((cls) => {
+                onlineClassListBox.innerHTML += `
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 12px;">
+                        <h4>${cls.title}</h4>
+                        <p style="margin: 5px 0; color: #475569;">استاد: ${cls.teacher}</p>
+                        <p style="font-size: 12px; color: #d97706; margin-bottom: 10px;">زمان: ${cls.time}</p>
+                        <a href="${cls.link}" target="_blank" style="display: inline-block; background: var(--primary-blue); color: white; padding: 8px 18px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">ورود به کلاس اسکای‌روم</a>
+                    </div>`;
+            });
+        }
+
+        function loadGradesTable() {
+            let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+            gradesTableBody.innerHTML = '';
+            if (grades.length === 0) {
+                gradesTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b;">هنوز نمره یا امتیازی ثبت نشده است.</td></tr>';
+                return;
+            }
+            grades.forEach(g => {
+                gradesTableBody.innerHTML += `<tr><td>${g.student}</td><td>${g.subject}</td><td><b>${g.score}</b></td><td><span style="color: #d97706; font-weight: bold;">⭐ +${g.points || 0}</span></td></tr>`;
+            });
+        }
+
+        function loadScheduleTable() {
+            let schedules = JSON.parse(localStorage.getItem('farabi_schedules') || '[]');
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+
+            scheduleTableBody.innerHTML = '';
+
+            if (user.role === 'دانش‌آموز' && user.grade) {
+                schedules = schedules.filter(s => s.grade === user.grade);
+            }
+
+            if (schedules.length === 0) {
+                scheduleTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b;">برنامه‌ای برای نمایش وجود ندارد.</td></tr>';
+                return;
+            }
+
+            schedules.forEach(s => {
+                scheduleTableBody.innerHTML += `<tr><td><b>پایه ${s.grade}</b></td><td>${s.day}</td><td>${s.time}</td><td><b>${s.lesson}</b></td></tr>`;
+            });
+        }
+
+        function loadHomeworkList() {
+            let homeworks = JSON.parse(localStorage.getItem('farabi_homeworks') || '[]');
+            homeworkListBox.innerHTML = '';
+            if (homeworks.length === 0) {
+                homeworkListBox.innerHTML = '<p style="color: #64748b;">در حال حاضر تکلیفی تعریف نشده است.</p>';
+                return;
+            }
+            homeworks.forEach((hw) => {
+                homeworkListBox.innerHTML += `
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 12px;">
+                        <h4>درس: ${hw.subject}</h4>
+                        <p style="margin: 5px 0; color: #475569;">${hw.desc}</p>
+                        <p style="font-size: 12px; color: #d97706;">مهلت تحویل: ${hw.deadline}</p>
+                        <button onclick="alert('تکلیف شما با موفقیت ارسال شد!')" style="width: auto; padding: 6px 14px; font-size: 13px; margin-top: 8px;">ارسال پاسخ تکلیف</button>
+                    </div>`;
+            });
+        }
+
+        function loadMessagesList() {
+            let messages = JSON.parse(localStorage.getItem('farabi_messages') || '[]');
+            messagesListBox.innerHTML = '';
+            if (messages.length === 0) {
+                messages = [{ title: 'خوش آمدید', text: 'آغاز سال تحصیلی جدید در سامانه هوشمند مدرسه فارابی مبارک باد.', date: 'مهر ۱۴۰۵' }];
+            }
+            messages.forEach(m => {
+                messagesListBox.innerHTML += `
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 12px;">
+                        <h4 style="color: var(--dark-blue);">${m.title}</h4>
+                        <p style="margin: 5px 0; color: #475569;">${m.text}</p>
+                        <span style="font-size: 11px; color: #64748b;">تاریخ: ${m.date}</span>
+                    </div>`;
+            });
+        }
+
+        checkLogin();
+    </script>
+</body>
+</html>
