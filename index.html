@@ -395,25 +395,21 @@
 </head>
 <body>
 
-    <!-- صفحه ورود با کد ملی و رمز عبور -->
+    <!-- صفحه ورود فقط با کد ملی -->
     <div id="login-section" class="container">
         <h2>ورود به سامانه فارابی</h2>
         <form id="login-form">
             <div class="form-group">
                 <label for="national-code">کد ملی:</label>
-                <input type="text" id="national-code" required placeholder="کد ملی ۱۰ رقمی..." autocomplete="off">
-            </div>
-            <div class="form-group">
-                <label for="password">رمز عبور:</label>
-                <input type="password" id="password" required placeholder="رمز عبور..." autocomplete="off">
+                <input type="text" id="national-code" required placeholder="کد ملی خود را وارد کنید..." autocomplete="off">
             </div>
             <button type="submit">ورود به پنل کاربری</button>
         </form>
         <div class="hint-box">
-            <b>اطلاعات ورود برای تست:</b><br>
-            • دانش‌آموز (محمد محمودی): کد ملی <code>1234567890</code> | رمز: <code>1234</code><br>
-            • معلم شیمی: کد ملی <code>0011223344</code> | رمز: <code>teacher123</code><br>
-            • مدیر مدرسه: کد ملی <code>9988776655</code> | رمز: <code>admin123</code>
+            <b>کد ملی‌های نمونه برای تست:</b><br>
+            • دانش‌آموز (محمد محمودی): <code>1234567890</code><br>
+            • معلم شیمی: <code>0011223344</code><br>
+            • مدیر مدرسه: <code>9988776655</code>
         </div>
     </div>
 
@@ -747,11 +743,11 @@
     </div>
 
     <script>
-        // پایگاه داده کاربران همراه با رمز عبور
+        // پایگاه داده کاربران مدرسه
         const schoolUsers = [
-            { nationalCode: "1234567890", password: "123", name: "محمد محمودی", role: "دانش‌آموز", grade: "نهم" },
-            { nationalCode: "0011223344", password: "123", name: "استاد رضایی (معلم شیمی)", role: "معلم", grade: "" },
-            { nationalCode: "9988776655", password: "123", name: "مدیر محترم (آقای ناصری)", role: "مدیر", grade: "" }
+            { nationalCode: "1234567890", name: "محمد محمودی", role: "دانش‌آموز", grade: "نهم" },
+            { nationalCode: "0011223344", name: "استاد رضایی (معلم شیمی)", role: "معلم", grade: "" },
+            { nationalCode: "9988776655", name: "مدیر محترم (آقای ناصری)", role: "مدیر", grade: "" }
         ];
 
         const loginForm = document.getElementById('login-form');
@@ -873,19 +869,18 @@
             }
         }
 
-        // بررسی کد ملی و رمز عبور هنگام ورود
+        // ورود فقط با کد ملی (سریع و ساده)
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const inputCode = document.getElementById('national-code').value.trim();
-            const inputPass = document.getElementById('password').value.trim();
             
-            const foundUser = schoolUsers.find(u => u.nationalCode === inputCode && u.password === inputPass);
+            const foundUser = schoolUsers.find(u => u.nationalCode === inputCode);
 
             if (foundUser) {
                 localStorage.setItem('farabi_user', JSON.stringify(foundUser));
                 checkLogin();
             } else {
-                alert('کد ملی یا رمز عبور اشتباه است!');
+                alert('کد ملی وارد شده در سامانه ثبت نشده است! (لطفاً از کد ملی‌های راهنما استفاده کنید)');
             }
         });
 
