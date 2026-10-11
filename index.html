@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدرسه فارابی - سامانه جامع هوشمند</title>
+    <title>مدرسه فارابی - سامانه جامع هوشمند سیبا</title>
     <style>
         :root {
             --primary-blue: #2563eb;
@@ -290,13 +290,25 @@
             color: var(--dark-blue);
             font-weight: bold;
         }
+
+        .del-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+        .del-btn:hover { background: #dc2626; }
     </style>
 </head>
 <body>
 
-    <!-- صفحه ورود (فقط با کد ملی) -->
+    <!-- صفحه ورود -->
     <div id="login-section" class="container">
-        <h2>ورود به سامانه فارابی</h2>
+        <h2>سامانه هوشمند سیبا</h2>
         <form id="login-form">
             <div class="form-group">
                 <label for="national-code">کد ملی:</label>
@@ -328,6 +340,11 @@
                     <h3>کلاس‌های آنلاین</h3>
                     <p>ورود به سامانه فنو‌تک</p>
                 </div>
+                <div class="card" onclick="showLibraryView()">
+                    <div class="card-icon">📖</div>
+                    <h3>کتابخانه و جزوات</h3>
+                    <p>دانلود جزوات و نکات درسی</p>
+                </div>
                 <div class="card" onclick="showHomeworkStudentView()">
                     <div class="card-icon">📝</div>
                     <h3>تکالیف درسی</h3>
@@ -340,12 +357,17 @@
                 </div>
             </div>
 
-            <h3 class="section-title">امور آموزشی و اداری</h3>
+            <h3 class="section-title">امور آموزشی و پیشرفت</h3>
             <div class="grid">
                 <div class="card" onclick="showStudentGrades()">
                     <div class="card-icon">📊</div>
-                    <h3>کارنامه و نمرات</h3>
-                    <p>مشاهده نمرات و ستاره‌ها</p>
+                    <h3>کارنامه و نمرات من</h3>
+                    <p>مشاهده نمرات و ستاره‌های اختصاصی</p>
+                </div>
+                <div class="card" onclick="showProgressReport()">
+                    <div class="card-icon">📈</div>
+                    <h3>گزارش پیشرفت تحصیلی</h3>
+                    <p>تحلیل نموداری امتیازات و معدل</p>
                 </div>
                 <div class="card" onclick="showScheduleView()">
                     <div class="card-icon">📅</div>
@@ -367,7 +389,12 @@
                 <div class="card" onclick="openGradeForm()">
                     <div class="card-icon">📝</div>
                     <h3>ثبت نمره و امتیاز</h3>
-                    <p>ثبت نمره و امتیاز تشویقی</p>
+                    <p>ثبت نمره و امتیاز تشویقی دانش‌آموز</p>
+                </div>
+                <div class="card" onclick="openLibraryForm()">
+                    <div class="card-icon">📤</div>
+                    <h3>بارگذاری جزوه و فایل</h3>
+                    <p>افزودن محتوای آموزشی</p>
                 </div>
                 <div class="card" onclick="openHomeworkForm()">
                     <div class="card-icon">📂</div>
@@ -379,19 +406,14 @@
                     <h3>طراحی آزمون آنلاین</h3>
                     <p>ساخت آزمون تستی و تشریحی</p>
                 </div>
-                <div class="card" onclick="openAttendanceForm()">
-                    <div class="card-icon">📋</div>
-                    <h3>حضور و غیاب</h3>
-                    <p>ثبت وضعیت حضور کلاس</p>
-                </div>
             </div>
 
             <h3 class="section-title">ارتباطات و برنامه‌ریزی</h3>
             <div class="grid">
-                <div class="card" onclick="window.open('https://fanotech.ir', '_blank')">
-                    <div class="card-icon">💻</div>
-                    <h3>کلاس آنلاین</h3>
-                    <p>شروع جلسه در فنو‌تک</p>
+                <div class="card" onclick="showLibraryView()">
+                    <div class="card-icon">📖</div>
+                    <h3>کتابخانه درسی</h3>
+                    <p>مدیریت و حذف جزوات</p>
                 </div>
                 <div class="card" onclick="showScheduleView()">
                     <div class="card-icon">📅</div>
@@ -400,8 +422,13 @@
                 </div>
                 <div class="card" onclick="showMessagesView()">
                     <div class="card-icon">🔔</div>
-                    <h3>پیام‌های مدرسه</h3>
+                    ### پیام‌های مدرسه
                     <p>مشاهده و ارسال اطلاعیه</p>
+                </div>
+                <div class="card" onclick="showGradesManagerView()">
+                    <div class="card-icon">⚙️</div>
+                    <h3>مدیریت و مشاهده کل نمرات</h3>
+                    <p>ویرایش یا حذف نمرات ثبت‌شده</p>
                 </div>
             </div>
         </div>
@@ -413,7 +440,7 @@
                 <div class="card" onclick="openUserRegisterForm()">
                     <div class="card-icon">👥</div>
                     <h3>ثبت‌نام کاربر جدید</h3>
-                    <p>تعریف دانش‌آموز یا معلم جدید</p>
+                    <p>تعریف دانش‌آموز یا معلم</p>
                 </div>
                 <div class="card" onclick="openScheduleForm()">
                     <div class="card-icon">📅</div>
@@ -425,22 +452,22 @@
                     <h3>ارسال پیام عمومی</h3>
                     <p>اعلامیه برای همه</p>
                 </div>
-                <div class="card" onclick="showMessagesView()">
-                    <div class="card-icon">🔔</div>
-                    <h3>پیام‌های مدرسه</h3>
-                    <p>مشاهده لیست پیام‌ها</p>
+                <div class="card" onclick="showManagerDashboardData()">
+                    <div class="card-icon">⚙️</div>
+                    <h3>مدیریت کامل سامانه</h3>
+                    <p>مشاهده، ویرایش و حذف کاربران</p>
                 </div>
             </div>
         </div>
 
-        <!-- فرم ثبت‌نام کاربر توسط مدیر -->
+        <!-- فرم ثبت‌نام کاربر -->
         <div id="manager-user-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
             <h3>ثبت دانش‌آموز یا معلم جدید در سامانه</h3>
             <form id="user-register-form" style="margin-top: 15px;">
                 <div class="form-group">
-                    <label>نام و نام خانوادگی:</label>
-                    <input type="text" id="reg-name" required placeholder="مثلاً: رضا رضایی">
+                    <label>نام و نام خانوادگی (باید دقیقاً مطابق با نام درج شده در نمرات باشد):</label>
+                    <input type="text" id="reg-name" required placeholder="مثلاً: علی رضایی">
                 </div>
                 <div class="form-group">
                     <label>نقش کاربر:</label>
@@ -458,6 +485,27 @@
                     <input type="text" id="reg-national-code" required placeholder="۱۰ رقم">
                 </div>
                 <button type="submit">ثبت و ذخیره کاربر در سامانه</button>
+            </form>
+        </div>
+
+        <!-- فرم بارگذاری جزوه و کتابخانه -->
+        <div id="library-upload-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>بارگذاری جزوه یا محتوای آموزشی جدید</h3>
+            <form id="library-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>عنوان جزوه / درس:</label>
+                    <input type="text" id="lib-title" required placeholder="مثلاً: جزوه جامع شیمی نهم (اتم و یون)">
+                </div>
+                <div class="form-group">
+                    <label>پایه تحصیلی:</label>
+                    <input type="text" id="lib-grade" required placeholder="مثلاً: نهم">
+                </div>
+                <div class="form-group">
+                    <label>لینک دانلود یا مطالعه فایل:</label>
+                    <input type="url" id="lib-link" required placeholder="https://example.com/file.pdf">
+                </div>
+                <button type="submit">انتشار در کتابخانه درسی</button>
             </form>
         </div>
 
@@ -528,27 +576,6 @@
             </form>
         </div>
 
-        <!-- فرم حضور و غیاب -->
-        <div id="teacher-attendance-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>ثبت حضور و غیاب کلاس</h3>
-            <form id="attendance-form" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>نام دانش‌آموز:</label>
-                    <input type="text" id="att-student" required placeholder="مثلاً: علی رضایی">
-                </div>
-                <div class="form-group">
-                    <label>وضعیت حضور:</label>
-                    <select id="att-status">
-                        <option value="حاضر">حاضر</option>
-                        <option value="غایب">غایب</option>
-                        <option value="تاخیر">دارای تاخیر</option>
-                    </select>
-                </div>
-                <button type="submit">ثبت وضعیت در سامانه</button>
-            </form>
-        </div>
-
         <!-- فرم ارسال پیام -->
         <div id="manager-message-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
@@ -597,10 +624,10 @@
             </form>
         </div>
 
-        <!-- جدول نمرات -->
+        <!-- جدول نمرات (دانش‌آموز فقط نمره خودش را می‌بیند) -->
         <div id="grades-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
-            <h3>لیست نمرات و امتیازات ثبت‌شده سامانه</h3>
+            <h3 id="grades-section-title">کارنامه و نمرات من</h3>
             <table>
                 <thead>
                     <tr>
@@ -608,10 +635,25 @@
                         <th>درس</th>
                         <th>نمره</th>
                         <th>امتیاز</th>
+                        <th id="grade-action-th" class="hidden">عملیات</th>
                     </tr>
                 </thead>
                 <tbody id="grades-table-body"></tbody>
             </table>
+        </div>
+
+        <!-- کتابخانه جزوات -->
+        <div id="library-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>کتابخانه و جزوات آموزشی</h3>
+            <div id="library-list-box" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- گزارش پیشرفت تحصیلی -->
+        <div id="progress-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>گزارش پیشرفت تحصیلی و تحلیل عملکرد</h3>
+            <div id="progress-content-box" style="margin-top: 15px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;"></div>
         </div>
 
         <!-- جدول برنامه هفتگی -->
@@ -651,6 +693,24 @@
             <h3>آزمون آنلاین فعال</h3>
             <div id="exam-container-box" style="margin-top: 15px;"></div>
         </div>
+
+        <!-- پنل مدیریت کاربران -->
+        <div id="manager-control-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به منو</button>
+            <h3>مدیریت کاربران سامانه</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>نام و نام خانوادگی</th>
+                        <th>نقش</th>
+                        <th>پایه</th>
+                        <th>کد ملی</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -671,24 +731,28 @@
         const panelManager = document.getElementById('panel-manager');
 
         const managerUserSection = document.getElementById('manager-user-section');
+        const libraryUploadSection = document.getElementById('library-upload-section');
         const teacherGradeSection = document.getElementById('teacher-grade-section');
         const teacherHomeworkSection = document.getElementById('teacher-homework-section');
         const teacherExamSection = document.getElementById('teacher-exam-section');
-        const teacherAttendanceSection = document.getElementById('teacher-attendance-section');
         const managerMessageSection = document.getElementById('manager-message-section');
         const managerScheduleSection = document.getElementById('manager-schedule-section');
-        
+
         const gradesViewSection = document.getElementById('grades-view-section');
+        const gradesSectionTitle = document.getElementById('grades-section-title');
+        const libraryViewSection = document.getElementById('library-view-section');
+        const progressViewSection = document.getElementById('progress-view-section');
         const scheduleViewSection = document.getElementById('schedule-view-section');
         const homeworkViewSection = document.getElementById('homework-view-section');
         const messagesViewSection = document.getElementById('messages-view-section');
         const examViewSection = document.getElementById('exam-view-section');
+        const managerControlSection = document.getElementById('manager-control-section');
 
         const userRegisterForm = document.getElementById('user-register-form');
+        const libraryForm = document.getElementById('library-form');
         const gradeForm = document.getElementById('grade-form');
         const homeworkForm = document.getElementById('homework-form');
         const examCreateForm = document.getElementById('exam-create-form');
-        const attendanceForm = document.getElementById('attendance-form');
         const messageForm = document.getElementById('message-form');
         const scheduleForm = document.getElementById('schedule-form');
 
@@ -697,10 +761,14 @@
         const regGradeInput = document.getElementById('reg-grade');
 
         const gradesTableBody = document.getElementById('grades-table-body');
+        const gradeActionTh = document.getElementById('grade-action-th');
+        const libraryListBox = document.getElementById('library-list-box');
+        const progressContentBox = document.getElementById('progress-content-box');
         const scheduleTableBody = document.getElementById('schedule-table-body');
         const homeworkListBox = document.getElementById('homework-list-box');
         const messagesListBox = document.getElementById('messages-list-box');
         const examContainerBox = document.getElementById('exam-container-box');
+        const usersTableBody = document.getElementById('users-table-body');
 
         function toggleRegGradeField() {
             if (regRoleSelect.value === 'دانش‌آموز') {
@@ -783,7 +851,7 @@
                 localStorage.setItem('farabi_user', JSON.stringify(foundUser));
                 checkLogin();
             } else {
-                alert('کد ملی وارد شده در سامانه ثبت نشده است! از مدیر مدرسه بخواهید ابتدا شما را ثبت کند.');
+                alert('کد ملی وارد شده در سامانه ثبت نشده است!');
             }
         });
 
@@ -817,34 +885,56 @@
             closeSubPanels();
         });
 
+        libraryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newLib = {
+                title: document.getElementById('lib-title').value.trim(),
+                grade: document.getElementById('lib-grade').value.trim(),
+                link: document.getElementById('lib-link').value.trim()
+            };
+            let libraries = JSON.parse(localStorage.getItem('farabi_libraries') || '[]');
+            libraries.push(newLib);
+            localStorage.setItem('farabi_libraries', JSON.stringify(libraries));
+            alert('جزوه آموزشی با موفقیت به کتابخانه اضافه شد!');
+            libraryForm.reset();
+            closeSubPanels();
+        });
+
         function openUserRegisterForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerUserSection.classList.remove('hidden'); }
+        function openLibraryForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); libraryUploadSection.classList.remove('hidden'); }
         function openGradeForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherGradeSection.classList.remove('hidden'); }
         function openHomeworkForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherHomeworkSection.classList.remove('hidden'); }
         function openExamForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherExamSection.classList.remove('hidden'); }
-        function openAttendanceForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherAttendanceSection.classList.remove('hidden'); }
         function openMessageForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerMessageSection.classList.remove('hidden'); }
         function openScheduleForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerScheduleSection.classList.remove('hidden'); }
 
         function showStudentGrades() { closeSubPanels(); panelStudent.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
+        function showGradesManagerView() { closeSubPanels(); panelTeacher.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
+        function showLibraryView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); libraryViewSection.classList.remove('hidden'); loadLibraryList(); }
+        function showProgressReport() { closeSubPanels(); panelStudent.classList.add('hidden'); progressViewSection.classList.remove('hidden'); loadProgressReportData(); }
         function showScheduleView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); scheduleViewSection.classList.remove('hidden'); loadScheduleTable(); }
         function showHomeworkStudentView() { closeSubPanels(); panelStudent.classList.add('hidden'); homeworkViewSection.classList.remove('hidden'); loadHomeworkList(); }
         function showMessagesView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); messagesViewSection.classList.remove('hidden'); loadMessagesList(); }
         function showOnlineExamView() { closeSubPanels(); panelStudent.classList.add('hidden'); examViewSection.classList.remove('hidden'); loadExamsList(); }
+        function showManagerDashboardData() { closeSubPanels(); panelManager.classList.add('hidden'); managerControlSection.classList.remove('hidden'); loadUsersTable(); }
 
         function closeSubPanels() {
             managerUserSection.classList.add('hidden');
+            libraryUploadSection.classList.add('hidden');
             teacherGradeSection.classList.add('hidden');
             teacherHomeworkSection.classList.add('hidden');
             teacherExamSection.classList.add('hidden');
-            teacherAttendanceSection.classList.add('hidden');
             managerMessageSection.classList.add('hidden');
             managerScheduleSection.classList.add('hidden');
             gradesViewSection.classList.add('hidden');
+            libraryViewSection.classList.add('hidden');
+            progressViewSection.classList.add('hidden');
             scheduleViewSection.classList.add('hidden');
             homeworkViewSection.classList.add('hidden');
             messagesViewSection.classList.add('hidden');
             examViewSection.classList.add('hidden');
-            
+            managerControlSection.classList.add('hidden');
+
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             if (user.role === 'دانش‌آموز') {
                 panelStudent.classList.remove('hidden');
@@ -858,8 +948,8 @@
         gradeForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newGrade = {
-                student: document.getElementById('student-name').value,
-                subject: document.getElementById('subject-name').value,
+                student: document.getElementById('student-name').value.trim(),
+                subject: document.getElementById('subject-name').value.trim(),
                 score: document.getElementById('score-val').value,
                 points: document.getElementById('points-val').value || 0
             };
@@ -901,13 +991,6 @@
             closeSubPanels();
         });
 
-        attendanceForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('وضعیت حضور و غیاب دانش‌آموز ثبت شد.');
-            attendanceForm.reset();
-            closeSubPanels();
-        });
-
         messageForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const newMsg = {
@@ -939,24 +1022,112 @@
             closeSubPanels();
         });
 
+        function deleteGradeItem(index) {
+            if(confirm('آیا از حذف این رکورد نمره اطمینان دارید؟')) {
+                let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+                grades.splice(index, 1);
+                localStorage.setItem('farabi_grades', JSON.stringify(grades));
+                loadGradesTable();
+            }
+        }
+
+        function deleteLibraryItem(index) {
+            if(confirm('آیا از حذف این جزوه اطمینان دارید؟')) {
+                let libs = JSON.parse(localStorage.getItem('farabi_libraries') || '[]');
+                libs.splice(index, 1);
+                localStorage.setItem('farabi_libraries', JSON.stringify(libs));
+                loadLibraryList();
+            }
+        }
+
+        function deleteUserItem(index) {
+            if(confirm('آیا از حذف این کاربر از سامانه اطمینان دارید؟')) {
+                let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
+                users.splice(index, 1);
+                localStorage.setItem('farabi_users', JSON.stringify(users));
+                loadUsersTable();
+            }
+        }
+
         function loadGradesTable() {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             gradesTableBody.innerHTML = '';
+
+            // تفکیک دسترسی نمرات: دانش‌آموز فقط نمرات خودش را می‌بیند
+            if (user.role === 'معلم' || user.role === 'مدیر') {
+                gradeActionTh.classList.remove('hidden');
+                gradesSectionTitle.textContent = 'لیست کل نمرات و امتیازات ثبت‌شده در سامانه';
+            } else {
+                gradeActionTh.classList.add('hidden');
+                gradesSectionTitle.textContent = `کارنامه و نمرات من (${user.name})`;
+                // فیلتر دقیق بر اساس نام دانش‌آموز لاگین‌شده
+                grades = grades.filter(g => g.student.trim() === user.name.trim());
+            }
+
             if (grades.length === 0) {
-                gradesTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b;">هنوز نمره یا امتیازی ثبت نشده است.</td></tr>';
+                gradesTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b;">هنوز نمره یا امتیازی برای شما ثبت نشده است.</td></tr>`;
                 return;
             }
-            grades.forEach(g => {
-                gradesTableBody.innerHTML += `<tr><td>${g.student}</td><td>${g.subject}</td><td><b>${g.score}</b></td><td><span style="color: #d97706; font-weight: bold;">⭐ +${g.points || 0}</span></td></tr>`;
+
+            grades.forEach((g, idx) => {
+                let actionTd = (user.role === 'معلم' || user.role === 'مدیر') ? `<td><button class="del-btn" onclick="deleteGradeItem(${idx})">حذف</button></td>` : '';
+                gradesTableBody.innerHTML += `<tr><td>${g.student}</td><td>${g.subject}</td><td><b>${g.score}</b></td><td><span style="color: #d97706; font-weight: bold;">⭐ +${g.points || 0}</span></td>${actionTd}</tr>`;
             });
+        }
+
+        function loadLibraryList() {
+            let libs = JSON.parse(localStorage.getItem('farabi_libraries') || '[]');
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            libraryListBox.innerHTML = '';
+
+            if (libs.length === 0) {
+                libs = [{ title: 'جزوه آموزشی نمونه: مبانی اتم و یون (پایه نهم)', grade: 'نهم', link: 'https://fanotech.ir' }];
+            }
+
+            libs.forEach((lib, idx) => {
+                let delBtnHtml = (user.role === 'معلم' || user.role === 'مدیر') ? `<button class="del-btn" onclick="deleteLibraryItem(${idx})" style="margin-right: 10px;">حذف جزوه</button>` : '';
+                libraryListBox.innerHTML += `
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <div>
+                            <h4 style="color: var(--dark-blue);">${lib.title}</h4>
+                            <p style="font-size: 12px; color: #64748b; margin-top: 3px;">پایه تحصیلی: ${lib.grade}</p>
+                        </div>
+                        <div>
+                            <button onclick="window.open('${lib.link}', '_blank')" style="width: auto; padding: 6px 14px; font-size: 13px; margin-top: 0;">مشاهده / دانلود</button>
+                            ${delBtnHtml}
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function loadProgressReportData() {
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+            let userGrades = grades.filter(g => g.student.trim() === user.name.trim());
+            let totalStars = calculateUserPoints(user.name);
+
+            let avgScore = 0;
+            if (userGrades.length > 0) {
+                let sum = userGrades.reduce((acc, curr) => acc + Number(curr.score || 0), 0);
+                avgScore = (sum / userGrades.length).toFixed(2);
+            }
+
+            progressContentBox.innerHTML = `
+                <h4 style="color: var(--dark-blue); margin-bottom: 10px;">تحلیل وضعیت عملکرد تحصیلی: ${user.name}</h4>
+                <p style="margin-bottom: 8px;">📊 تعداد کل آزمون‌ها و ارزیابی‌های ثبت‌شده شما: <b>${userGrades.length} مورد</b></p>
+                <p style="margin-bottom: 8px;">📈 معدل نمرات شما: <b style="color: var(--primary-blue);">${avgScore} از ۲۰</b></p>
+                <p style="margin-bottom: 15px;">⭐ مجموع ستاره‌ها و امتیازات تشویقی شما: <b style="color: #d97706;">${totalStars} امتیاز</b></p>
+                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+                <p style="font-size: 13px; color: #64748b;">وضعیت پیشرفت: ${avgScore >= 17 ? '🌟 عالی و رو به رشد! به تلاش خود ادامه دهید.' : (avgScore >= 12 ? '👍 خوب، با تلاش بیشتر می‌توانید نتایج بهتری کسب کنید.' : '⚠️ نیاز به تمرکز و مرور بیشتر روی تکالیف و دروس دارید.')}</p>
+            `;
         }
 
         function loadScheduleTable() {
             let schedules = JSON.parse(localStorage.getItem('farabi_schedules') || '[]');
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
-            
             scheduleTableBody.innerHTML = '';
-            
+
             if (user.role === 'دانش‌آموز' && user.grade) {
                 schedules = schedules.filter(s => s.grade === user.grade);
             }
@@ -1021,6 +1192,25 @@
                         <p style="margin: 5px 0; color: #475569;">${m.text}</p>
                         <span style="font-size: 11px; color: #64748b;">تاریخ: ${m.date}</span>
                     </div>`;
+            });
+        }
+
+        function loadUsersTable() {
+            let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
+            usersTableBody.innerHTML = '';
+            if (users.length === 0) {
+                usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b;">کاربر ثبت‌شده‌ای وجود ندارد.</td></tr>';
+                        return;
+            }
+            users.forEach((u, idx) => {
+                usersTableBody.innerHTML += `
+                    <tr>
+                        <td>${u.name}</td>
+                        <td>${u.role}</td>
+                        <td>${u.grade || '-'}</td>
+                        <td>${u.nationalCode}</td>
+                        <td><button class="del-btn" onclick="deleteUserItem(${idx})">حذف کاربر</button></td>
+                    </tr>`;
             });
         }
 
