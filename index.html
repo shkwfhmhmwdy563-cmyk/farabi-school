@@ -330,7 +330,7 @@
                 <p>
                     <span>نقش: <b><span id="user-display-role"></span></b></span>
                     <span id="grade-info-box">پایه: <b><span id="user-display-grade"></span></b></span>
-                    <span id="points-info-box">⭐ امتیاز: <b id="user-display-points" style="color: #fef08a;">0</b></span>
+                    <span id="points-info-box">⭐ امتیاز کل: <b id="user-display-points" style="color: #fef08a;">0</b></span>
                 </p>
             </div>
             <button class="logout-btn" id="logout-btn">خروج از حساب</button>
@@ -412,23 +412,28 @@
                 </div>
                 <div class="card" onclick="openGradeForm()">
                     <div class="card-icon">📝</div>
-                    <h3>ثبت نمره و امتیاز</h3>
-                    <p>ثبت نمره و ستاره تشویقی</p>
+                    <h3>ثبت نمره</h3>
+                    <p>محاسبه خودکار امتیاز نمره (بالا ۱۵)</p>
+                </div>
+                <div class="card" onclick="openAttendanceForm()">
+                    <div class="card-icon">📋</div>
+                    <h3>حضور و غیاب</h3>
+                    <p>حضور (+۱) و غیبت (۳-)</p>
                 </div>
                 <div class="card" onclick="openLibraryForm()">
                     <div class="card-icon">📤</div>
                     <h3>بارگذاری جزوه</h3>
                     <p>افزودن محتوای آموزشی</p>
                 </div>
+            </div>
+
+            <h3 class="section-title">مدیریت و نظارت</h3>
+            <div class="grid">
                 <div class="card" onclick="openHomeworkForm()">
                     <div class="card-icon">📂</div>
                     <h3>تعریف تکلیف</h3>
                     <p>ارسال تکلیف جدید</p>
                 </div>
-            </div>
-
-            <h3 class="section-title">مدیریت و نظارت</h3>
-            <div class="grid">
                 <div class="card" onclick="openExamForm()">
                     <div class="card-icon">✍️</div>
                     <h3>طراحی آزمون آنلاین</h3>
@@ -443,11 +448,6 @@
                     <div class="card-icon">🏆</div>
                     <h3>۱۰ نفر برتر سامانه</h3>
                     <p>بررسی جدول برترین‌ها</p>
-                </div>
-                <div class="card" onclick="showLibraryView()">
-                    <div class="card-icon">📖</div>
-                    <h3>کتابخانه درسی</h3>
-                    <p>مدیریت جزوات بارگذاری‌شده</p>
                 </div>
             </div>
         </div>
@@ -528,6 +528,26 @@
             </form>
         </div>
 
+        <!-- فرم حضور و غیاب هوشمند -->
+        <div id="teacher-attendance-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
+            <h3>ثبت حضور و غیاب (امتیاز خودکار)</h3>
+            <form id="attendance-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>نام دانش‌آموز:</label>
+                    <input type="text" id="att-student" required placeholder="مثلاً: علی رضایی">
+                </div>
+                <div class="form-group">
+                    <label>وضعیت:</label>
+                    <select id="att-status">
+                        <option value="حاضر">حاضر (⭐ +1 امتیاز)</option>
+                        <option value="غایب">غایب (❌ ۳- امتیاز)</option>
+                    </select>
+                </div>
+                <button type="submit">ثبت وضعیت و اعمال امتیاز</button>
+            </form>
+        </div>
+
         <div id="library-upload-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3>بارگذاری جزوه یا محتوای آموزشی</h3>
@@ -548,9 +568,10 @@
             </form>
         </div>
 
+        <!-- فرم ثبت نمره با قانون امتیازدهی جدید -->
         <div id="teacher-grade-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
-            <h3>ثبت نمره و امتیاز برای دانش‌آموز</h3>
+            <h3>ثبت نمره (محاسبه خودکار امتیاز نمرات بالای ۱۵)</h3>
             <form id="grade-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>نام دانش‌آموز:</label>
@@ -562,13 +583,12 @@
                 </div>
                 <div class="form-group">
                     <label>نمره (از ۲۰):</label>
-                    <input type="number" step="0.25" max="20" min="0" id="score-val" required placeholder="19.5">
+                    <input type="number" step="0.25" max="20" min="0" id="score-val" required placeholder="مثلاً: 18">
                 </div>
-                <div class="form-group">
-                    <label>امتیاز تشویقی (ستاره):</label>
-                    <input type="number" min="0" id="points-val" value="0" required placeholder="5">
-                </div>
-                <button type="submit">ثبت نمره و امتیاز</button>
+                <p style="font-size: 12px; color: var(--gray-text); margin-bottom: 15px;">
+                    💡 راهنما: نمره ۱۵ (۴ امتیاز) و به ازای هر ۱ نمره بالاتر از ۱۵، ۱ امتیاز اضافه تعلق می‌گیرد (نمره ۲۰ = ۹ امتیاز).
+                </p>
+                <button type="submit">ثبت نمره و محاسبه امتیاز</button>
             </form>
         </div>
 
@@ -632,7 +652,7 @@
                         <th>نام دانش‌آموز</th>
                         <th>درس</th>
                         <th>نمره</th>
-                        <th>امتیاز</th>
+                        <th>امتیاز مکتسبه</th>
                         <th id="grade-action-th" class="hidden">عملیات</th>
                     </tr>
                 </thead>
@@ -755,6 +775,7 @@
 
         const managerUserSection = document.getElementById('manager-user-section');
         const onlineClassUploadSection = document.getElementById('online-class-upload-section');
+        const teacherAttendanceSection = document.getElementById('teacher-attendance-section');
         const libraryUploadSection = document.getElementById('library-upload-section');
         const teacherGradeSection = document.getElementById('teacher-grade-section');
         const teacherHomeworkSection = document.getElementById('teacher-homework-section');
@@ -775,6 +796,7 @@
 
         const userRegisterForm = document.getElementById('user-register-form');
         const onlineClassForm = document.getElementById('online-class-form');
+        const attendanceForm = document.getElementById('attendance-form');
         const libraryForm = document.getElementById('library-form');
         const gradeForm = document.getElementById('grade-form');
         const homeworkForm = document.getElementById('homework-form');
@@ -808,6 +830,7 @@
             }
         }
 
+        // تابع محاسبه امتیازات کاربر بر اساس نمرات (بالای 15) و حضور و غیاب
         function calculateUserPoints(studentName) {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             let totalPoints = 0;
@@ -921,6 +944,27 @@
             closeSubPanels();
         });
 
+        // ثبت حضور و غیاب با اعمال امتیاز خودکار (+1 یا -3)
+        attendanceForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const studentName = document.getElementById('att-student').value.trim();
+            const status = document.getElementById('att-status').value;
+            let pointsChange = status === 'حاضر' ? 1 : -3;
+
+            // ثبت به عنوان رکورد نمره/امتیاز در سامانه برای اعمال در معدل و امتیازات
+            let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+            grades.push({
+                student: studentName,
+                subject: `حضور و غیاب (${status})`,
+                score: status === 'حاضر' ? 'حاضر' : 'غایب',
+                points: pointsChange
+            });
+            localStorage.setItem('farabi_grades', JSON.stringify(grades));
+            alert(`وضعیت ${status} برای ${studentName} ثبت شد (${pointsChange > 0 ? '+' + pointsChange : pointsChange} امتیاز)!`);
+            attendanceForm.reset();
+            closeSubPanels();
+        });
+
         libraryForm.addEventListener('submit', function(e) {
             e.preventDefault();
             let libs = JSON.parse(localStorage.getItem('farabi_libraries') || '[]');
@@ -935,17 +979,26 @@
             closeSubPanels();
         });
 
+        // ثبت نمره با محاسبه خودکار امتیاز بر اساس فرمول (نمره بالا 15: پایه 4 امتیاز + 1 امتیاز به ازای هر نمره مازاد)
         gradeForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const scoreVal = Number(document.getElementById('score-val').value);
+            let calculatedPoints = 0;
+
+            if (scoreVal >= 15) {
+                // فرمول: 4 امتیاز برای نمره 15، به علاوه 1 امتیاز به ازای هر نمره بالاتر از 15
+                calculatedPoints = 4 + (scoreVal - 15);
+            }
+
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             grades.push({
                 student: document.getElementById('student-name').value.trim(),
                 subject: document.getElementById('subject-name').value.trim(),
-                score: document.getElementById('score-val').value,
-                points: document.getElementById('points-val').value || 0
+                score: scoreVal,
+                points: calculatedPoints
             });
             localStorage.setItem('farabi_grades', JSON.stringify(grades));
-            alert('نمره ثبت شد!');
+            alert(`نمره با موفقیت ثبت شد! امتیاز مکتسبه برای این نمره: ⭐ ${calculatedPoints}`);
             gradeForm.reset();
             closeSubPanels();
         });
@@ -982,6 +1035,7 @@
 
         function openUserRegisterForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerUserSection.classList.remove('hidden'); }
         function openOnlineClassForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); onlineClassUploadSection.classList.remove('hidden'); }
+        function openAttendanceForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherAttendanceSection.classList.remove('hidden'); }
         function openLibraryForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); libraryUploadSection.classList.remove('hidden'); }
         function openGradeForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherGradeSection.classList.remove('hidden'); }
         function openHomeworkForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherHomeworkSection.classList.remove('hidden'); }
@@ -1003,6 +1057,7 @@
         function closeSubPanels() {
             managerUserSection.classList.add('hidden');
             onlineClassUploadSection.classList.add('hidden');
+            teacherAttendanceSection.classList.add('hidden');
             libraryUploadSection.classList.add('hidden');
             teacherGradeSection.classList.add('hidden');
             teacherHomeworkSection.classList.add('hidden');
@@ -1022,7 +1077,7 @@
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             if (user.role === 'دانش‌آموز') panelStudent.classList.remove('hidden');
             else if (user.role === 'معلم') panelTeacher.classList.remove('hidden');
-            else if (user.role === 'مدیر') panelManager.classList.add('hidden') === false ? panelManager.classList.remove('hidden') : panelManager.classList.remove('hidden');
+            else if (user.role === 'مدیر') panelManager.classList.remove('hidden');
         }
 
         function deleteOnlineClassItem(index) {
@@ -1098,7 +1153,7 @@
 
             if (user.role === 'معلم' || user.role === 'مدیر') {
                 gradeActionTh.classList.remove('hidden');
-                gradesSectionTitle.textContent = 'لیست کل نمرات';
+                gradesSectionTitle.textContent = 'لیست کل نمرات و حضور و غیاب‌ها';
             } else {
                 gradeActionTh.classList.add('hidden');
                 gradesSectionTitle.textContent = `کارنامه من (${user.name})`;
@@ -1112,7 +1167,9 @@
 
             grades.forEach((g, idx) => {
                 let actionTd = (user.role === 'معلم' || user.role === 'مدیر') ? `<td><button class="del-btn" onclick="deleteGradeItem(${idx})">حذف</button></td>` : '';
-                gradesTableBody.innerHTML += `<tr><td>${g.student}</td><td>${g.subject}</td><td><b>${g.score}</b></td><td><span style="color: #d97706; font-weight: bold;">⭐ +${g.points || 0}</span></td>${actionTd}</tr>`;
+                let pColor = Number(g.points) < 0 ? '#dc2626' : '#d97706';
+                let pSign = Number(g.points) > 0 ? '+' : '';
+                gradesTableBody.innerHTML += `<tr><td>${g.student}</td><td>${g.subject}</td><td><b>${g.score}</b></td><td><span style="color: ${pColor}; font-weight: bold;">⭐ ${pSign}${g.points || 0}</span></td>${actionTd}</tr>`;
             });
         }
 
@@ -1154,9 +1211,9 @@
 
         function loadProgressReportData() {
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
-            let userGrades = JSON.parse(localStorage.getItem('farabi_grades') || '[]').filter(g => g.student.trim() === user.name.trim());
+            let userGrades = JSON.parse(localStorage.getItem('farabi_grades') || '[]').filter(g => g.student.trim() === user.name.trim() && !isNaN(g.score));
             let avg = userGrades.length > 0 ? (userGrades.reduce((a, c) => a + Number(c.score || 0), 0) / userGrades.length).toFixed(2) : 0;
-            progressContentBox.innerHTML = `<h4>تحلیل عملکرد: ${user.name}</h4><p style="margin: 8px 0;">📊 ارزیابی‌ها: <b>${userGrades.length}</b></p><p style="margin: 8px 0;">📈 معدل: <b style="color: var(--primary);">${avg} از ۲۰</b></p><p style="margin: 8px 0;">⭐ امتیازات: <b style="color: #d97706;">${calculateUserPoints(user.name)}</b></p>`;
+            progressContentBox.innerHTML = `<h4>تحلیل عملکرد: ${user.name}</h4><p style="margin: 8px 0;">📊 ارزیابی‌ها: <b>${userGrades.length}</b></p><p style="margin: 8px 0;">📈 معدل: <b style="color: var(--primary);">${avg} از ۲۰</b></p><p style="margin: 8px 0;">⭐ امتیاز کل: <b style="color: #d97706;">${calculateUserPoints(user.name)}</b></p>`;
         }
 
         function loadScheduleTable() {
