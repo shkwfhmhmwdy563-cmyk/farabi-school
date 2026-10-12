@@ -340,10 +340,10 @@
         <div id="panel-student" class="hidden">
             <h3 class="section-title">آموزش و یادگیری</h3>
             <div class="grid">
-                <div class="card" onclick="window.open('https://fanotech.ir', '_blank')">
+                <div class="card" onclick="showOnlineClassView()">
                     <div class="card-icon">📚</div>
                     <h3>کلاس‌های آنلاین</h3>
-                    <p>ورود به سامانه فنو‌تک</p>
+                    <p>ورود به اتاق‌های فنوتک</p>
                 </div>
                 <div class="card" onclick="showLibraryView()">
                     <div class="card-icon">📖</div>
@@ -405,10 +405,10 @@
         <div id="panel-teacher" class="hidden">
             <h3 class="section-title">ابزارهای تدریس و کلاس آنلاین</h3>
             <div class="grid">
-                <div class="card" onclick="window.open('https://fanotech.ir', '_blank')">
+                <div class="card" onclick="openOnlineClassForm()">
                     <div class="card-icon">💻</div>
-                    <h3>برگزاری کلاس آنلاین</h3>
-                    <p>ورود به اتاق زنده فنوتک</p>
+                    <h3>ثبت کلاس آنلاین</h3>
+                    <p>ارسال لینک اتاق فنوتک</p>
                 </div>
                 <div class="card" onclick="openGradeForm()">
                     <div class="card-icon">📝</div>
@@ -461,15 +461,15 @@
                     <h3>ثبت‌نام کاربر جدید</h3>
                     <p>تعریف دانش‌آموز یا معلم</p>
                 </div>
+                <div class="card" onclick="openOnlineClassForm()">
+                    <div class="card-icon">💻</div>
+                    <h3>ثبت کلاس آنلاین</h3>
+                    <p>انتشار لینک فنوتک</p>
+                </div>
                 <div class="card" onclick="showSchoolDirectoryView()">
                     <div class="card-icon">🏫</div>
                     <h3>کل مدرسه (پایه‌ها)</h3>
                     <p>مدیریت تفکیکی دانش‌آموزان</p>
-                </div>
-                <div class="card" onclick="showLeaderboardView()">
-                    <div class="card-icon">🏆</div>
-                    <h3>۱۰ نفر برتر سامانه</h3>
-                    <p>مشاهده رتبه‌بندی برترین‌ها</p>
                 </div>
                 <div class="card" onclick="showManagerDashboardData()">
                     <div class="card-icon">⚙️</div>
@@ -504,6 +504,27 @@
                     <input type="text" id="reg-national-code" required placeholder="۱۰ رقم">
                 </div>
                 <button type="submit">ثبت کاربر در سامانه</button>
+            </form>
+        </div>
+
+        <!-- فرم ثبت کلاس آنلاین فنوتک -->
+        <div id="online-class-upload-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
+            <h3>ثبت و انتشار کلاس آنلاین (فنوتک)</h3>
+            <form id="online-class-form" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>عنوان کلاس / درس:</label>
+                    <input type="text" id="oc-title" required placeholder="مثلاً: کلاس آنلاین علوم (شیمی)">
+                </div>
+                <div class="form-group">
+                    <label>پایه تحصیلی:</label>
+                    <input type="text" id="oc-grade" required placeholder="مثلاً: نهم">
+                </div>
+                <div class="form-group">
+                    <label>لینک اتاق فنوتک:</label>
+                    <input type="url" id="oc-link" required placeholder="https://fanotech.ir/room/...">
+                </div>
+                <button type="submit">انتشار کلاس آنلاین</button>
             </form>
         </div>
 
@@ -596,6 +617,12 @@
         </div>
 
         <!-- جدول‌ها و نمایش داده‌ها -->
+        <div id="online-class-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
+            <h3>کلاس‌های آنلاین فعال (فنوتک)</h3>
+            <div id="online-class-list-box" style="margin-top: 15px;"></div>
+        </div>
+
         <div id="grades-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
             <h3 id="grades-section-title">کارنامه و نمرات</h3>
@@ -727,11 +754,13 @@
         const panelManager = document.getElementById('panel-manager');
 
         const managerUserSection = document.getElementById('manager-user-section');
+        const onlineClassUploadSection = document.getElementById('online-class-upload-section');
         const libraryUploadSection = document.getElementById('library-upload-section');
         const teacherGradeSection = document.getElementById('teacher-grade-section');
         const teacherHomeworkSection = document.getElementById('teacher-homework-section');
         const teacherExamSection = document.getElementById('teacher-exam-section');
 
+        const onlineClassViewSection = document.getElementById('online-class-view-section');
         const gradesViewSection = document.getElementById('grades-view-section');
         const gradesSectionTitle = document.getElementById('grades-section-title');
         const leaderboardViewSection = document.getElementById('leaderboard-view-section');
@@ -745,6 +774,7 @@
         const managerControlSection = document.getElementById('manager-control-section');
 
         const userRegisterForm = document.getElementById('user-register-form');
+        const onlineClassForm = document.getElementById('online-class-form');
         const libraryForm = document.getElementById('library-form');
         const gradeForm = document.getElementById('grade-form');
         const homeworkForm = document.getElementById('homework-form');
@@ -754,6 +784,7 @@
         const regGradeGroup = document.getElementById('reg-grade-group');
         const regGradeInput = document.getElementById('reg-grade');
 
+        const onlineClassListBox = document.getElementById('online-class-list-box');
         const gradesTableBody = document.getElementById('grades-table-body');
         const gradeActionTh = document.getElementById('grade-action-th');
         const leaderboardTableBody = document.getElementById('leaderboard-table-body');
@@ -876,6 +907,20 @@
             closeSubPanels();
         });
 
+        onlineClassForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let classes = JSON.parse(localStorage.getItem('farabi_online_classes') || '[]');
+            classes.push({
+                title: document.getElementById('oc-title').value.trim(),
+                grade: document.getElementById('oc-grade').value.trim(),
+                link: document.getElementById('oc-link').value.trim()
+            });
+            localStorage.setItem('farabi_online_classes', JSON.stringify(classes));
+            alert('کلاس آنلاین با موفقیت منتشر شد!');
+            onlineClassForm.reset();
+            closeSubPanels();
+        });
+
         libraryForm.addEventListener('submit', function(e) {
             e.preventDefault();
             let libs = JSON.parse(localStorage.getItem('farabi_libraries') || '[]');
@@ -936,11 +981,13 @@
         });
 
         function openUserRegisterForm() { closeSubPanels(); panelManager.classList.add('hidden'); managerUserSection.classList.remove('hidden'); }
+        function openOnlineClassForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); onlineClassUploadSection.classList.remove('hidden'); }
         function openLibraryForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); libraryUploadSection.classList.remove('hidden'); }
         function openGradeForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherGradeSection.classList.remove('hidden'); }
         function openHomeworkForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherHomeworkSection.classList.remove('hidden'); }
         function openExamForm() { closeSubPanels(); panelTeacher.classList.add('hidden'); teacherExamSection.classList.remove('hidden'); }
 
+        function showOnlineClassView() { closeSubPanels(); panelStudent.classList.add('hidden'); onlineClassViewSection.classList.remove('hidden'); loadOnlineClassesList(); }
         function showStudentGrades() { closeSubPanels(); panelStudent.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showGradesManagerView() { closeSubPanels(); panelTeacher.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showLeaderboardView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); leaderboardViewSection.classList.remove('hidden'); loadLeaderboardTable(); }
@@ -955,10 +1002,12 @@
 
         function closeSubPanels() {
             managerUserSection.classList.add('hidden');
+            onlineClassUploadSection.classList.add('hidden');
             libraryUploadSection.classList.add('hidden');
             teacherGradeSection.classList.add('hidden');
             teacherHomeworkSection.classList.add('hidden');
             teacherExamSection.classList.add('hidden');
+            onlineClassViewSection.classList.add('hidden');
             gradesViewSection.classList.add('hidden');
             leaderboardViewSection.classList.add('hidden');
             schoolDirectorySection.classList.add('hidden');
@@ -973,9 +1022,17 @@
             const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
             if (user.role === 'دانش‌آموز') panelStudent.classList.remove('hidden');
             else if (user.role === 'معلم') panelTeacher.classList.remove('hidden');
-            else if (user.role === 'مدیر') panelManager.classList.remove('hidden');
+            else if (user.role === 'مدیر') panelManager.classList.add('hidden') === false ? panelManager.classList.remove('hidden') : panelManager.classList.remove('hidden');
         }
 
+        function deleteOnlineClassItem(index) {
+            if(confirm('حذف شود؟')) {
+                let classes = JSON.parse(localStorage.getItem('farabi_online_classes') || '[]');
+                classes.splice(index, 1);
+                localStorage.setItem('farabi_online_classes', JSON.stringify(classes));
+                loadOnlineClassesList();
+            }
+        }
         function deleteGradeItem(index) {
             if(confirm('حذف شود؟')) {
                 let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
@@ -1007,6 +1064,31 @@
             localStorage.setItem('farabi_homeworks', JSON.stringify(homeworks));
             alert('پاسخ تکلیف با موفقیت ارسال شد و در انتظار بررسی دبیر است!');
             loadHomeworkList();
+        }
+
+        function loadOnlineClassesList() {
+            let classes = JSON.parse(localStorage.getItem('farabi_online_classes') || '[]');
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+
+            if (user.role === 'دانش‌آموز' && user.grade) {
+                classes = classes.filter(c => c.grade.trim() === user.grade.trim());
+            }
+
+            onlineClassListBox.innerHTML = classes.length === 0 ? '<p style="color: var(--gray-text);">در حال حاضر کلاس آنلاین فعالی ثبت نشده است.</p>' : '';
+            classes.forEach((cls, idx) => {
+                let delBtn = (user.role === 'معلم' || user.role === 'مدیر') ? `<button class="del-btn" onclick="deleteOnlineClassItem(${idx})" style="margin-right:8px;">حذف</button>` : '';
+                onlineClassListBox.innerHTML += `
+                    <div style="background: #f8fafc; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <div>
+                            <h4 style="color: var(--dark);">${cls.title}</h4>
+                            <p style="font-size: 12px; color: var(--gray-text); margin-top: 4px;">پایه: ${cls.grade}</p>
+                        </div>
+                        <div>
+                            <button onclick="window.open('${cls.link}', '_blank')" style="background: var(--success); width: auto; padding: 8px 16px; font-size: 13px; margin-top: 0;">ورود به کلاس 💻</button>
+                            ${delBtn}
+                        </div>
+                    </div>`;
+            });
         }
 
         function loadGradesTable() {
@@ -1089,8 +1171,7 @@
             let homeworks = JSON.parse(localStorage.getItem('farabi_homeworks') || '[]');
             if (homeworks.length === 0) {
                 homeworks = [
-                    { title: 'تمرین ص ۷', subject: 'درس: ریاضی – دبیر: اسلام صارمی', desc: 'نوشتن و حل تمرینات در دفتر', deadline: 'مهلت: ۲۰ مهر ۱۴۰۵', status: '⏳ هنوز انجام نداده‌ای' },
-                    { title: 'رسم مثلث با استفاده از خط و پرگار', subject: 'درس: هندسه – دبیر: علی طاهری', desc: 'رسم دقیق شکل‌های هندسی صفحه ۱۵', deadline: 'مهلت: ۲۲ مهر ۱۴۰۵', status: '⏳ هنوز انجام نداده‌ای' }
+                    { title: 'تمرین ص ۷', subject: 'درس: ریاضی – دبیر: اسلام صارمی', desc: 'نوشتن و حل تمرینات در دفتر', deadline: 'مهلت: ۲۰ مهر ۱۴۰۵', status: '⏳ هنوز انجام نداده‌ای' }
                 ];
                 localStorage.setItem('farabi_homeworks', JSON.stringify(homeworks));
             }
