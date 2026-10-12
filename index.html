@@ -390,8 +390,13 @@
             <div class="grid">
                 <div class="card" onclick="showLeaderboardView()">
                     <div class="card-icon">🏆</div>
-                    <h3>۱۰ نفر برتر</h3>
-                    <p>جدول برترین امتیازات</p>
+                    <h3>۱۰ نفر برتر مدرسه</h3>
+                    <p>جدول برترین‌های کل مدرسه</p>
+                </div>
+                <div class="card" onclick="showGradeLeaderboardView()">
+                    <div class="card-icon">⭐</div>
+                    <h3>۱۰ نفر برتر پایه</h3>
+                    <p>برترین‌های هم‌پایه شما</p>
                 </div>
                 <div class="card" onclick="showSchoolDirectoryView()">
                     <div class="card-icon">🏫</div>
@@ -446,7 +451,7 @@
                 </div>
                 <div class="card" onclick="showLeaderboardView()">
                     <div class="card-icon">🏆</div>
-                    <h3>۱۰ نفر برتر سامانه</h3>
+                    <h3>۱۰ نفر برتر مدرسه</h3>
                     <p>بررسی جدول برترین‌ها</p>
                 </div>
             </div>
@@ -466,10 +471,10 @@
                     <h3>ثبت کلاس آنلاین</h3>
                     <p>انتشار لینک فنوتک</p>
                 </div>
-                <div class="card" onclick="showSchoolDirectoryView()">
-                    <div class="card-icon">🏫</div>
-                    <h3>کل مدرسه (پایه‌ها)</h3>
-                    <p>مدیریت تفکیکی دانش‌آموزان</p>
+                <div class="card" onclick="showLeaderboardView()">
+                    <div class="card-icon">🏆</div>
+                    <h3>۱۰ نفر برتر مدرسه</h3>
+                    <p>مشاهده رتبه‌بندی کل</p>
                 </div>
                 <div class="card" onclick="showManagerDashboardData()">
                     <div class="card-icon">⚙️</div>
@@ -586,7 +591,7 @@
                     <input type="number" step="0.25" max="20" min="0" id="score-val" required placeholder="مثلاً: 18">
                 </div>
                 <p style="font-size: 12px; color: var(--gray-text); margin-bottom: 15px;">
-                    💡 راهنما: نمره ۱۵ (۴ امتیاز) و به ازای هر ۱ نمره بالاتر از ۱۵، ۱ امتیاز اضافه تعلق می‌گیرد (نمره ۲۰ = ۹ امتیاز).
+                    💡 راهنما: نمره ۱۵ (۴ امتیاز) و به ازای هر ۱ نمره بالاتر از ۱۵، ۱ امتیاز اضافه تعلق می‌گیرد.
                 </p>
                 <button type="submit">ثبت نمره و محاسبه امتیاز</button>
             </form>
@@ -662,7 +667,7 @@
 
         <div id="leaderboard-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
-            <h3>🏆 ۱۰ دانش‌آموز برتر سامانه</h3>
+            <h3>🏆 ۱۰ دانش‌آموز برتر کل مدرسه</h3>
             <table>
                 <thead>
                     <tr>
@@ -673,6 +678,22 @@
                     </tr>
                 </thead>
                 <tbody id="leaderboard-table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- جدول ۱۰ نفر برتر پایه -->
+        <div id="grade-leaderboard-view-section" class="sub-panel hidden">
+            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
+            <h3 id="grade-leaderboard-title">⭐ ۱۰ دانش‌آموز برتر پایه</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>رتبه</th>
+                        <th>نام دانش‌آموز</th>
+                        <th>مجموع امتیاز</th>
+                    </tr>
+                </thead>
+                <tbody id="grade-leaderboard-table-body"></tbody>
             </table>
         </div>
 
@@ -785,6 +806,8 @@
         const gradesViewSection = document.getElementById('grades-view-section');
         const gradesSectionTitle = document.getElementById('grades-section-title');
         const leaderboardViewSection = document.getElementById('leaderboard-view-section');
+        const gradeLeaderboardViewSection = document.getElementById('grade-leaderboard-view-section');
+        const gradeLeaderboardTitle = document.getElementById('grade-leaderboard-title');
         const schoolDirectorySection = document.getElementById('school-directory-section');
         const libraryViewSection = document.getElementById('library-view-section');
         const progressViewSection = document.getElementById('progress-view-section');
@@ -810,6 +833,7 @@
         const gradesTableBody = document.getElementById('grades-table-body');
         const gradeActionTh = document.getElementById('grade-action-th');
         const leaderboardTableBody = document.getElementById('leaderboard-table-body');
+        const gradeLeaderboardTableBody = document.getElementById('grade-leaderboard-table-body');
         const schoolDirectoryTableBody = document.getElementById('school-directory-table-body');
         const libraryListBox = document.getElementById('library-list-box');
         const progressContentBox = document.getElementById('progress-content-box');
@@ -830,7 +854,6 @@
             }
         }
 
-        // تابع محاسبه امتیازات کاربر بر اساس نمرات (بالای 15) و حضور و غیاب
         function calculateUserPoints(studentName) {
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             let totalPoints = 0;
@@ -944,14 +967,12 @@
             closeSubPanels();
         });
 
-        // ثبت حضور و غیاب با اعمال امتیاز خودکار (+1 یا -3)
         attendanceForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const studentName = document.getElementById('att-student').value.trim();
             const status = document.getElementById('att-status').value;
             let pointsChange = status === 'حاضر' ? 1 : -3;
 
-            // ثبت به عنوان رکورد نمره/امتیاز در سامانه برای اعمال در معدل و امتیازات
             let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
             grades.push({
                 student: studentName,
@@ -979,14 +1000,12 @@
             closeSubPanels();
         });
 
-        // ثبت نمره با محاسبه خودکار امتیاز بر اساس فرمول (نمره بالا 15: پایه 4 امتیاز + 1 امتیاز به ازای هر نمره مازاد)
         gradeForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const scoreVal = Number(document.getElementById('score-val').value);
             let calculatedPoints = 0;
 
             if (scoreVal >= 15) {
-                // فرمول: 4 امتیاز برای نمره 15، به علاوه 1 امتیاز به ازای هر نمره بالاتر از 15
                 calculatedPoints = 4 + (scoreVal - 15);
             }
 
@@ -998,7 +1017,7 @@
                 points: calculatedPoints
             });
             localStorage.setItem('farabi_grades', JSON.stringify(grades));
-            alert(`نمره با موفقیت ثبت شد! امتیاز مکتسبه برای این نمره: ⭐ ${calculatedPoints}`);
+            alert(`نمره ثبت شد! امتیاز مکتسبه: ⭐ ${calculatedPoints}`);
             gradeForm.reset();
             closeSubPanels();
         });
@@ -1045,6 +1064,7 @@
         function showStudentGrades() { closeSubPanels(); panelStudent.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showGradesManagerView() { closeSubPanels(); panelTeacher.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showLeaderboardView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); leaderboardViewSection.classList.remove('hidden'); loadLeaderboardTable(); }
+        function showGradeLeaderboardView() { closeSubPanels(); panelStudent.classList.add('hidden'); gradeLeaderboardViewSection.classList.remove('hidden'); loadGradeLeaderboardTable(); }
         function showSchoolDirectoryView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); schoolDirectorySection.classList.remove('hidden'); loadSchoolDirectoryTable(); }
         function showLibraryView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); libraryViewSection.classList.remove('hidden'); loadLibraryList(); }
         function showProgressReport() { closeSubPanels(); panelStudent.classList.add('hidden'); progressViewSection.classList.remove('hidden'); loadProgressReportData(); }
@@ -1065,6 +1085,7 @@
             onlineClassViewSection.classList.add('hidden');
             gradesViewSection.classList.add('hidden');
             leaderboardViewSection.classList.add('hidden');
+            gradeLeaderboardViewSection.classList.add('hidden');
             schoolDirectorySection.classList.add('hidden');
             libraryViewSection.classList.add('hidden');
             progressViewSection.classList.add('hidden');
@@ -1191,6 +1212,30 @@
             });
         }
 
+        // تابع نمایش ۱۰ نفر برتر هر پایه به صورت مجزا
+        function loadGradeLeaderboardTable() {
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            const userGrade = user.grade || 'نهم';
+            gradeLeaderboardTitle.textContent = `⭐ ۱۰ دانش‌آموز برتر پایه ${userGrade}`;
+
+            let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
+            let studentsInGrade = users.filter(u => u.role === 'دانش‌آموز' && (u.grade || '').trim() === userGrade.trim());
+            
+            let studentScores = studentsInGrade.map(st => ({
+                name: st.name, totalPoints: calculateUserPoints(st.name)
+            })).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 10);
+
+            gradeLeaderboardTableBody.innerHTML = '';
+            if (studentScores.length === 0) {
+                gradeLeaderboardTableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--gray-text);">دانش‌آموزی در این پایه ثبت نشده است.</td></tr>`;
+                return;
+            }
+            studentScores.forEach((st, index) => {
+                let rank = index === 0 ? '🥇 اول' : (index === 1 ? '🥈 دوم' : (index === 2 ? '🥉 سوم' : `${index + 1}`));
+                gradeLeaderboardTableBody.innerHTML += `<tr><td><b>${rank}</b></td><td>${st.name}</td><td>⭐ ${st.totalPoints}</td></tr>`;
+            });
+        }
+
         function loadSchoolDirectoryTable() {
             let students = JSON.parse(localStorage.getItem('farabi_users') || '[]').filter(u => u.role === 'دانش‌آموز');
             schoolDirectoryTableBody.innerHTML = students.length === 0 ? `<tr><td colspan="4" style="text-align: center; color: var(--gray-text);">دانش‌آموزی ثبت نشده است.</td></tr>` : '';
@@ -1244,7 +1289,7 @@
                         <p style="font-size: 12px; color: var(--gray-text); margin-bottom: 8px;">${hw.subject} – ${hw.deadline}</p>
                         <p style="font-size: 13px; color: #334155; margin-bottom: 12px;">${hw.desc}</p>
                         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                            <input type="file" style="flex: 1; padding: 8px; font-size: 12px; border: 1px dashed #cbd5e1; background: #f8fafc; border-radius: 10px;">
+                            <input type="file" style="flex: 1; padding: 8px; font-size: 12px; border: 1px dashed #cbd5e1; background: #f8fafc; border-router: 10px;">
                             <button onclick="submitHomework(${idx})" style="background: var(--success); width: auto; padding: 10px 20px; font-size: 13px; margin-top: 0; box-shadow: 0 4px 10px rgba(13, 148, 136, 0.2);">انجام دادم ✅</button>
                         </div>
                     </div>`;
