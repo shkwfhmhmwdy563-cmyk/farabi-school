@@ -390,13 +390,8 @@
             <div class="grid">
                 <div class="card" onclick="showLeaderboardView()">
                     <div class="card-icon">🏆</div>
-                    <h3>۱۰ نفر برتر مدرسه</h3>
-                    <p>جدول برترین‌های کل مدرسه</p>
-                </div>
-                <div class="card" onclick="showGradeLeaderboardView()">
-                    <div class="card-icon">⭐</div>
-                    <h3>۱۰ نفر برتر پایه</h3>
-                    <p>برترین‌های هم‌پایه شما</p>
+                    <h3>رتبه‌بندی و نفرات برتر</h3>
+                    <p>مشاهده کل مدرسه یا پایه</p>
                 </div>
                 <div class="card" onclick="showSchoolDirectoryView()">
                     <div class="card-icon">🏫</div>
@@ -451,8 +446,8 @@
                 </div>
                 <div class="card" onclick="showLeaderboardView()">
                     <div class="card-icon">🏆</div>
-                    <h3>۱۰ نفر برتر مدرسه</h3>
-                    <p>بررسی جدول برترین‌ها</p>
+                    <h3>رتبه‌بندی (برترین‌ها)</h3>
+                    <p>مشاهده جدول برترین‌ها</p>
                 </div>
             </div>
         </div>
@@ -473,8 +468,8 @@
                 </div>
                 <div class="card" onclick="showLeaderboardView()">
                     <div class="card-icon">🏆</div>
-                    <h3>۱۰ نفر برتر مدرسه</h3>
-                    <p>مشاهده رتبه‌بندی کل</p>
+                    <h3>رتبه‌بندی (برترین‌ها)</h3>
+                    <p>مشاهده جدول برترین‌ها</p>
                 </div>
                 <div class="card" onclick="showManagerDashboardData()">
                     <div class="card-icon">⚙️</div>
@@ -665,35 +660,28 @@
             </table>
         </div>
 
+        <!-- بخش جدول رتبه‌بندی با فیلتر کشویی (کل مدرسه یا پایه) -->
         <div id="leaderboard-view-section" class="sub-panel hidden">
             <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
-            <h3>🏆 ۱۰ دانش‌آموز برتر کل مدرسه</h3>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h3 id="leaderboard-title" style="margin: 0;">🏆 نفرات برتر</h3>
+                <select id="leaderboard-filter" onchange="loadLeaderboardTable()" style="width: auto; padding: 6px 12px; font-size: 13px;">
+                    <option value="school">کل مدرسه</option>
+                    <option value="grade">پایه تحصیلی من</option>
+                </select>
+            </div>
+
             <table>
                 <thead>
                     <tr>
                         <th>رتبه</th>
                         <th>نام دانش‌آموز</th>
                         <th>پایه</th>
-                        <th>مجموع امتیاز (ستاره)</th>
+                        <th>امتیاز کل</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboard-table-body"></tbody>
-            </table>
-        </div>
-
-        <!-- جدول ۱۰ نفر برتر پایه -->
-        <div id="grade-leaderboard-view-section" class="sub-panel hidden">
-            <button class="back-btn" onclick="closeSubPanels()">← بازگشت به میز کار</button>
-            <h3 id="grade-leaderboard-title">⭐ ۱۰ دانش‌آموز برتر پایه</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>رتبه</th>
-                        <th>نام دانش‌آموز</th>
-                        <th>مجموع امتیاز</th>
-                    </tr>
-                </thead>
-                <tbody id="grade-leaderboard-table-body"></tbody>
             </table>
         </div>
 
@@ -806,8 +794,8 @@
         const gradesViewSection = document.getElementById('grades-view-section');
         const gradesSectionTitle = document.getElementById('grades-section-title');
         const leaderboardViewSection = document.getElementById('leaderboard-view-section');
-        const gradeLeaderboardViewSection = document.getElementById('grade-leaderboard-view-section');
-        const gradeLeaderboardTitle = document.getElementById('grade-leaderboard-title');
+        const leaderboardFilter = document.getElementById('leaderboard-filter');
+        const leaderboardTitle = document.getElementById('leaderboard-title');
         const schoolDirectorySection = document.getElementById('school-directory-section');
         const libraryViewSection = document.getElementById('library-view-section');
         const progressViewSection = document.getElementById('progress-view-section');
@@ -833,7 +821,6 @@
         const gradesTableBody = document.getElementById('grades-table-body');
         const gradeActionTh = document.getElementById('grade-action-th');
         const leaderboardTableBody = document.getElementById('leaderboard-table-body');
-        const gradeLeaderboardTableBody = document.getElementById('grade-leaderboard-table-body');
         const schoolDirectoryTableBody = document.getElementById('school-directory-table-body');
         const libraryListBox = document.getElementById('library-list-box');
         const progressContentBox = document.getElementById('progress-content-box');
@@ -1064,7 +1051,6 @@
         function showStudentGrades() { closeSubPanels(); panelStudent.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showGradesManagerView() { closeSubPanels(); panelTeacher.classList.add('hidden'); gradesViewSection.classList.remove('hidden'); loadGradesTable(); }
         function showLeaderboardView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); leaderboardViewSection.classList.remove('hidden'); loadLeaderboardTable(); }
-        function showGradeLeaderboardView() { closeSubPanels(); panelStudent.classList.add('hidden'); gradeLeaderboardViewSection.classList.remove('hidden'); loadGradeLeaderboardTable(); }
         function showSchoolDirectoryView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); panelManager.classList.add('hidden'); schoolDirectorySection.classList.remove('hidden'); loadSchoolDirectoryTable(); }
         function showLibraryView() { closeSubPanels(); panelStudent.classList.add('hidden'); panelTeacher.classList.add('hidden'); libraryViewSection.classList.remove('hidden'); loadLibraryList(); }
         function showProgressReport() { closeSubPanels(); panelStudent.classList.add('hidden'); progressViewSection.classList.remove('hidden'); loadProgressReportData(); }
@@ -1085,7 +1071,6 @@
             onlineClassViewSection.classList.add('hidden');
             gradesViewSection.classList.add('hidden');
             leaderboardViewSection.classList.add('hidden');
-            gradeLeaderboardViewSection.classList.add('hidden');
             schoolDirectorySection.classList.add('hidden');
             libraryViewSection.classList.add('hidden');
             progressViewSection.classList.add('hidden');
@@ -1194,11 +1179,24 @@
             });
         }
 
+        // تابع داینامیک جدول رتبه‌بندی بر اساس انتخاب فیلتر (کل مدرسه یا پایه)
         function loadLeaderboardTable() {
+            const filterVal = leaderboardFilter.value;
+            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
+            const userGrade = user.grade || 'نهم';
+
             let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
             let students = users.filter(u => u.role === 'دانش‌آموز');
+
+            if (filterVal === 'grade') {
+                students = students.filter(st => (st.grade || '').trim() === userGrade.trim());
+                leaderboardTitle.textContent = `🏆 ۱۰ دانش‌آموز برتر پایه ${userGrade}`;
+            } else {
+                leaderboardTitle.textContent = `🏆 ۱۰ دانش‌آموز برتر کل مدرسه`;
+            }
+
             let studentScores = students.map(st => ({
-                name: st.name, grade: st.grade || 'نهم', totalPoints: calculateUserPoints(st.name)
+                name: st.name, grade: st.grade || '-', totalPoints: calculateUserPoints(st.name)
             })).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 10);
 
             leaderboardTableBody.innerHTML = '';
@@ -1206,33 +1204,10 @@
                 leaderboardTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--gray-text);">داده‌ای موجود نیست.</td></tr>`;
                 return;
             }
+
             studentScores.forEach((st, index) => {
                 let rank = index === 0 ? '🥇 اول' : (index === 1 ? '🥈 دوم' : (index === 2 ? '🥉 سوم' : `${index + 1}`));
                 leaderboardTableBody.innerHTML += `<tr><td><b>${rank}</b></td><td>${st.name}</td><td>${st.grade}</td><td>⭐ ${st.totalPoints}</td></tr>`;
-            });
-        }
-
-        // تابع نمایش ۱۰ نفر برتر هر پایه به صورت مجزا
-        function loadGradeLeaderboardTable() {
-            const user = JSON.parse(localStorage.getItem('farabi_user') || '{}');
-            const userGrade = user.grade || 'نهم';
-            gradeLeaderboardTitle.textContent = `⭐ ۱۰ دانش‌آموز برتر پایه ${userGrade}`;
-
-            let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
-            let studentsInGrade = users.filter(u => u.role === 'دانش‌آموز' && (u.grade || '').trim() === userGrade.trim());
-            
-            let studentScores = studentsInGrade.map(st => ({
-                name: st.name, totalPoints: calculateUserPoints(st.name)
-            })).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 10);
-
-            gradeLeaderboardTableBody.innerHTML = '';
-            if (studentScores.length === 0) {
-                gradeLeaderboardTableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--gray-text);">دانش‌آموزی در این پایه ثبت نشده است.</td></tr>`;
-                return;
-            }
-            studentScores.forEach((st, index) => {
-                let rank = index === 0 ? '🥇 اول' : (index === 1 ? '🥈 دوم' : (index === 2 ? '🥉 سوم' : `${index + 1}`));
-                gradeLeaderboardTableBody.innerHTML += `<tr><td><b>${rank}</b></td><td>${st.name}</td><td>⭐ ${st.totalPoints}</td></tr>`;
             });
         }
 
@@ -1289,7 +1264,7 @@
                         <p style="font-size: 12px; color: var(--gray-text); margin-bottom: 8px;">${hw.subject} – ${hw.deadline}</p>
                         <p style="font-size: 13px; color: #334155; margin-bottom: 12px;">${hw.desc}</p>
                         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                            <input type="file" style="flex: 1; padding: 8px; font-size: 12px; border: 1px dashed #cbd5e1; background: #f8fafc; border-router: 10px;">
+                            <input type="file" style="flex: 1; padding: 8px; font-size: 12px; border: 1px dashed #cbd5e1; background: #f8fafc; border-radius: 10px;">
                             <button onclick="submitHomework(${idx})" style="background: var(--success); width: auto; padding: 10px 20px; font-size: 13px; margin-top: 0; box-shadow: 0 4px 10px rgba(13, 148, 136, 0.2);">انجام دادم ✅</button>
                         </div>
                     </div>`;
