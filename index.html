@@ -260,7 +260,7 @@
         <div style="background: #f8fafc; padding: 12px; border-radius: 12px; margin-top: 15px; font-size: 11px; color: var(--text-muted); text-align: center;">
             <p><b>مدیر کل پیش‌فرض:</b></p>
             <p>کد ملی: <code>1234567890</code> | رمز: <code>admin</code></p>
-            <button type="button" onclick="resetSystemData()" style="background: #e2e8f0; color: #334155; padding: 6px; font-size: 11px; margin-top: 8px;">🔄 بازنشانی کلی سامانه (رفع خطا)</button>
+            <button type="button" onclick="resetSystemData()" style="background: #e2e8f0; color: #334155; padding: 6px; font-size: 11px; margin-top: 8px; border:none; border-radius:8px; cursor:pointer;">🔄 پاکسازی و راه‌اندازی مجدد</button>
         </div>
     </div>
 
@@ -319,25 +319,23 @@
     </div>
 
     <script>
-        // تابع بازنشانی کامل داده‌ها برای رفع خطای ورود
-        function resetSystemData() {
-            if(confirm('آیا اطلاعات سامانه ریست شود؟ (کاربران پیش‌فرض دوباره ساخته می‌شوند)')) {
-                localStorage.clear();
+        // تضمین وجود کاربران اولیه در حافظه
+        function initDB() {
+            let users = localStorage.getItem('farabi_users');
+            if (!users) {
                 const defaultUsers = [
                     { name: 'مدیر کل', role: 'مدیر', nationalCode: '1234567890', password: 'admin', grade: '' }
                 ];
                 localStorage.setItem('farabi_users', JSON.stringify(defaultUsers));
-                alert('سامانه با موفقیت بازنشانی شد! حالا با کد ملی 1234567890 و رمز admin وارد شوید.');
-                location.reload();
             }
         }
+        initDB();
 
-        // بررسی و ایجاد اطلاعات پایه در صورت خالی بودن
-        if (!localStorage.getItem('farabi_users')) {
-            const defaultUsers = [
-                { name: 'مدیر کل', role: 'مدیر', nationalCode: '1234567890', password: 'admin', grade: '' }
-            ];
-            localStorage.setItem('farabi_users', JSON.stringify(defaultUsers));
+        function resetSystemData() {
+            localStorage.clear();
+            initDB();
+            alert('سامانه ریست شد! حالا با کد ملی 1234567890 و رمز admin وارد شوید.');
+            location.reload();
         }
 
         const loginForm = document.getElementById('login-form');
@@ -348,8 +346,9 @@
         const contentSection = document.getElementById('content-section');
 
         function checkLogin() {
-            const user = JSON.parse(localStorage.getItem('farabi_current_user'));
-            if (user) {
+            const userStr = localStorage.getItem('farabi_current_user');
+            if (userStr) {
+                const user = JSON.parse(userStr);
                 loginSection.classList.add('hidden');
                 dashboardSection.classList.remove('hidden');
                 document.getElementById('user-name').textContent = user.name;
@@ -404,11 +403,14 @@
 
         function closeSubPanel() {
             contentSection.classList.add('hidden');
-            const currentUser = JSON.parse(localStorage.getItem('farabi_current_user') || '{}');
-            if(currentUser.role === 'دانش‌آموز') {
-                panelStudent.classList.remove('hidden');
-            } else {
-                panelStaff.classList.remove('hidden');
+            const userStr = localStorage.getItem('farabi_current_user');
+            if (userStr) {
+                const currentUser = JSON.parse(userStr);
+                if(currentUser.role === 'دانش‌آموز') {
+                    panelStudent.classList.remove('hidden');
+                } else {
+                    panelStaff.classList.remove('hidden');
+                }
             }
         }
 
@@ -457,8 +459,8 @@
                 body.innerHTML = `
                     <form id="reg-form">
                         <div class="form-group"><label>نام و نام خانوادگی:</label><input type="text" id="r-name" required placeholder="مثلاً علی رضایی"></div>
-                        <div class="form-group"><label>نقش:</label><select id="r-role" onchange="toggleGradeInput()"><option value="دانش‌آموز">دانش‌آموز</option><option value="معلم">معلم</option></select></div>
-                        <div class="form-group" id="r-grade-box"><label>پایه تحصیلی:</label><input type="text" id="r-grade" placeholder="مثلاً دهم"></div>
+                        <div class="form-group"><label>نقش:</label><select id="r-role"><option value="دانش‌آموز">دانش‌آموز</option><option value="معلم">معلم</option></select></div>
+                        <div class="form-group"><label>پایه تحصیلی:</label><input type="text" id="r-grade" placeholder="مثلاً دهم"></div>
                         <div class="form-group"><label>کد ملی:</label><input type="text" id="r-code" required placeholder="۱۰ رقم"></div>
                         <div class="form-group"><label>رمز عبور دلخواه:</label><input type="password" id="r-pass" required placeholder="رمز ورود"></div>
                         <button type="submit">ثبت کاربر در سامانه</button>
