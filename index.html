@@ -12,7 +12,6 @@
             --card-bg: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --accent: #14b8a6;
             --danger: #ef4444;
             --shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(99, 102, 241, 0.1);
             --radius: 20px;
@@ -115,7 +114,6 @@
             display: none !important;
         }
 
-        /* میز کار جدید و مدرن */
         .dashboard {
             width: 100%;
             max-width: 800px;
@@ -211,12 +209,6 @@
             border-radius: var(--radius);
             border: 1px solid #e2e8f0;
             box-shadow: var(--shadow);
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .back-link {
@@ -251,13 +243,13 @@
 </head>
 <body>
 
-    <!-- صفحه ورود با کد ملی و رمز عبور -->
+    <!-- صفحه ورود -->
     <div id="login-section" class="container">
         <h2>سامانه هوشمند سیبا</h2>
         <form id="login-form">
             <div class="form-group">
                 <label>کد ملی:</label>
-                <input type="text" id="login-national-code" required placeholder="کد ملی ۱۰ رقمی">
+                <input type="text" id="login-national-code" required placeholder="مثلاً 1234567890">
             </div>
             <div class="form-group">
                 <label>رمز عبور:</label>
@@ -265,12 +257,14 @@
             </div>
             <button type="submit">ورود به میز کار</button>
         </form>
-        <p style="text-align: center; margin-top: 15px; font-size: 11px; color: var(--text-muted);">
-            مدیر کل پیش‌فرض — کد ملی: <b>1234567890</b> | رمز: <b>admin</b>
-        </p>
+        <div style="background: #f8fafc; padding: 12px; border-radius: 12px; margin-top: 15px; font-size: 11px; color: var(--text-muted); text-align: center;">
+            <p><b>مدیر کل پیش‌فرض:</b></p>
+            <p>کد ملی: <code>1234567890</code> | رمز: <code>admin</code></p>
+            <button type="button" onclick="resetSystemData()" style="background: #e2e8f0; color: #334155; padding: 6px; font-size: 11px; margin-top: 8px;">🔄 بازنشانی کلی سامانه (رفع خطا)</button>
+        </div>
     </div>
 
-    <!-- میز کار اصلی و مدرن -->
+    <!-- میز کار اصلی -->
     <div id="dashboard-section" class="dashboard hidden">
         <div class="profile-card">
             <div class="profile-info">
@@ -284,7 +278,7 @@
             <button class="logout-btn" id="logout-btn">خروج از حساب</button>
         </div>
 
-        <!-- منوهای میز کار دانش‌آموز -->
+        <!-- منوهای دانش‌آموز -->
         <div id="panel-student" class="hidden">
             <div class="menu-grid">
                 <div class="menu-item" onclick="openSection('grades')">
@@ -292,36 +286,21 @@
                     <h4>کارنامه من</h4>
                     <p>مشاهده نمرات و امتیازات</p>
                 </div>
-                <div class="menu-item" onclick="openSection('homeworks')">
-                    <div class="menu-icon">📝</div>
-                    <h4>تکالیف درسی</h4>
-                    <p>ارسال و پیگیری تمرین‌ها</p>
-                </div>
                 <div class="menu-item" onclick="openSection('leaderboard')">
                     <div class="menu-icon">🏆</div>
                     <h4>رتبه‌بندی</h4>
-                    <p>نفرات برتر مدرسه و پایه</p>
-                </div>
-                <div class="menu-item" onclick="openSection('library')">
-                    <div class="menu-icon">📖</div>
-                    <h4>کتابخانه جزوات</h4>
-                    <p>دانلود فایل‌های آموزشی</p>
+                    <p>نفرات برتر مدرسه</p>
                 </div>
             </div>
         </div>
 
-        <!-- منوهای میز کار معلم و مدیر -->
+        <!-- منوهای مدیر و معلم -->
         <div id="panel-staff" class="hidden">
             <div class="menu-grid">
                 <div class="menu-item" onclick="openSection('register-user')">
                     <div class="menu-icon">👤</div>
                     <h4>ثبت‌نام کاربر</h4>
-                    <p>افزودن دانش‌آموز یا معلم جدید</p>
-                </div>
-                <div class="menu-item" onclick="openSection('manage-grades')">
-                    <div class="menu-icon">📝</div>
-                    <h4>ثبت نمره / امتیاز</h4>
-                    <p>مدیریت ارزیابی‌ها</p>
+                    <p>افزودن دانش‌آموز یا معلم</p>
                 </div>
                 <div class="menu-item" onclick="openSection('leaderboard')">
                     <div class="menu-icon">🏆</div>
@@ -331,7 +310,7 @@
             </div>
         </div>
 
-        <!-- بخش‌های محتوایی (زیرپنل‌ها) -->
+        <!-- زیرپنل محتوا -->
         <div id="content-section" class="sub-panel hidden">
             <span class="back-link" onclick="closeSubPanel()">← بازگشت به میز کار</span>
             <h3 id="panel-title" style="margin-bottom: 15px; font-size: 16px;"></h3>
@@ -340,7 +319,20 @@
     </div>
 
     <script>
-        // داده‌های اولیه پیش‌فرض مدیر
+        // تابع بازنشانی کامل داده‌ها برای رفع خطای ورود
+        function resetSystemData() {
+            if(confirm('آیا اطلاعات سامانه ریست شود؟ (کاربران پیش‌فرض دوباره ساخته می‌شوند)')) {
+                localStorage.clear();
+                const defaultUsers = [
+                    { name: 'مدیر کل', role: 'مدیر', nationalCode: '1234567890', password: 'admin', grade: '' }
+                ];
+                localStorage.setItem('farabi_users', JSON.stringify(defaultUsers));
+                alert('سامانه با موفقیت بازنشانی شد! حالا با کد ملی 1234567890 و رمز admin وارد شوید.');
+                location.reload();
+            }
+        }
+
+        // بررسی و ایجاد اطلاعات پایه در صورت خالی بودن
         if (!localStorage.getItem('farabi_users')) {
             const defaultUsers = [
                 { name: 'مدیر کل', role: 'مدیر', nationalCode: '1234567890', password: 'admin', grade: '' }
@@ -394,7 +386,7 @@
                 localStorage.setItem('farabi_current_user', JSON.stringify(found));
                 checkLogin();
             } else {
-                alert('کد ملی یا رمز عبور اشتباه است!');
+                alert('خطا: کد ملی یا رمز عبور اشتباه است!');
             }
         });
 
@@ -412,7 +404,8 @@
 
         function closeSubPanel() {
             contentSection.classList.add('hidden');
-            if(JSON.parse(localStorage.getItem('farabi_current_user')).role === 'دانش‌آموز') {
+            const currentUser = JSON.parse(localStorage.getItem('farabi_current_user') || '{}');
+            if(currentUser.role === 'دانش‌آموز') {
                 panelStudent.classList.remove('hidden');
             } else {
                 panelStaff.classList.remove('hidden');
@@ -446,6 +439,11 @@
                 let users = JSON.parse(localStorage.getItem('farabi_users') || '[]').filter(u => u.role === 'دانش‌آموز');
                 let ranked = users.map(u => ({ name: u.name, grade: u.grade, pts: calculatePoints(u.name) })).sort((a,b) => b.pts - a.pts);
                 
+                if(ranked.length === 0) {
+                    body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">دانش‌آموزی ثبت نشده است.</p>';
+                    return;
+                }
+
                 let html = `<table><thead><tr><th>رتبه</th><th>نام</th><th>پایه</th><th>امتیاز کل</th></tr></thead><tbody>`;
                 ranked.forEach((r, idx) => {
                     let rankIcon = idx === 0 ? '🥇 اول' : (idx === 1 ? '🥈 دوم' : (idx === 2 ? '🥉 سوم' : idx + 1));
@@ -458,12 +456,12 @@
                 title.textContent = '👤 ثبت‌نام کاربر جدید';
                 body.innerHTML = `
                     <form id="reg-form">
-                        <div class="form-group"><label>نام و نام خانوادگی:</label><input type="text" id="r-name" required></div>
+                        <div class="form-group"><label>نام و نام خانوادگی:</label><input type="text" id="r-name" required placeholder="مثلاً علی رضایی"></div>
                         <div class="form-group"><label>نقش:</label><select id="r-role" onchange="toggleGradeInput()"><option value="دانش‌آموز">دانش‌آموز</option><option value="معلم">معلم</option></select></div>
                         <div class="form-group" id="r-grade-box"><label>پایه تحصیلی:</label><input type="text" id="r-grade" placeholder="مثلاً دهم"></div>
-                        <div class="form-group"><label>کد ملی:</label><input type="text" id="r-code" required></div>
-                        <div class="form-group"><label>رمز عبور دلخواه:</label><input type="password" id="r-pass" required></div>
-                        <button type="submit">ثبت کاربر</button>
+                        <div class="form-group"><label>کد ملی:</label><input type="text" id="r-code" required placeholder="۱۰ رقم"></div>
+                        <div class="form-group"><label>رمز عبور دلخواه:</label><input type="password" id="r-pass" required placeholder="رمز ورود"></div>
+                        <button type="submit">ثبت کاربر در سامانه</button>
                     </form>`;
                 
                 document.getElementById('reg-form').addEventListener('submit', (e) => {
@@ -478,13 +476,9 @@
                     };
                     users.push(newU);
                     localStorage.setItem('farabi_users', JSON.stringify(users));
-                    alert('کاربر با موفقیت ثبت شد!');
+                    alert('کاربر جدید با موفقیت ثبت شد!');
                     closeSubPanel();
                 });
-            }
-            else {
-                title.textContent = 'به زودی...';
-                body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">این بخش در حال توسعه است.</p>';
             }
         }
 
