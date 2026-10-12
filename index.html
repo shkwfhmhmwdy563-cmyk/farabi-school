@@ -302,6 +302,11 @@
                     <h4>تکالیف درسی</h4>
                     <p>ارسال عکس تکلیف (+۳ امتیاز)</p>
                 </div>
+                <div class="menu-item" onclick="openSection('online-exams')">
+                    <div class="menu-icon">✍️</div>
+                    <h4>آزمون آنلاین</h4>
+                    <p>شرکت در آزمون تستی/تشریحی</p>
+                </div>
                 <div class="menu-item" onclick="openSection('online-classes')">
                     <div class="menu-icon">💻</div>
                     <h4>کلاس‌های آنلاین</h4>
@@ -347,6 +352,11 @@
                     <div class="menu-icon">📂</div>
                     <h4>تعریف تکلیف</h4>
                     <p>ارسال تکلیف جدید</p>
+                </div>
+                <div class="menu-item" onclick="openSection('manage-exams')">
+                    <div class="menu-icon">✍️</div>
+                    <h4>طراحی آزمون آنلاین</h4>
+                    <p>ساخت آزمون با زمان اتمام</p>
                 </div>
                 <div class="menu-item" onclick="openSection('manage-classes')">
                     <div class="menu-icon">💻</div>
@@ -486,6 +496,22 @@
             openSection('homeworks');
         }
 
+        function submitExamAction(examTitle) {
+            const currentUser = JSON.parse(localStorage.getItem('farabi_current_user'));
+            let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+            
+            grades.push({
+                student: currentUser.name,
+                subject: `آزمون آنلاین (${examTitle})`,
+                score: 'شرکت کرد',
+                points: 5
+            });
+            localStorage.setItem('farabi_grades', JSON.stringify(grades));
+            alert('پاسخ آزمون با موفقیت ثبت شد و ⭐ ۵ امتیاز شرکت در آزمون به کارنامه شما اضافه گردید!');
+            document.getElementById('user-points').textContent = calculatePoints(currentUser.name);
+            openSection('online-exams');
+        }
+
         function openSection(type) {
             panelStudent.classList.add('hidden');
             panelStaff.classList.add('hidden');
@@ -612,7 +638,6 @@
                     closeSubPanel();
                 });
             }
-            // بخش جدید: ثبت عملکرد انضباطی مثبت و منفی
             else if (type === 'manage-discipline') {
                 title.textContent = '⚖️ ثبت عملکرد انضباطی (تشویق یا تذکر)';
                 body.innerHTML = `
@@ -629,7 +654,6 @@
                     let desc = document.getElementById('d-desc').value.trim();
                     let ptsVal = Number(document.getElementById('d-pts').value);
                     
-                    // تنظیم علامت امتیاز بر اساس نوع انتخاب شده
                     if (dType === 'منفی' && ptsVal > 0) ptsVal = -ptsVal;
                     if (dType === 'مثبت' && ptsVal < 0) ptsVal = Math.abs(ptsVal);
 
@@ -642,6 +666,57 @@
                     });
                     localStorage.setItem('farabi_grades', JSON.stringify(grades));
                     alert(`عملکرد انضباطی ${dType} با موفقیت ثبت شد (${ptsVal > 0 ? '+' + ptsVal : ptsVal} امتیاز)!`);
+                    closeSubPanel();
+                });
+            }
+            // نمایش آزمون‌های آنلاین با نمایش زمان اتمام
+            else if (type === 'online-exams') {
+                title.textContent = '✍️ آزمون‌های آنلاین فعال';
+                let exams = JSON.parse(localStorage.getItem('farabi_exams') || '[]');
+                if (exams.length === 0) {
+                    body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">در حال حاضر آزمون فعالی وجود ندارد.</p>';
+                    return;
+                }
+                let html = '';
+                exams.forEach(ex => {
+                    html += `
+                        <div style="background:#f8fafc; padding:16px; border-radius:12px; margin-bottom:16px; border:1px solid #e2e8f0;">
+                            <h4>${ex.title}</h4>
+                            <p style="font-size:12px; color:var(--text-muted); margin:4px 0;">درس: ${ex.subject}</p>
+                            <p style="font-size:12px; color:var(--danger); font-weight:bold; margin-bottom:10px;">⏰ مهلت اتمام: ${ex.deadline}</p>
+                            <p style="font-size:13px; margin-bottom:6px;"><b>سوال ۱:</b> ${ex.q1}</p>
+                            <input type="text" placeholder="پاسخ سوال ۱..." style="margin-bottom:10px; background:white;">
+                            <p style="font-size:13px; margin-bottom:6px;"><b>سوال ۲:</b> ${ex.q2}</p>
+                            <input type="text" placeholder="پاسخ سوال ۲..." style="margin-bottom:14px; background:white;">
+                            <button onclick="submitExamAction('${ex.title}')" style="width:auto; padding:8px 16px; margin:0; background:var(--success);">ثبت نهایی و ارسال آزمون ✅</button>
+                        </div>`;
+                });
+                body.innerHTML = html;
+            }
+            // ساخت آزمون با فیلد زمان اتمام
+            else if (type === 'manage-exams') {
+                title.textContent = '✍️ طراحی و انتشار آزمون آنلاین جدید';
+                body.innerHTML = `
+                    <form id="exam-form">
+                        <div class="form-group"><label>عنوان آزمون:</label><input type="text" id="e-title" required placeholder="مثلاً آزمون میان‌ترم شیمی"></div>
+                        <div class="form-group"><label>درس:</label><input type="text" id="e-subj" required placeholder="مثلاً شیمی دهم"></div>
+                        <div class="form-group"><label>مهلت اتمام (تاریخ و ساعت):</label><input type="text" id="e-dead" required placeholder="مثلاً پنجشنبه ۲0 مهر ساعت ۱۸:۰۰"></div>
+                        <div class="form-group"><label>سوال اول:</label><input type="text" id="e-q1" required placeholder="متن سوال اول"></div>
+                        <div class="form-group"><label>سوال دوم:</label><input type="text" id="e-q2" required placeholder="متن سوال دوم"></div>
+                        <button type="submit">انتشار آزمون</button>
+                    </form>`;
+                document.getElementById('exam-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let exams = JSON.parse(localStorage.getItem('farabi_exams') || '[]');
+                    exams.push({
+                        title: document.getElementById('e-title').value.trim(),
+                        subject: document.getElementById('e-subj').value.trim(),
+                        deadline: document.getElementById('e-dead').value.trim(),
+                        q1: document.getElementById('e-q1').value.trim(),
+                        q2: document.getElementById('e-q2').value.trim()
+                    });
+                    localStorage.setItem('farabi_exams', JSON.stringify(exams));
+                    alert('آزمون آنلاین با موفقیت و همراه با مهلت اتمام منتشر شد!');
                     closeSubPanel();
                 });
             }
