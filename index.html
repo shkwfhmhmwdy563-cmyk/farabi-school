@@ -12,6 +12,7 @@
             --card-bg: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
+            --success: #0d9488;
             --danger: #ef4444;
             --shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(99, 102, 241, 0.1);
             --radius: 20px;
@@ -74,7 +75,7 @@
             color: var(--text-main);
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 12px 16px;
             border: 2px solid #e2e8f0;
@@ -85,7 +86,7 @@
             transition: all 0.2s;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: var(--primary);
             background: #fff;
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
@@ -151,6 +152,16 @@
             background: rgba(255, 255, 255, 0.2);
             padding: 2px 10px;
             border-radius: 20px;
+        }
+
+        .clickable-badge {
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .clickable-badge:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
         }
 
         .logout-btn {
@@ -272,7 +283,7 @@
                 <p>
                     <span>نقش: <b id="user-role"></b></span>
                     <span id="grade-box">پایه: <b id="user-grade"></b></span>
-                    <span>⭐ امتیاز: <b id="user-points">0</b></span>
+                    <span id="points-badge-box" class="clickable-badge" onclick="openSection('score-details')" title="برای دیدن ریز امتیازات کلیک کنید">⭐ امتیاز کل: <b id="user-points" style="color: #fef08a;">0</b> 🔍</span>
                 </p>
             </div>
             <button class="logout-btn" id="logout-btn">خروج از حساب</button>
@@ -284,12 +295,27 @@
                 <div class="menu-item" onclick="openSection('grades')">
                     <div class="menu-icon">📊</div>
                     <h4>کارنامه من</h4>
-                    <p>مشاهده نمرات و امتیازات</p>
+                    <p>مشاهده نمرات و ستاره‌ها</p>
+                </div>
+                <div class="menu-item" onclick="openSection('homeworks')">
+                    <div class="menu-icon">📝</div>
+                    <h4>تکالیف درسی</h4>
+                    <p>ارسال عکس تکلیف (+۳ امتیاز)</p>
+                </div>
+                <div class="menu-item" onclick="openSection('online-classes')">
+                    <div class="menu-icon">💻</div>
+                    <h4>کلاس‌های آنلاین</h4>
+                    <p>ورود به اتاق‌های فنوتک</p>
+                </div>
+                <div class="menu-item" onclick="openSection('library')">
+                    <div class="menu-icon">📖</div>
+                    <h4>کتابخانه جزوات</h4>
+                    <p>دانلود نکات آموزشی</p>
                 </div>
                 <div class="menu-item" onclick="openSection('leaderboard')">
                     <div class="menu-icon">🏆</div>
                     <h4>رتبه‌بندی</h4>
-                    <p>نفرات برتر مدرسه</p>
+                    <p>نفرات برتر مدرسه و پایه</p>
                 </div>
             </div>
         </div>
@@ -302,10 +328,35 @@
                     <h4>ثبت‌نام کاربر</h4>
                     <p>افزودن دانش‌آموز یا معلم</p>
                 </div>
+                <div class="menu-item" onclick="openSection('manage-grades')">
+                    <div class="menu-icon">📝</div>
+                    <h4>ثبت نمره</h4>
+                    <p>محاسبه هوشمند امتیاز بالا ۱۵</p>
+                </div>
+                <div class="menu-item" onclick="openSection('manage-attendance')">
+                    <div class="menu-icon">📋</div>
+                    <h4>حضور و غیاب</h4>
+                    <p>حضور (+۱) و غیبت (۳-)</p>
+                </div>
+                <div class="menu-item" onclick="openSection('manage-discipline')">
+                    <div class="menu-icon">⚖️</div>
+                    <h4>انضباطی (مثبت/منفی)</h4>
+                    <p>ثبت تشویق یا تذکر انضباطی</p>
+                </div>
+                <div class="menu-item" onclick="openSection('manage-homework')">
+                    <div class="menu-icon">📂</div>
+                    <h4>تعریف تکلیف</h4>
+                    <p>ارسال تکلیف جدید</p>
+                </div>
+                <div class="menu-item" onclick="openSection('manage-classes')">
+                    <div class="menu-icon">💻</div>
+                    <h4>ثبت کلاس فنوتک</h4>
+                    <p>انتشار لینک آنلاین</p>
+                </div>
                 <div class="menu-item" onclick="openSection('leaderboard')">
                     <div class="menu-icon">🏆</div>
                     <h4>رتبه‌بندی برترین‌ها</h4>
-                    <p>مشاهده امتیازات کل مدرسه</p>
+                    <p>مشاهده جدول امتیازات کل</p>
                 </div>
             </div>
         </div>
@@ -319,10 +370,8 @@
     </div>
 
     <script>
-        // تضمین وجود کاربران اولیه در حافظه
         function initDB() {
-            let users = localStorage.getItem('farabi_users');
-            if (!users) {
+            if (!localStorage.getItem('farabi_users')) {
                 const defaultUsers = [
                     { name: 'مدیر کل', role: 'مدیر', nationalCode: '1234567890', password: 'admin', grade: '' }
                 ];
@@ -334,7 +383,7 @@
         function resetSystemData() {
             localStorage.clear();
             initDB();
-            alert('سامانه ریست شد! حالا با کد ملی 1234567890 و رمز admin وارد شوید.');
+            alert('سامانه ریست شد! با کد ملی 1234567890 و رمز admin وارد شوید.');
             location.reload();
         }
 
@@ -357,12 +406,13 @@
                 if (user.role === 'دانش‌آموز') {
                     document.getElementById('grade-box').style.display = 'inline-block';
                     document.getElementById('user-grade').textContent = user.grade || '-';
+                    document.getElementById('points-badge-box').style.display = 'inline-block';
                     document.getElementById('user-points').textContent = calculatePoints(user.name);
                     panelStudent.classList.remove('hidden');
                     panelStaff.classList.add('hidden');
                 } else {
                     document.getElementById('grade-box').style.display = 'none';
-                    document.getElementById('user-points').parentElement.style.display = 'none';
+                    document.getElementById('points-badge-box').style.display = 'none';
                     panelStudent.classList.add('hidden');
                     panelStaff.classList.remove('hidden');
                 }
@@ -414,6 +464,28 @@
             }
         }
 
+        function submitHomeworkAction(hwTitle, index) {
+            const fileInput = document.getElementById(`hw-file-${index}`);
+            if (fileInput.files.length === 0) {
+                alert('لطفاً ابتدا عکس یا فایل پاسخ تکلیف را انتخاب کنید!');
+                return;
+            }
+
+            const currentUser = JSON.parse(localStorage.getItem('farabi_current_user'));
+            let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+            
+            grades.push({
+                student: currentUser.name,
+                subject: `تکلیف (${hwTitle})`,
+                score: 'ارسال شد (پیوست تصویر)',
+                points: 3
+            });
+            localStorage.setItem('farabi_grades', JSON.stringify(grades));
+            alert('پاسخ تکلیف همراه با فایل پیوست با موفقیت ارسال شد و ⭐ ۳ امتیاز مثبت به کارنامه شما اضافه گردید!');
+            document.getElementById('user-points').textContent = calculatePoints(currentUser.name);
+            openSection('homeworks');
+        }
+
         function openSection(type) {
             panelStudent.classList.add('hidden');
             panelStaff.classList.add('hidden');
@@ -424,28 +496,38 @@
 
             const currentUser = JSON.parse(localStorage.getItem('farabi_current_user'));
 
-            if (type === 'grades') {
+            if (type === 'score-details') {
+                title.textContent = '🔍 ریز امتیازات من (از کجا آمده؟)';
+                let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]').filter(g => g.student.trim() === currentUser.name.trim());
+                if (grades.length === 0) {
+                    body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">هنوز امتیازی ثبت نشده است.</p>';
+                    return;
+                }
+                let html = `<table><thead><tr><th>بخش / عنوان</th><th>جزئیات</th><th>امتیاز</th></tr></thead><tbody>`;
+                grades.forEach(g => {
+                    let pColor = Number(g.points) < 0 ? 'var(--danger)' : 'var(--success)';
+                    html += `<tr><td>${g.subject}</td><td><b>${g.score}</b></td><td><span style="color:${pColor}; font-weight:bold;">⭐ ${g.points}</span></td></tr>`;
+                });
+                html += `</tbody></table>`;
+                body.innerHTML = html;
+            }
+            else if (type === 'grades') {
                 title.textContent = '📊 کارنامه و نمرات من';
                 let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]').filter(g => g.student.trim() === currentUser.name.trim());
                 if (grades.length === 0) {
                     body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">هنوز نمره‌ای ثبت نشده است.</p>';
                     return;
                 }
-                let html = `<table><thead><tr><th>درس</th><th>نمره</th><th>امتیاز</th></tr></thead><tbody>`;
+                let html = `<table><thead><tr><th>درس / رویداد</th><th>نمره / وضعیت</th><th>امتیاز مکتسبه</th></tr></thead><tbody>`;
                 grades.forEach(g => { html += `<tr><td>${g.subject}</td><td><b>${g.score}</b></td><td>⭐ ${g.points}</td></tr>`; });
                 html += `</tbody></table>`;
                 body.innerHTML = html;
-            } 
+            }
             else if (type === 'leaderboard') {
                 title.textContent = '🏆 رتبه‌بندی برترین‌ها';
                 let users = JSON.parse(localStorage.getItem('farabi_users') || '[]').filter(u => u.role === 'دانش‌آموز');
                 let ranked = users.map(u => ({ name: u.name, grade: u.grade, pts: calculatePoints(u.name) })).sort((a,b) => b.pts - a.pts);
                 
-                if(ranked.length === 0) {
-                    body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">دانش‌آموزی ثبت نشده است.</p>';
-                    return;
-                }
-
                 let html = `<table><thead><tr><th>رتبه</th><th>نام</th><th>پایه</th><th>امتیاز کل</th></tr></thead><tbody>`;
                 ranked.forEach((r, idx) => {
                     let rankIcon = idx === 0 ? '🥇 اول' : (idx === 1 ? '🥈 دوم' : (idx === 2 ? '🥉 سوم' : idx + 1));
@@ -463,22 +545,198 @@
                         <div class="form-group"><label>پایه تحصیلی:</label><input type="text" id="r-grade" placeholder="مثلاً دهم"></div>
                         <div class="form-group"><label>کد ملی:</label><input type="text" id="r-code" required placeholder="۱۰ رقم"></div>
                         <div class="form-group"><label>رمز عبور دلخواه:</label><input type="password" id="r-pass" required placeholder="رمز ورود"></div>
-                        <button type="submit">ثبت کاربر در سامانه</button>
+                        <button type="submit">ثبت کاربر</button>
                     </form>`;
-                
                 document.getElementById('reg-form').addEventListener('submit', (e) => {
                     e.preventDefault();
                     let users = JSON.parse(localStorage.getItem('farabi_users') || '[]');
-                    let newU = {
+                    users.push({
                         name: document.getElementById('r-name').value.trim(),
                         role: document.getElementById('r-role').value,
                         grade: document.getElementById('r-grade').value.trim(),
                         nationalCode: document.getElementById('r-code').value.trim(),
                         password: document.getElementById('r-pass').value.trim()
-                    };
-                    users.push(newU);
+                    });
                     localStorage.setItem('farabi_users', JSON.stringify(users));
                     alert('کاربر جدید با موفقیت ثبت شد!');
+                    closeSubPanel();
+                });
+            }
+            else if (type === 'manage-grades') {
+                title.textContent = '📝 ثبت نمره و محاسبه هوشمند امتیاز';
+                body.innerHTML = `
+                    <form id="grade-form">
+                        <div class="form-group"><label>نام دانش‌آموز:</label><input type="text" id="g-student" required placeholder="مثلاً علی رضایی"></div>
+                        <div class="form-group"><label>درس:</label><input type="text" id="g-subj" required placeholder="مثلاً شیمی"></div>
+                        <div class="form-group"><label>نمره (از ۲۰):</label><input type="number" step="0.25" max="20" min="0" id="g-score" required placeholder="مثلاً 18"></div>
+                        <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">💡 نمره ۱۵ (۴ امتیاز) و به ازای هر ۱ نمره بالاتر، ۱ امتیاز اضافه می‌شود.</p>
+                        <button type="submit">ثبت نمره و اعمال امتیاز</button>
+                    </form>`;
+                document.getElementById('grade-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let sVal = Number(document.getElementById('g-score').value);
+                    let pts = sVal >= 15 ? 4 + (sVal - 15) : 0;
+                    let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+                    grades.push({
+                        student: document.getElementById('g-student').value.trim(),
+                        subject: document.getElementById('g-subj').value.trim(),
+                        score: sVal,
+                        points: pts
+                    });
+                    localStorage.setItem('farabi_grades', JSON.stringify(grades));
+                    alert(`نمره ثبت شد! امتیاز مکتسبه: ⭐ ${pts}`);
+                    closeSubPanel();
+                });
+            }
+            else if (type === 'manage-attendance') {
+                title.textContent = '📋 ثبت حضور و غیاب';
+                body.innerHTML = `
+                    <form id="att-form">
+                        <div class="form-group"><label>نام دانش‌آموز:</label><input type="text" id="a-student" required placeholder="مثلاً علی رضایی"></div>
+                        <div class="form-group"><label>وضعیت:</label><select id="a-status"><option value="حاضر">حاضر (⭐ +1 امتیاز)</option><option value="غایب">غایب (❌ ۳- امتیاز)</option></select></div>
+                        <button type="submit">ثبت وضعیت</button>
+                    </form>`;
+                document.getElementById('att-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let status = document.getElementById('a-status').value;
+                    let pts = status === 'حاضر' ? 1 : -3;
+                    let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+                    grades.push({
+                        student: document.getElementById('a-student').value.trim(),
+                        subject: `حضور و غیاب (${status})`,
+                        score: status,
+                        points: pts
+                    });
+                    localStorage.setItem('farabi_grades', JSON.stringify(grades));
+                    alert(`وضعیت ${status} ثبت شد (${pts > 0 ? '+' + pts : pts} امتیاز)!`);
+                    closeSubPanel();
+                });
+            }
+            // بخش جدید: ثبت عملکرد انضباطی مثبت و منفی
+            else if (type === 'manage-discipline') {
+                title.textContent = '⚖️ ثبت عملکرد انضباطی (تشویق یا تذکر)';
+                body.innerHTML = `
+                    <form id="disc-form">
+                        <div class="form-group"><label>نام دانش‌آموز:</label><input type="text" id="d-student" required placeholder="مثلاً علی رضایی"></div>
+                        <div class="form-group"><label>نوع عملکرد انضباطی:</label><select id="d-type"><option value="مثبت">انضباطی مثبت (تشویق)</option><option value="منفی">انضباطی منفی (تذکر/کاهش امتیاز)</option></select></div>
+                        <div class="form-group"><label>دلیل / توضیحات:</label><input type="text" id="d-desc" required placeholder="مثلاً نظم عالی در کلاس یا بی‌انضباطی"></div>
+                        <div class="form-group"><label>مقدار امتیاز (مثبت یا منفی):</label><input type="number" id="d-pts" required placeholder="مثلاً 2 یا -2"></div>
+                        <button type="submit">ثبت و اعمال امتیاز انضباطی</button>
+                    </form>`;
+                document.getElementById('disc-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let dType = document.getElementById('d-type').value;
+                    let desc = document.getElementById('d-desc').value.trim();
+                    let ptsVal = Number(document.getElementById('d-pts').value);
+                    
+                    // تنظیم علامت امتیاز بر اساس نوع انتخاب شده
+                    if (dType === 'منفی' && ptsVal > 0) ptsVal = -ptsVal;
+                    if (dType === 'مثبت' && ptsVal < 0) ptsVal = Math.abs(ptsVal);
+
+                    let grades = JSON.parse(localStorage.getItem('farabi_grades') || '[]');
+                    grades.push({
+                        student: document.getElementById('d-student').value.trim(),
+                        subject: `انضباطی (${desc})`,
+                        score: dType === 'مثبت' ? 'تشویق' : 'تذکر',
+                        points: ptsVal
+                    });
+                    localStorage.setItem('farabi_grades', JSON.stringify(grades));
+                    alert(`عملکرد انضباطی ${dType} با موفقیت ثبت شد (${ptsVal > 0 ? '+' + ptsVal : ptsVal} امتیاز)!`);
+                    closeSubPanel();
+                });
+            }
+            else if (type === 'online-classes') {
+                title.textContent = '💻 کلاس‌های آنلاین فنوتک';
+                let classes = JSON.parse(localStorage.getItem('farabi_classes') || '[]');
+                if (classes.length === 0) {
+                    body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">کلاس آنلاین فعالی ثبت نشده است.</p>';
+                    return;
+                }
+                let html = '';
+                classes.forEach(c => {
+                    html += `<div style="background:#f8fafc; padding:14px; border-radius:12px; margin-bottom:10px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;"><div><h4>${c.title}</h4><p style="font-size:12px; color:var(--text-muted);">پایه: ${c.grade}</p></div><button onclick="window.open('${c.link}', '_blank')" style="width:auto; padding:8px 14px; margin:0;">ورود به کلاس</button></div>`;
+                });
+                body.innerHTML = html;
+            }
+            else if (type === 'manage-classes') {
+                title.textContent = '💻 ثبت کلاس آنلاین جدید';
+                body.innerHTML = `
+                    <form id="cls-form">
+                        <div class="form-group"><label>عنوان کلاس:</label><input type="text" id="c-title" required placeholder="مثلاً کلاس شیمی"></div>
+                        <div class="form-group"><label>پایه:</label><input type="text" id="c-grade" required placeholder="مثلاً دهم"></div>
+                        <div class="form-group"><label>لینک فنوتک:</label><input type="url" id="c-link" required placeholder="https://fanotech.ir/room/..."></div>
+                        <button type="submit">انتشار کلاس</button>
+                    </form>`;
+                document.getElementById('cls-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let classes = JSON.parse(localStorage.getItem('farabi_classes') || '[]');
+                    classes.push({
+                        title: document.getElementById('c-title').value.trim(),
+                        grade: document.getElementById('c-grade').value.trim(),
+                        link: document.getElementById('c-link').value.trim()
+                    });
+                    localStorage.setItem('farabi_classes', JSON.stringify(classes));
+                    alert('کلاس آنلاین ثبت شد!');
+                    closeSubPanel();
+                });
+            }
+            else if (type === 'library') {
+                title.textContent = '📖 کتابخانه و جزوات آموزشی';
+                let libs = JSON.parse(localStorage.getItem('farabi_libs') || '[]');
+                if (libs.length === 0) {
+                    body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">جززه‌ای موجود نیست.</p>';
+                    return;
+                }
+                let html = '';
+                libs.forEach(l => {
+                    html += `<div style="background:#f8fafc; padding:14px; border-radius:12px; margin-bottom:10px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;"><div><h4>${l.title}</h4><p style="font-size:12px; color:var(--text-muted);">پایه: ${l.grade}</p></div><button onclick="window.open('${l.link}', '_blank')" style="width:auto; padding:8px 14px; margin:0;">دانلود</button></div>`;
+                });
+                body.innerHTML = html;
+            }
+            else if (type === 'homeworks') {
+                title.textContent = '📝 تکالیف درسی (هر ارسال ۳ امتیاز)';
+                let hws = JSON.parse(localStorage.getItem('farabi_hws') || '[]');
+                if (hws.length === 0) {
+                    body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">تکلیفی ثبت نشده است.</p>';
+                    return;
+                }
+                let html = '';
+                hws.forEach((h, idx) => {
+                    html += `
+                        <div style="background:#f8fafc; padding:16px; border-radius:12px; margin-bottom:16px; border:1px solid #e2e8f0;">
+                            <h4>${h.title}</h4>
+                            <p style="font-size:12px; color:var(--text-muted); margin:4px 0;">${h.subject} | مهلت: ${h.deadline}</p>
+                            <p style="font-size:13px; margin-bottom:10px;">${h.desc}</p>
+                            <div class="form-group" style="margin-bottom:8px;">
+                                <label style="font-size:11px;">پیوست عکس یا فایل پاسخ:</label>
+                                <input type="file" id="hw-file-${idx}" accept="image/*,.pdf" style="padding:6px; font-size:12px; background:white;">
+                            </div>
+                            <button onclick="submitHomeworkAction('${h.title}', ${idx})" style="width:auto; padding:8px 16px; margin:0; background:var(--success);">ارسال پاسخ و دریافت ۳ امتیاز ✅</button>
+                        </div>`;
+                });
+                body.innerHTML = html;
+            }
+            else if (type === 'manage-homework') {
+                title.textContent = '📂 تعریف تکلیف جدید';
+                body.innerHTML = `
+                    <form id="hw-form">
+                        <div class="form-group"><label>عنوان تکلیف:</label><input type="text" id="h-title" required placeholder="تمرین ص ۱۰"></div>
+                        <div class="form-group"><label>درس و دبیر:</label><input type="text" id="h-subj" required placeholder="ریاضی - دبیر صارمی"></div>
+                        <div class="form-group"><label>توضیحات:</label><textarea id="h-desc" rows="3" required placeholder="حل تمرینات..."></textarea></div>
+                        <div class="form-group"><label>مهلت:</label><input type="text" id="h-dead" required placeholder="۲۰ مهر"></div>
+                        <button type="submit">انتشار تکلیف</button>
+                    </form>`;
+                document.getElementById('hw-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let hws = JSON.parse(localStorage.getItem('farabi_hws') || '[]');
+                    hws.push({
+                        title: document.getElementById('h-title').value.trim(),
+                        subject: document.getElementById('h-subj').value.trim(),
+                        desc: document.getElementById('h-desc').value.trim(),
+                        deadline: document.getElementById('h-dead').value.trim()
+                    });
+                    localStorage.setItem('farabi_hws', JSON.stringify(hws));
+                    alert('تکلیف منتشر شد!');
                     closeSubPanel();
                 });
             }
